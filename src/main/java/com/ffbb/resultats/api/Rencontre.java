@@ -8,9 +8,9 @@ public class Rencontre {
 	
 	private Date horaire;
 	
-	private Equipe domicile;
+	private Équipe domicile;
 	
-	private Equipe visiteur;
+	private Équipe visiteur;
 	
 	private Résultat résultat;
 
@@ -30,19 +30,27 @@ public class Rencontre {
 		this.résultat = résultat;
 	}
 
-	public Equipe getDomicile() {
+	public Équipe getDomicile() {
 		return domicile;
 	}
 
-	public Equipe getVisiteur() {
+	public Équipe getVisiteur() {
 		return visiteur;
 	}
 
-	public Rencontre(Equipe domicile, Equipe visiteur, Integer journée, Date horaire) {
+	public Rencontre(Équipe domicile, Équipe visiteur, Integer journée, Date horaire) {
 		this.domicile = domicile;
 		this.visiteur = visiteur;
 		this.journée = journée;
 		this.horaire = horaire;
+	}
+	
+	@Override
+	public String toString() {
+		return journée + "\t" + horaire.toString()
+				+ "\t" + (domicile == null ? "Exempt" : domicile.getDénomination())
+				+ "\t" + (résultat == null ? "-" : résultat.getDomicile() + "-" + résultat.getVisiteur())
+				+ "\t" + (visiteur == null ? "Exempt" : visiteur.getDénomination());
 	}
 	
 }

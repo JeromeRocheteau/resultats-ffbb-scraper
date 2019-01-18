@@ -15,7 +15,11 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 		this.code = code;
 		String link = "http://resultats.ffbb.com/organisation/" + code + ".html";
 		URI uri = URI.create(link);
-		return this.doExtract(uri);
+		if (this.doFind(Organisation.class, uri) == null) {
+			return this.doExtract(uri);
+		} else {
+			return this.doFind(Organisation.class, uri);
+		}
 	}
 
 	public Organisation doExtract(URI uri) throws Exception {
@@ -28,7 +32,9 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 		String display = td.text();
 		Element input = doc.getElementById("idOrganisme");
 		Long id = Long.valueOf(input.attr("value"));
-		return this.doParse(id, display);
+		Organisation organisation = this.doParse(id, display);
+		this.doBind(Organisation.class, uri, organisation);
+		return organisation;
 	}
 
 	private Organisation doParse(Long id, String display) throws Exception { // 

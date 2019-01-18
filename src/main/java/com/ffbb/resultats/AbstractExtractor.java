@@ -1,6 +1,8 @@
 package com.ffbb.resultats;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,6 +16,23 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.ProtocolHandshake;
 
 public abstract class AbstractExtractor<T> implements Extractor<T> {
+
+	protected Map<String, Object> resources;
+	
+	protected ExtractorAPI extractor;
+	
+	@SuppressWarnings("unchecked")
+	protected <U> U doFind(Class<U> type, URI uri) {
+		return (U) resources.get(uri.toString());
+	}
+	
+	protected <U> void doBind(Class<U> type, URI uri, U resource) {
+		resources.put(uri.toString(), resource);
+	}
+	
+	protected AbstractExtractor() {
+		resources = new HashMap<String, Object>(1024);
+	}
 	
 	protected Document getDocument(URI uri) throws Exception {
 		DesiredCapabilities capabilities = new DesiredCapabilities();

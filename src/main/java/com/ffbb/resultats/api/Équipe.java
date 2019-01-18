@@ -6,13 +6,17 @@ import java.util.List;
 
 import com.ffbb.resultats.Extractable;
 
-public class Equipe implements Extractable {
+public class Équipe implements Extractable {
 
 	private Organisation organisation;
 	
 	private Compétition compétition;
 	
+	private String dénomination;
+	
 	private List<Rencontre> rencontres;
+	
+	private Classement classement;
 	
 	public Organisation getOrganisation() {
 		return organisation;
@@ -20,6 +24,22 @@ public class Equipe implements Extractable {
 
 	public Compétition getCompétition() {
 		return compétition;
+	}
+
+	public String getDénomination() {
+		return dénomination;
+	}
+
+	public void setDénomination(String dénomination) {
+		this.dénomination = dénomination;
+	}
+
+	public Classement getClassement() {
+		return classement;
+	}
+
+	public void setClassement(Classement classement) {
+		this.classement = classement;
 	}
 
 	public List<Rencontre> getRencontres() {
@@ -30,7 +50,7 @@ public class Equipe implements Extractable {
 		this.rencontres = rencontres;
 	}
 
-	public Equipe(Organisation organisation, Compétition compétition) {
+	public Équipe(Organisation organisation, Compétition compétition) {
 		super();
 		this.organisation = organisation;
 		this.compétition = compétition;

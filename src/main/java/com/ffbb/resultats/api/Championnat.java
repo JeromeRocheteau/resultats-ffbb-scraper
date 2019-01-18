@@ -1,5 +1,8 @@
 package com.ffbb.resultats.api;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Championnat extends Compétition {
 	
 	private Niveau niveau;
@@ -9,6 +12,8 @@ public class Championnat extends Compétition {
 	private Integer division;
 	
 	private String poule;
+	
+	private List<Équipe> équipes;
 	
 	public Niveau getNiveau() {
 		return niveau;
@@ -42,12 +47,17 @@ public class Championnat extends Compétition {
 		this.poule = poule;
 	}
 
+	public List<Équipe> getÉquipes() {
+		return équipes;
+	}
+
 	public Championnat(Paramètres parameter, Genre genre, Catégorie catégorie, Niveau niveau, Integer phase, Integer division, String poule) {
 		super(parameter, Compétition.Type.Championnat, genre, catégorie);
 		this.niveau = niveau;
 		this.phase = phase;
 		this.division = division;
 		this.poule = poule;
+		this.équipes= new LinkedList<Équipe>();
 	}
 	
 	@Override
