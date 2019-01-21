@@ -15,7 +15,21 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.ProtocolHandshake;
 
+import com.ffbb.resultats.api.Organisation;
+
 public abstract class AbstractExtractor<T> implements Extractor<T> {
+
+	protected void doInfo(String message) {
+		Logger.getLogger(ExtractorAPI.class.getSimpleName()).log(Level.INFO, message);
+	}
+
+	protected void doWarn(String message) {
+		Logger.getLogger(ExtractorAPI.class.getSimpleName()).log(Level.WARNING, message);
+	}
+
+	protected void doFailure(String message) {
+		Logger.getLogger(ExtractorAPI.class.getSimpleName()).log(Level.SEVERE, message);
+	}
 
 	protected Map<String, Object> resources;
 	
@@ -27,11 +41,19 @@ public abstract class AbstractExtractor<T> implements Extractor<T> {
 	}
 	
 	protected <U> void doBind(Class<U> type, URI uri, U resource) {
-		resources.put(uri.toString(), resource);
+		if (this.doFind(type, uri) == null) {
+			resources.put(uri.toString(), resource);			
+		} else {
+			this.doWarn("Already bound resource of " + type.getSimpleName() + " for URI: " + uri);
+		}
 	}
 	
 	protected AbstractExtractor() {
 		resources = new HashMap<String, Object>(1024);
+		URI uri = URI.create("http://resultats.ffbb.com/organisation/fffffffffffffffb.html");
+		Organisation exempt = new Organisation("fffffffffffffffb");
+		exempt.setName("Exempt");exempt.setType(Organisation.Type.Entente);
+		this.doBind(Organisation.class, uri, exempt);
 	}
 	
 	protected Document getDocument(URI uri) throws Exception {

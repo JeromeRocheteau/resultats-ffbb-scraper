@@ -28,7 +28,6 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 		Element iframe = doc.getElementById("idIframeClassements");
 		String link = iframe.attr("src").substring(3);
 		URI u = URI.create("http://resultats.ffbb.com/championnat/" + link);
-		System.err.println(u);
 		this.getClassement(u);
 		return équipe.getClassement();
 	}
@@ -43,7 +42,9 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 				if (cols.size() == 18) {
 					Integer rang = Integer.valueOf(cols.get(0).text());
 					Équipe équipe = this.getÉquipe(cols.get(1));
-					if (équipe == null) System.err.println(uri);
+					if (équipe == null) {
+						throw new Exception("Impossible de récupérer l'équipe " + cols.get(1) + " à partir du classement " + uri);
+					}
 					Integer victoires = Integer.valueOf(cols.get(4).text());
 					Integer défaites = Integer.valueOf(cols.get(5).text());
 					Integer pour = Integer.valueOf(cols.get(15).text());
@@ -63,13 +64,12 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 		String link = anchor.attr("href");
 		link = link.substring(link.lastIndexOf('/') + 1);
 		URI uri = URI.create("http://resultats.ffbb.com/championnat/equipe/" + link);
-		if (name.equals("Exempt")) {
-			return null;
-		} else if (this.doFind(Équipe.class, uri) == null) {
+		if (this.doFind(Équipe.class, uri) == null) {
 			String code = this.getCode(link);
 			Organisation organisation = new OrganisationExtractor().doExtract(code);
-			// FIXME
-			if (organisation == null) System.err.println(uri);
+			if (organisation == null) {
+				throw new Exception("Impossible de récupérer l'organisation " + code + " pour l'équipe " + uri);
+			}
 			Équipe equipe = new Équipe(organisation, this.équipe.getCompétition());
 			equipe.setDénomination(name);
 			this.doBind(Équipe.class, equipe.getURI(), equipe);

@@ -78,9 +78,7 @@ public class RencontresExtractor extends AbstractExtractor<List<Rencontre>> {
 		String name = anchor.text();
 		String link = anchor.attr("href").substring(3);
 		URI uri = URI.create("http://resultats.ffbb.com/championnat/equipe/" + link);
-		if (name.equals("Exempt")) {
-			return null;
-		} else if (this.doFind(Équipe.class, uri) == null) {
+		if (this.doFind(Équipe.class, uri) == null) {
 			String code = this.getCode(link);
 			Organisation organisation = new OrganisationExtractor().doExtract(code);
 			Équipe équipe = new Équipe(organisation, this.équipe.getCompétition());
