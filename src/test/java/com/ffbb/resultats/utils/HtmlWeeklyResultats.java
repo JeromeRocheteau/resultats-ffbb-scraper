@@ -1,6 +1,5 @@
 package com.ffbb.resultats.utils;
 
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,17 +25,16 @@ import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Rencontre;
-import com.ffbb.resultats.api.Équipe;
 import com.ffbb.resultats.tests.ResultatsExtraction;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class HtmlRésultats extends ResultatsExtraction {
+public class HtmlWeeklyResultats extends ResultatsExtraction {
 
 	private ChampionnatComparator comparator;
 
 	private Map<String, Integer> nums;
 	
-	public HtmlRésultats() {
+	public HtmlWeeklyResultats() {
 		super();
 		comparator = new ChampionnatComparator();
 		nums = new HashMap<String, Integer>();
@@ -61,28 +59,20 @@ public class HtmlRésultats extends ResultatsExtraction {
 			Compétition compétition = engagement.getCompétition();
 			if (compétition.getType() == Compétition.Type.Championnat) {
 				Championnat championnat = (Championnat) compétition;
-				try {
-					this.doInfo("extraction des rencontres du championnat " + championnat);
-					List<Rencontre> liste = extractor.getRencontres(organisation, championnat, début, fin);
-					if (liste.size() > 0 && liste.size() == 1) {
-						Rencontre rencontre = liste.get(0);
-						if (championnat.getCatégorie() == Catégorie.U9) {
-							championnats.add(championnat);
-							rencontres.put(championnat, rencontre);
-						} else {
-							try {
-								this.doInfo("extraction du classement du championnat " + championnat);
-								Classement classement = extractor.getClassement(organisation, championnat);
-								championnats.add(championnat);
-								rencontres.put(championnat, rencontre);
-								classements.put(championnat, classement);
-							} catch (Exception e) {
-								this.doWarn(e.getMessage());
-							}
-						}
+				this.doInfo("extraction des rencontres du championnat " + championnat);
+				List<Rencontre> liste = extractor.getRencontres(organisation, championnat, début, fin);
+				if (liste.size() > 0 && liste.size() == 1) {
+					Rencontre rencontre = liste.get(0);
+					if (championnat.getCatégorie() == Catégorie.U9) {
+						championnats.add(championnat);
+						rencontres.put(championnat, rencontre);
+					} else {
+						this.doInfo("extraction du classement du championnat " + championnat);
+						Classement classement = extractor.getClassement(organisation, championnat);
+						championnats.add(championnat);
+						rencontres.put(championnat, rencontre);
+						classements.put(championnat, classement);
 					}
-				} catch (Exception e) {
-					this.doWarn(e.getMessage());
 				}
 			}
 		}
@@ -112,7 +102,7 @@ public class HtmlRésultats extends ResultatsExtraction {
 	}
 
 	private void doBody(Organisation organisation, Championnat championnat, Rencontre rencontre, Classement classement, StringBuilder html) {
-		String href = this.doLink(organisation, championnat);
+		String href = this.doLink(organisation, championnat, rencontre);
 		html.append("\t");
 		html.append("<dt>");
 		this.doTeam(organisation, championnat, html);
@@ -129,10 +119,12 @@ public class HtmlRésultats extends ResultatsExtraction {
 		html.append(SEP);
 	}
 	
-	private String doLink(Organisation organisation, Championnat championnat) {
-		Équipe équipe = new Équipe(organisation, championnat);
-		URI uri = équipe.getURI();
-		return uri.toString();
+	private String doLink(Organisation organisation, Championnat championnat, Rencontre rencontre) {
+		Integer journée = rencontre.getJournée();
+		String id = championnat.getParamètres().getId();
+		Long d = championnat.getParamètres().getD();
+		Long r = championnat.getParamètres().getR();
+		return "http://resultats.ffbb.com/championnat/" + id + ".html?r=" + r.toString() + "&d=" + d.toString() + "&p=" + journée.toString();
 	}
 
 	private void doTeam(Organisation organisation, Championnat championnat, StringBuilder html) {
@@ -220,6 +212,18 @@ public class HtmlRésultats extends ResultatsExtraction {
 			boolean male = championnat.getGenre() == Genre.Masculin;
 			boolean first = classement.getRang() == 1;
 			html.append(" (");
+			html.append(classement.getVictoires().intValue());
+			if (classement.getVictoires().intValue() > 1) {
+				html.append(" victoires - ");
+			} else {
+				html.append(" victoire - ");
+			}
+			html.append(classement.getDéfaites().intValue());
+			if (classement.getDéfaites().intValue() > 1) {
+				html.append(" défaites - ");
+			} else {
+				html.append(" défaite, ");
+			}
 			html.append(classement.getRang());
 			if (first && male) {
 				html.append("<sup>er</sup>");
