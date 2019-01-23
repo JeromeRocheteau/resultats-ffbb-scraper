@@ -25,6 +25,9 @@ import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Rencontre;
+import com.ffbb.resultats.filtres.ChampionnatFiltre;
+import com.ffbb.resultats.filtres.CompétitionFiltre;
+import com.ffbb.resultats.filtres.MultipleFiltres;
 import com.ffbb.resultats.tests.ResultatsExtraction;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -34,10 +37,29 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 
 	private Map<String, Integer> nums;
 	
+	private ChampionnatFiltre filtre1;
+	
+	private ChampionnatFiltre filtre2;
+	
+	private MultipleFiltres filtre3;
+	
 	public HtmlWeeklyResultats() {
 		super();
 		comparator = new ChampionnatComparator();
 		nums = new HashMap<String, Integer>();
+		filtre1 = new ChampionnatFiltre()
+				.catégories(Catégorie.U11, Catégorie.U13)
+				.genres(Genre.Féminin)
+				.niveaux(Niveau.Départemental)
+				.divisions(0, 1)
+				.phases(2);
+		filtre2 = new ChampionnatFiltre()
+				.catégories(Catégorie.U15)
+				.genres(Genre.Féminin)
+				.niveaux(Niveau.Régional)
+				.phases(2);
+		filtre3 = new MultipleFiltres().filtres(filtre1, filtre2);
+;
 	}
 	
 	@Test
@@ -57,7 +79,7 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 		this.doInfo("extraction des rencontres pour le week-end du " + new SimpleDateFormat("dd/MM/yyyy").format(début) + " au " + new SimpleDateFormat("dd/MM/yyyy").format(fin));
 		for (Engagement engagement : engagements) {
 			Compétition compétition = engagement.getCompétition();
-			if (compétition.getType() == Compétition.Type.Championnat) {
+			if (filtre3.match(compétition)) {
 				Championnat championnat = (Championnat) compétition;
 				this.doInfo("extraction des rencontres du championnat " + championnat);
 				List<Rencontre> liste = extractor.getRencontres(organisation, championnat, début, fin);
