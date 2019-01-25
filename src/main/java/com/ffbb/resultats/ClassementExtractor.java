@@ -42,15 +42,23 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 				if (cols.size() == 18) {
 					Integer rang = Integer.valueOf(cols.get(0).text());
 					Équipe équipe = this.getÉquipe(cols.get(1));
-					if (équipe == null) {
-						throw new Exception("Impossible de récupérer l'équipe " + cols.get(1) + " à partir du classement " + uri);
-					}
 					Integer victoires = Integer.valueOf(cols.get(4).text());
 					Integer défaites = Integer.valueOf(cols.get(5).text());
 					Integer pour = Integer.valueOf(cols.get(15).text());
 					Integer contre = Integer.valueOf(cols.get(16).text());
 					Classement classement = new Classement(équipe, rang, victoires, défaites, pour, contre);
-					if (équipe != null && équipe.getURI().equals(this.équipe.getURI())) {
+					if (équipe.getURI().equals(this.équipe.getURI())) {
+						this.équipe.setClassement(classement);
+					}
+				} else if (cols.size() == 17) {
+					Integer rang = Integer.valueOf(cols.get(0).text());
+					Équipe équipe = this.getÉquipe(cols.get(1));
+					Integer victoires = Integer.valueOf(cols.get(4).text());
+					Integer défaites = Integer.valueOf(cols.get(5).text());
+					Integer pour = Integer.valueOf(cols.get(14).text());
+					Integer contre = Integer.valueOf(cols.get(15).text());
+					Classement classement = new Classement(équipe, rang, victoires, défaites, pour, contre);
+					if (équipe.getURI().equals(this.équipe.getURI())) {
 						this.équipe.setClassement(classement);
 					}
 				}

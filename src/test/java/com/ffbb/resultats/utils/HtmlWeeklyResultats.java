@@ -1,5 +1,9 @@
 package com.ffbb.resultats.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,7 +30,6 @@ import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Rencontre;
 import com.ffbb.resultats.filtres.ChampionnatFiltre;
-import com.ffbb.resultats.filtres.CompétitionFiltre;
 import com.ffbb.resultats.filtres.MultipleFiltres;
 import com.ffbb.resultats.tests.ResultatsExtraction;
 
@@ -48,22 +51,19 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 		comparator = new ChampionnatComparator();
 		nums = new HashMap<String, Integer>();
 		filtre1 = new ChampionnatFiltre()
-				.catégories(Catégorie.U11, Catégorie.U13)
-				.genres(Genre.Féminin)
-				.niveaux(Niveau.Départemental)
-				.divisions(0, 1)
-				.phases(2);
-		filtre2 = new ChampionnatFiltre()
 				.catégories(Catégorie.U15)
 				.genres(Genre.Féminin)
 				.niveaux(Niveau.Régional)
 				.phases(2);
-		filtre3 = new MultipleFiltres().filtres(filtre1, filtre2);
+		filtre2 = new ChampionnatFiltre()
+				.phases(2);
+		filtre3 = new MultipleFiltres().filtres(filtre1 /*, filtre2 */);
 ;
 	}
 	
 	@Test
 	public void test() throws Exception {
+		Logger.getAnonymousLogger().setLevel(Level.SEVERE);
 		this.doInfo("début de l'extraction");
 		Date début = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-01-19 00:00");
 		Date fin = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-01-20 23:59");
@@ -99,6 +99,7 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 			}
 		}
 		this.doInfo("fin de l'extraction");
+		this.doInfo("début de l'écriture");
 		Collections.sort(championnats, comparator);
 		StringBuilder html = new StringBuilder(1024 * 1024);
 		this.doHead(html);
@@ -108,36 +109,38 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 			this.doBody(organisation, championnat, rencontre, classement, html);
 		}
 		this.doTail(html);
-		System.out.println(html.toString());
+		File file = new File("/home/jerome/Bureau/naclt-resultats.html");
+		this.doInfo("écriture dans le fichier " + file.getAbsolutePath());
+		OutputStream out = new FileOutputStream(file);
+		out.write(html.toString().getBytes());
+		this.doInfo("fin de l'écriture");
 	}
 	
 	private static final String SEP = "\n";
 
 	private void doHead(StringBuilder html) {
-		html.append("<dl>");
+		html.append("<ul>");
 		html.append(SEP);
 	}
 
 	private void doTail(StringBuilder html) {
-		html.append("</dl>");
+		html.append("</ul>");
 		html.append(SEP);
 	}
 
 	private void doBody(Organisation organisation, Championnat championnat, Rencontre rencontre, Classement classement, StringBuilder html) {
 		String href = this.doLink(organisation, championnat, rencontre);
 		html.append("\t");
-		html.append("<dt>");
+		html.append("<li>");
+		html.append("<strong>");
 		this.doTeam(organisation, championnat, html);
+		html.append("</strong>");
 		html.append(" (<a href=\"" + href + "\">");
 		this.doChampionnat(organisation, championnat, html);
-		html.append("</a>)");
-		html.append("</dt>");
-		html.append(SEP);
-		html.append("\t");
-		html.append("<dd>");
+		html.append("</a>) : ");
 		this.doRencontre(organisation, championnat, rencontre, html);
 		this.doClassement(organisation, championnat, classement, html);
-		html.append("</dd>");
+		html.append("</li>");
 		html.append(SEP);
 	}
 	
@@ -230,7 +233,9 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 	}
 
 	private void doClassement(Organisation organisation, Championnat championnat, Classement classement, StringBuilder html) {
-		if (classement != null) {
+		if (classement == null) {
+			this.doWarn("pas de classement extrait !");
+		} else {
 			boolean male = championnat.getGenre() == Genre.Masculin;
 			boolean first = classement.getRang() == 1;
 			html.append(" (");
