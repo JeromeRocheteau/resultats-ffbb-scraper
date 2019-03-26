@@ -3,7 +3,6 @@ package com.ffbb.resultats.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,6 +29,7 @@ import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Rencontre;
 import com.ffbb.resultats.filtres.ChampionnatFiltre;
+import com.ffbb.resultats.filtres.Filtre;
 import com.ffbb.resultats.filtres.MultipleFiltres;
 import com.ffbb.resultats.tests.ResultatsExtraction;
 
@@ -44,12 +44,31 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 	
 	private ChampionnatFiltre filtre2;
 	
-	private MultipleFiltres filtre3;
+	private ChampionnatFiltre filtre3;
 	
-	public HtmlWeeklyResultats() {
+	private MultipleFiltres filtre4;
+	
+	private ChampionnatFiltre filtre5;
+
+	private Map<String, Filtre> organisations;
+	
+	private List<Championnat> championnats;
+	
+	private Map<Championnat, Rencontre> rencontres;
+	
+	private Map<Championnat, Classement> classements;
+	
+	private Date début;
+	
+	private Date fin;
+	
+	public HtmlWeeklyResultats() throws Exception {
 		super();
 		comparator = new ChampionnatComparator();
 		nums = new HashMap<String, Integer>();
+		championnats = new LinkedList<Championnat>();
+		rencontres = new HashMap<Championnat, Rencontre>();
+		classements = new HashMap<Championnat, Classement>();
 		filtre1 = new ChampionnatFiltre()
 				.catégories(Catégorie.U15)
 				.genres(Genre.Féminin)
@@ -57,29 +76,48 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 				.phases(2);
 		filtre2 = new ChampionnatFiltre()
 				.phases(2);
-		filtre3 = new MultipleFiltres().filtres(filtre1 /*, filtre2 */);
-;
+		filtre3 = new ChampionnatFiltre()
+				.genres(Genre.Masculin)
+				.catégories(Catégorie.Senior)
+				.niveaux(Niveau.Départemental)
+				.divisions(2)
+				.phases(1);
+		filtre4 = new MultipleFiltres().filtres(filtre1, filtre2, filtre3);
+		filtre5 = new ChampionnatFiltre()
+				.genres(Genre.Féminin)
+				.catégories(Catégorie.Senior)
+				.niveaux(Niveau.Départemental)
+				.divisions(4)
+				.phases(2);
+		organisations = new HashMap<String, Filtre>();
+		organisations.put("2226", filtre4);
+		organisations.put("223c", filtre5);
+		début = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-03-23 00:00");
+		fin = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-03-24 23:59");
 	}
 	
 	@Test
 	public void test() throws Exception {
 		Logger.getAnonymousLogger().setLevel(Level.SEVERE);
 		this.doInfo("début de l'extraction");
-		Date début = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-01-19 00:00");
-		Date fin = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-01-20 23:59");
+		for (String code : organisations.keySet()) {
+			this.doExtract(code, organisations.get(code));			
+		}
+		this.doInfo("fin de l'extraction");
+		this.doWrite();
+	}
+
+	private void doExtract(String code, Filtre filtre) throws Exception {
 		this.doInfo("extraction de l'organisation");
-		Organisation organisation = extractor.getOrganisation("2226");
+		Organisation organisation = extractor.getOrganisation(code); 
 		Assert.assertNotNull(organisation);
-		this.doInfo("extraction des engagements");
+		this.doInfo("extraction des engagements de l'organisation " + organisation.getName());
 		List<Engagement> engagements = extractor.getEngagements(organisation);
 		Assert.assertNotNull(engagements);
-		List<Championnat> championnats = new LinkedList<Championnat>();
-		Map<Championnat, Rencontre> rencontres = new HashMap<Championnat, Rencontre>();
-		Map<Championnat, Classement> classements = new HashMap<Championnat, Classement>();
 		this.doInfo("extraction des rencontres pour le week-end du " + new SimpleDateFormat("dd/MM/yyyy").format(début) + " au " + new SimpleDateFormat("dd/MM/yyyy").format(fin));
 		for (Engagement engagement : engagements) {
 			Compétition compétition = engagement.getCompétition();
-			if (filtre3.match(compétition)) {
+			if (filtre.match(compétition)) {
 				Championnat championnat = (Championnat) compétition;
 				this.doInfo("extraction des rencontres du championnat " + championnat);
 				List<Rencontre> liste = extractor.getRencontres(organisation, championnat, début, fin);
@@ -98,7 +136,9 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 				}
 			}
 		}
-		this.doInfo("fin de l'extraction");
+	}
+
+	private void doWrite() throws Exception {
 		this.doInfo("début de l'écriture");
 		Collections.sort(championnats, comparator);
 		StringBuilder html = new StringBuilder(1024 * 1024);
@@ -106,13 +146,14 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 		for (Championnat championnat : championnats) {
 			Rencontre rencontre = rencontres.get(championnat);
 			Classement classement = classements.get(championnat);
-			this.doBody(organisation, championnat, rencontre, classement, html);
+			this.doBody(championnat, rencontre, classement, html);
 		}
 		this.doTail(html);
 		File file = new File("/home/jerome/Bureau/naclt-resultats.html");
 		this.doInfo("écriture dans le fichier " + file.getAbsolutePath());
 		OutputStream out = new FileOutputStream(file);
 		out.write(html.toString().getBytes());
+		out.close();
 		this.doInfo("fin de l'écriture");
 	}
 	
@@ -128,23 +169,24 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 		html.append(SEP);
 	}
 
-	private void doBody(Organisation organisation, Championnat championnat, Rencontre rencontre, Classement classement, StringBuilder html) {
-		String href = this.doLink(organisation, championnat, rencontre);
+	private void doBody(Championnat championnat, Rencontre rencontre, Classement classement, StringBuilder html) {
+		String href = this.doLink(championnat, rencontre);
 		html.append("\t");
 		html.append("<li>");
 		html.append("<strong>");
-		this.doTeam(organisation, championnat, html);
+		this.doTeam(championnat, html);
 		html.append("</strong>");
 		html.append(" (<a href=\"" + href + "\">");
-		this.doChampionnat(organisation, championnat, html);
+		this.doChampionnat(championnat, html);
 		html.append("</a>) : ");
-		this.doRencontre(organisation, championnat, rencontre, html);
-		this.doClassement(organisation, championnat, classement, html);
+		this.doRencontre(championnat, rencontre, html);
+		html.append("<br/>");
+		this.doClassement(championnat, classement, html);
 		html.append("</li>");
 		html.append(SEP);
 	}
 	
-	private String doLink(Organisation organisation, Championnat championnat, Rencontre rencontre) {
+	private String doLink(Championnat championnat, Rencontre rencontre) {
 		Integer journée = rencontre.getJournée();
 		String id = championnat.getParamètres().getId();
 		Long d = championnat.getParamètres().getD();
@@ -152,7 +194,7 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 		return "http://resultats.ffbb.com/championnat/" + id + ".html?r=" + r.toString() + "&d=" + d.toString() + "&p=" + journée.toString();
 	}
 
-	private void doTeam(Organisation organisation, Championnat championnat, StringBuilder html) {
+	private void doTeam(Championnat championnat, StringBuilder html) {
 		String cat = championnat.getCatégorie() == Catégorie.Senior ? "S" : championnat.getCatégorie().name();
 		String gen = (championnat.getCatégorie() == Catégorie.Senior && championnat.getGenre() == Genre.Masculin) ? "G" : (championnat.getGenre() == Genre.Masculin ? "M" : "F"); 
 		String num = this.getNum(cat, gen);
@@ -173,7 +215,7 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 		}
 	}
 
-	private void doChampionnat(Organisation organisation, Championnat championnat, StringBuilder html) {
+	private void doChampionnat(Championnat championnat, StringBuilder html) {
 		String div = (championnat.getDivision() == null ? "" : (championnat.getDivision().intValue() == 0) ? "Elite" : championnat.getDivision().toString());
 		String niv = (championnat.getNiveau() == Niveau.National ? "N" : (championnat.getNiveau() == Niveau.Régional ? "R" : (div.isEmpty() || div.equals("Elite") ? "" : "D")));
 		String poule = (div.equals("Elite") ? " - " + championnat.getPoule(): championnat.getPoule());
@@ -182,8 +224,8 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 		html.append(poule);
 	}
 
-	private void doRencontre(Organisation organisation, Championnat championnat, Rencontre rencontre, StringBuilder html) {
-		boolean domicile = rencontre.getDomicile().getOrganisation().getCode().equals(organisation.getCode());
+	private void doRencontre(Championnat championnat, Rencontre rencontre, StringBuilder html) {
+		boolean domicile = this.isDomicile(rencontre);
 		if (domicile) {
 			String adversaires = rencontre.getVisiteur().getDénomination();
 			if (rencontre.getRésultat() == null) {
@@ -203,6 +245,16 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 				this.doRencontre(domicile, adversaires, nous, eux, nous > eux, html);
 			}
 		}
+	}
+
+	private boolean isDomicile(Rencontre rencontre) {
+		String code = rencontre.getDomicile().getOrganisation().getCode();
+		for (String c : organisations.keySet()) {
+			if (c.equals(code)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void doRencontre(boolean domicile, String adversaires, int nous, int eux, boolean victoire, StringBuilder html) {
@@ -232,13 +284,13 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 		}
 	}
 
-	private void doClassement(Organisation organisation, Championnat championnat, Classement classement, StringBuilder html) {
+	private void doClassement(Championnat championnat, Classement classement, StringBuilder html) {
 		if (classement == null) {
 			this.doWarn("pas de classement extrait !");
 		} else {
 			boolean male = championnat.getGenre() == Genre.Masculin;
 			boolean first = classement.getRang() == 1;
-			html.append(" (");
+			// html.append(" (");
 			html.append(classement.getVictoires().intValue());
 			if (classement.getVictoires().intValue() > 1) {
 				html.append(" victoires - ");
@@ -259,7 +311,7 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 			} else {
 				html.append("<sup>e</sup>");
 			}
-			html.append(")");
+			// html.append(")");
 		}
 	}
 
