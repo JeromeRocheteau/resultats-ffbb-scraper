@@ -1,6 +1,8 @@
 package com.ffbb.resultats;
 
 import java.net.URI;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,7 +49,9 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 					Integer pour = Integer.valueOf(cols.get(15).text());
 					Integer contre = Integer.valueOf(cols.get(16).text());
 					Classement classement = new Classement(équipe, rang, victoires, défaites, pour, contre);
-					if (équipe.getURI().equals(this.équipe.getURI())) {
+					if (équipe == null) {
+						
+					} else if (équipe.getURI().equals(this.équipe.getURI())) {
 						this.équipe.setClassement(classement);
 					}
 				} else if (cols.size() == 17) {
@@ -58,7 +62,9 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 					Integer pour = Integer.valueOf(cols.get(14).text());
 					Integer contre = Integer.valueOf(cols.get(15).text());
 					Classement classement = new Classement(équipe, rang, victoires, défaites, pour, contre);
-					if (équipe.getURI().equals(this.équipe.getURI())) {
+					if (équipe == null) {
+						
+					} if (équipe.getURI().equals(this.équipe.getURI())) {
 						this.équipe.setClassement(classement);
 					}
 				}
@@ -74,14 +80,20 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 		URI uri = URI.create("http://resultats.ffbb.com/championnat/equipe/" + link);
 		if (this.doFind(Équipe.class, uri) == null) {
 			String code = this.getCode(link);
-			Organisation organisation = new OrganisationExtractor().doExtract(code);
-			if (organisation == null) {
-				throw new Exception("Impossible de récupérer l'organisation " + code + " pour l'équipe " + uri);
+			try {
+				Organisation organisation = new OrganisationExtractor().doExtract(code);
+				Équipe equipe = new Équipe(organisation, this.équipe.getCompétition());
+				equipe.setDénomination(name);
+				this.doBind(Équipe.class, equipe.getURI(), equipe);
+				return equipe;
+			} catch (Exception e) {
+				// throw new Exception("Impossible de récupérer l'organisation " + code + " pour l'équipe " + uri, e);
+				Logger.getAnonymousLogger().log(Level.WARNING, "Impossible de récupérer l'organisation " + code + " pour l'équipe " + uri);
+				// Équipe exempt = new Équipe(organisation, this.équipe.getCompétition());
+				// exempt.setDénomination(name);
+				// this.doBind(Équipe.class, exempt.getURI(), exempt);
+				return null;
 			}
-			Équipe equipe = new Équipe(organisation, this.équipe.getCompétition());
-			equipe.setDénomination(name);
-			this.doBind(Équipe.class, equipe.getURI(), equipe);
-			return equipe;
 		} else {
 			Équipe équipe = this.doFind(Équipe.class, uri);
 			équipe.setDénomination(name);

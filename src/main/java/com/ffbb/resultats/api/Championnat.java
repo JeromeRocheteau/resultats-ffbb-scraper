@@ -81,9 +81,9 @@ public class Championnat extends Compétition {
 			builder.append(" - Phase ");
 			builder.append(phase.toString());
 		}
-		if (division == null) {
+		if (poule != null) {
 			builder.append(" - Poule ");
-			builder.append(poule);
+			builder.append(poule.toUpperCase());
 		} else {
 			if (division > 0) {
 				if (this.getCatégorie() == Catégorie.Senior || this.getCatégorie() == Catégorie.U9) {
@@ -93,8 +93,10 @@ public class Championnat extends Compétition {
 					builder.append(this.getNiveau().toString());
 				}
 				builder.append(division);
-				builder.append(" - Poule ");
-				builder.append(poule);
+				if (poule != null) {
+					builder.append(" - Poule ");
+					builder.append(poule.toUpperCase());					
+				}
 			} else if (division == 0) {
 				builder.append(" - ");
 				builder.append(poule);

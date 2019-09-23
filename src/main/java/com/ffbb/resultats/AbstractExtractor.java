@@ -1,8 +1,13 @@
 package com.ffbb.resultats;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,10 +20,15 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.ProtocolHandshake;
 
-import com.ffbb.resultats.api.Organisation;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-public abstract class AbstractExtractor<T> implements Extractor<T> {
+public class AbstractExtractor<T> {
 
+	private Gson mapper;
+	
+	private Extract extract;
+	
 	protected void doInfo(String message) {
 		Logger.getLogger(ExtractorAPI.class.getSimpleName()).log(Level.INFO, message);
 	}
@@ -31,29 +41,31 @@ public abstract class AbstractExtractor<T> implements Extractor<T> {
 		Logger.getLogger(ExtractorAPI.class.getSimpleName()).log(Level.SEVERE, message);
 	}
 
-	protected Map<String, Object> resources;
-	
-	protected ExtractorAPI extractor;
-	
-	@SuppressWarnings("unchecked")
-	protected <U> U doFind(Class<U> type, URI uri) {
-		return (U) resources.get(uri.toString());
+	protected <U extends Extractable> U doFind(Class<U> type, URI uri) throws Exception {
+		return extract.doFind(type, uri);
 	}
 	
-	protected <U> void doBind(Class<U> type, URI uri, U resource) {
+	protected <U extends Extractable> void doBind(Class<U> type, URI uri, U resource) throws Exception {
 		if (this.doFind(type, uri) == null) {
-			resources.put(uri.toString(), resource);			
+			extract.doBind(type, uri, resource);			
 		} else {
 			this.doWarn("Already bound resource of " + type.getSimpleName() + " for URI: " + uri);
 		}
 	}
 	
+	public void doStore(OutputStream output) throws IOException {
+		Writer writer = new OutputStreamWriter(output);
+		mapper.toJson(extract, writer);
+	}
+	
+	public void doLoad(InputStream input) throws IOException {
+		Reader reader = new InputStreamReader(input);
+		extract = mapper.fromJson(reader, Extract.class);
+	}
+	
 	protected AbstractExtractor() {
-		resources = new HashMap<String, Object>(1024);
-		URI uri = URI.create("http://resultats.ffbb.com/organisation/fffffffffffffffb.html");
-		Organisation exempt = new Organisation("fffffffffffffffb");
-		exempt.setName("Exempt");exempt.setType(Organisation.Type.Entente);
-		this.doBind(Organisation.class, uri, exempt);
+		mapper = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		extract = new Extract();
 	}
 	
 	protected Document getDocument(URI uri) throws Exception {

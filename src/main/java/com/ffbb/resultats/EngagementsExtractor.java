@@ -19,6 +19,7 @@ import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Paramètres;
+import com.ffbb.resultats.api.Plateau;
 
 public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 		
@@ -100,18 +101,19 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	}
 
 	private Compétition getCompétition(Paramètres paramètres, Genre genre, Catégorie catégorie, Compétition.Type type, String text) throws Exception {
-		String head = this.getHead(text);
+		String head = this.getHead(text).toLowerCase();
 		if (type == null) {
 			throw new Exception();
 		} else if (type == Compétition.Type.Championnat) {
-			String tail = this.getTail(text);
+			String tail = this.getTail(text).toLowerCase();
 			return getChampionnat(paramètres, genre, catégorie, head, tail);
 		} else if (type == Compétition.Type.Championnat3x3) {
 			throw new Exception();
 		} else if (type == Compétition.Type.Coupe) {
 			return new Coupe(paramètres, genre, catégorie);
 		} else if (type == Compétition.Type.Plateau) {
-			throw new Exception();
+			Integer numero = this.getNumero(text);
+			return new Plateau(paramètres, genre, catégorie, numero);
 		} else {
 			throw new Exception();
 		}
@@ -128,8 +130,12 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	private Integer getDivision(Catégorie catégorie, Niveau niveau, Integer phase, String head, String tail) throws Exception {
 		if (niveau == Niveau.Départemental) {
 			return getDivisionDep(catégorie, niveau, phase, head, tail);			
+		} else if (niveau == Niveau.PréRégional) {
+			return 1;
 		} else if (niveau == Niveau.Régional) {
 			return getDivisionReg(phase, head, tail);
+		} else if (niveau == Niveau.PréNational) {
+			return 1;
 		} else if (niveau == Niveau.National) {
 			return null;
 		} else {
@@ -145,7 +151,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 			if (items.length == 2) {
 				String fst = items[0].trim();
 				String snd = items[1].trim();
-				if (snd.equals("Elite")) {
+				if (snd.equals("elite")) {
 					return 0;
 				} else {
 					return getDivisionDep(niveau, fst);
@@ -160,7 +166,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 		if (phase == 1) {
 			return this.getDivisionDep(text);
 		} else if (phase == 2) {
-			String suffix = "- Phase 2";
+			String suffix = "- phase 2";
 			return this.getDivisionDep(text.substring(0, text.length() - suffix.length()));
 		} else {
 			throw new Exception();
@@ -171,8 +177,8 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 		String[] items = text.split("-");
 		if (items.length == 2) {
 			String snd = items[1].trim();
-			if (snd.startsWith("Division ")) {
-				return Integer.valueOf(snd.substring("Division ".length()));
+			if (snd.startsWith("division ")) {
+				return Integer.valueOf(snd.substring("division ".length()));
 			} else {
 				throw new Exception();	
 			}
@@ -182,19 +188,19 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	}
 
 	private Integer getDivisionDep(Niveau niveau, String text) throws Exception {
-		if (text.startsWith(niveau.toString())) {
-			if (text.startsWith("D")) {
+		if (text.startsWith(niveau.toString().toLowerCase())) {
+			if (text.startsWith("d")) {
 				return Integer.valueOf(text.substring(1, 2));
 			} else {
 				return null;
 			}
 		} else {
-			throw new Exception();
+			throw new Exception(niveau.toString() + " '" + text + "'");
 		}
 	}
 
 	private Integer getDivisionReg(Integer phase, String head, String tail) {
-		if (tail.startsWith("R")) {
+		if (tail.startsWith("r")) {
 			return Integer.valueOf(tail.substring(1, 2));
 		} else {
 			return null;
@@ -204,8 +210,12 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	private String getPoule(Catégorie catégorie, Niveau niveau, Integer phase, String text) throws Exception {
 		if (niveau == Niveau.Départemental) {
 			return getPouleDep(catégorie, text);			
+		} else if (niveau == Niveau.PréRégional) {
+			return null;
 		} else if (niveau == Niveau.Régional) {
 			return getPouleReg(phase, text);
+		} else if (niveau == Niveau.PréNational) {
+			return null;
 		} else if (niveau == Niveau.National) {
 			return null;
 		} else {
@@ -215,11 +225,13 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 
 	private String getPouleReg(Integer phase, String text) throws Exception {
 		if (phase == 1) {
-			return getPoule(text);				
+			String poule = getPoule(text);
+			int index = poule.lastIndexOf("-");
+			return poule.substring(index);
 		} else if (phase == 2) {
 			String[] items = text.split("\\s+");
 			if (items.length == 3) {
-				if (items[1].trim().equals("Poule")) {
+				if (items[1].trim().equals("poule")) {
 					return items[2].trim();
 				} else {
 					throw new Exception();	
@@ -240,7 +252,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 			if (items.length == 2) {
 				String fst = items[0].trim();
 				String snd = items[1].trim();
-				if (snd.equals("Elite")) {
+				if (snd.equals("elite")) {
 					return fst;
 				} else {
 					return getPoule(snd);
@@ -252,15 +264,19 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	}
 
 	private String getPoule(String text) throws Exception {
-		if (text.startsWith("Poule ")) {
-			return text.substring("Poule ".length());
+		if (text.startsWith("poule ")) {
+			return text.substring("poule ".length());
+		} else if (text.startsWith("défi ")) {
+			// int index = text.lastIndexOf("-");
+			// return text.substring(index + 2);
+			return text;
 		} else {
 			throw new Exception();
 		}
 	}
 
 	private Integer getPhase(String text) {
-		if (text.endsWith("- Phase 2")) {
+		if (text.endsWith("- phase 2")) {
 			return 2;
 		} else {
 			return 1;
@@ -268,11 +284,20 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	}
 
 	private Niveau getNiveau(String text) throws Exception {
-		if (text.startsWith(Niveau.Départemental.name())) {
+		if (text.startsWith("pré ")) {
+			Niveau niveau = this.getNiveau(text.substring(4));
+			if (niveau == Niveau.National) {
+				return Niveau.PréNational;
+			} else if (niveau == Niveau.Régional) {
+				return Niveau.PréRégional;
+			} else {
+				throw new Exception("unexepected niveau: '" + text + "'");
+			}
+		} if (text.startsWith(Niveau.Départemental.name().toLowerCase())) {
 			return Niveau.Départemental;
-		} else if (text.startsWith(Niveau.Régional.name())) {
+		} else if (text.startsWith(Niveau.Régional.name().toLowerCase())) {
 			return Niveau.Régional;
-		} else if (text.startsWith(Niveau.National.name())) {
+		} else if (text.startsWith(Niveau.National.name().toLowerCase())) {
 			return Niveau.National;
 		} else {
 			throw new Exception();
@@ -298,6 +323,20 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 			return Catégorie.U9;
 		} else {
 			throw new Exception();
+		}
+	}
+
+	private Integer getNumero(String text) throws Exception {
+		String[] items = text.split("-");
+		if (items.length == 2) {
+			String item = items[1].trim();
+			if (item.startsWith("N°")) {
+				return Integer.valueOf(item.substring(2));
+			} else {
+				throw new Exception("unexepected plateau number format: '" + item + "'");
+			}
+		} else {
+			throw new Exception("unexepected plateau format: '" + text + "'");
 		}
 	}
 
