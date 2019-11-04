@@ -227,7 +227,11 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 		if (phase == 1) {
 			String poule = getPoule(text);
 			int index = poule.lastIndexOf("-");
-			return poule.substring(index);
+            if (index == -1) {
+                return poule;
+            } else {
+            	return poule.substring(index);
+            }
 		} else if (phase == 2) {
 			String[] items = text.split("\\s+");
 			if (items.length == 3) {
