@@ -16,6 +16,7 @@ import com.ffbb.resultats.api.Équipe;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Rencontre;
 import com.ffbb.resultats.api.Résultat;
+import com.ffbb.resultats.api.Salle;
 
 public class RencontresExtractor extends AbstractExtractor<List<Rencontre>> {
 		
@@ -65,11 +66,33 @@ public class RencontresExtractor extends AbstractExtractor<List<Rencontre>> {
 					Équipe domicile = this.getEquipe(cols.get(3));
 					Équipe visiteur = this.getEquipe(cols.get(4));
 					Résultat résultat = this.getRésultat(cols.get(5).text());
-					Rencontre rencontre = new Rencontre(domicile, visiteur, journée, horaire);
+					Salle salle = this.getSalle(cols.get(6));
+					Rencontre rencontre = new Rencontre(domicile, visiteur, journée, horaire, salle);
 					rencontre.setRésultat(résultat);
 					équipe.getRencontres().add(rencontre);
 				}
 			}
+		}
+	}
+
+	
+	private static final String PREFIX = "javascript:openHere('";
+	private static final String SUFFIX = "')";
+	
+	private Salle getSalle(Element element) throws Exception {
+		Element a = element.select("a").first();
+		String href = a.attr("href");
+		int inf = PREFIX.length();
+		int sup = href.length() - SUFFIX.length();
+		String id = href.substring(inf, sup);
+		URI uri = URI.create("https://resultats.ffbb.com/here/here_popup.php?id=" + id);
+		if (this.doFind(Salle.class, uri) == null) {
+			Salle salle = new SalleExtractor().doExtract(uri);
+			this.doBind(Salle.class, salle.getURI(), salle);
+			return salle;
+		} else {
+			Salle salle = this.doFind(Salle.class, uri);
+			return salle;
 		}
 	}
 

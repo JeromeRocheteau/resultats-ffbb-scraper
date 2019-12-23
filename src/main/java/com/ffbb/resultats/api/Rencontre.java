@@ -13,6 +13,8 @@ public class Rencontre {
 	private Équipe visiteur;
 	
 	private Résultat résultat;
+	
+	private Salle salle;
 
 	public Integer getJournée() {
 		return journée;
@@ -38,11 +40,20 @@ public class Rencontre {
 		return visiteur;
 	}
 
-	public Rencontre(Équipe domicile, Équipe visiteur, Integer journée, Date horaire) {
+	public Salle getSalle() {
+		return salle;
+	}
+
+	public void setSalle(Salle salle) {
+		this.salle = salle;
+	}
+
+	public Rencontre(Équipe domicile, Équipe visiteur, Integer journée, Date horaire, Salle salle) {
 		this.domicile = domicile;
 		this.visiteur = visiteur;
 		this.journée = journée;
 		this.horaire = horaire;
+		this.salle = salle;
 	}
 	
 	@Override

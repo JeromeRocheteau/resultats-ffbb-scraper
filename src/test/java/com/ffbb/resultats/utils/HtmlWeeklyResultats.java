@@ -46,6 +46,8 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 
 	private MultipleFiltres filtre3;
 	
+	private ChampionnatFiltre filtre4;
+	
 	private Map<String, Filtre> organisations;
 	
 	private List<Championnat> championnats;
@@ -74,10 +76,16 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 				.niveaux(Niveau.PréRégional, Niveau.Départemental)
 				.phases(1);
 		filtre3 = new MultipleFiltres().filtres(filtre1, filtre2);
+		filtre4 = new ChampionnatFiltre()
+				.niveaux(Niveau.Départemental)
+				.genres(Genre.Féminin)
+				.catégories(Catégorie.Senior)
+				.phases(1);
 		organisations = new HashMap<String, Filtre>();
 		organisations.put("2226", filtre3);
-		début = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-09-21 00:00");
-		fin = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-09-22 23:59");
+		organisations.put("223c", filtre4);
+		début = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-12-07 00:00");
+		fin = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2019-12-08 23:59");
 	}
 	
 	@Test
