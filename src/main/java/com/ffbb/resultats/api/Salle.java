@@ -6,7 +6,7 @@ import com.ffbb.resultats.Extractable;
 
 public class Salle implements Extractable, Comparable<Salle> {
 
-	private String id;
+	private Long id;
 	
 	private Float latitude;
 	
@@ -68,15 +68,15 @@ public class Salle implements Extractable, Comparable<Salle> {
 		this.ville = ville;
 	}
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public Salle(String id) {
+	public Salle(Long id) {
 		this.id = id;
 	}
 	
-	public Salle(String id, Float latitude, Float longitude, String dénomnation, String adresse, String codePostal, String ville) {
+	public Salle(Long id, Float latitude, Float longitude, String dénomnation, String adresse, String codePostal, String ville) {
 		this(id);
 		this.latitude = latitude;
 		this.longitude = longitude;

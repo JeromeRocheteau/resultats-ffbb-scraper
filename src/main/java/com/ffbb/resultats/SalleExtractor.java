@@ -21,7 +21,7 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 	
 	public Salle doExtract(URI uri) throws Exception {
 		String id = uri.toString().substring(PREFIX.length());
-		Salle salle = new Salle(id);
+		Salle salle = new Salle(Long.valueOf(id));
 		Document doc = this.getDocument(uri);
 		Elements scripts = doc.getElementsByTag("script");
 		for (Element script : scripts) {
