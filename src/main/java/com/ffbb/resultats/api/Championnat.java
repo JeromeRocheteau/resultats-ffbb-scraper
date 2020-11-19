@@ -95,10 +95,9 @@ public class Championnat extends Compétition {
 				builder.append(" - Poule ");
 				builder.append(poule.toUpperCase());					
 			}
-		} else if (division == 0) {
+		} else if (division == 0 && poule != null) {
 			builder.append(" - ");
 			builder.append(poule);
-			builder.append(" - Elite");
 		}
 		return builder.toString();
 	}

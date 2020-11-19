@@ -148,7 +148,13 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 			return this.getDivisionDep(niveau, phase, head);
 		} else {
 			String[] items = tail.split("-");
-			if (items.length == 2) {
+			if (items.length == 1) {
+				if (tail.equals("accès région")) {
+					return 0;
+				} else {
+					return getDivisionDep(niveau, tail);
+				}				
+			} else if (items.length == 2) {
 				String fst = items[0].trim();
 				String snd = items[1].trim();
 				if (snd.equals("elite")) {
@@ -157,7 +163,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 					return getDivisionDep(niveau, fst);
 				}
 			} else {
-				throw new Exception();
+				throw new Exception(tail);
 			}
 		}
 	}
@@ -169,7 +175,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 			String suffix = "- phase 2";
 			return this.getDivisionDep(text.substring(0, text.length() - suffix.length()));
 		} else {
-			throw new Exception();
+			throw new Exception(text);
 		}
 	}
 
@@ -180,7 +186,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 			if (snd.startsWith("division ")) {
 				return Integer.valueOf(snd.substring("division ".length()));
 			} else {
-				throw new Exception();	
+				throw new Exception(text);	
 			}
 		} else {
 			return null;
@@ -219,32 +225,20 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 		} else if (niveau == Niveau.National) {
 			return null;
 		} else {
-			throw new Exception();
+			throw new Exception(text);
 		}
 	}
 
 	private String getPouleReg(Integer phase, String text) throws Exception {
-		if (phase == 1) {
-			String poule = getPoule(text);
-			int index = poule.lastIndexOf("-");
-            if (index == -1) {
-                return poule;
-            } else {
-            	return poule.substring(index);
-            }
-		} else if (phase == 2) {
-			String[] items = text.split("\\s+");
-			if (items.length == 3) {
-				if (items[1].trim().equals("poule")) {
-					return items[2].trim();
-				} else {
-					throw new Exception();	
-				}
+		String[] items = text.split("\\s+");
+		if (items.length == 3) {
+			if (items[1].trim().equals("poule")) {
+				return items[2].trim();
 			} else {
-				throw new Exception();		
+				throw new Exception(items[1]);	
 			}
 		} else {
-			throw new Exception();
+			throw new Exception("length=" + items.length);
 		}
 	}
 
@@ -253,7 +247,14 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 			return getPoule(text);
 		} else {
 			String[] items = text.split("-");
-			if (items.length == 2) {
+			if (items.length == 1) {
+				if (text.equals("accès région")) {
+					return text;
+				} else {
+					return getPoule(text);
+				}
+			}
+			else if (items.length == 2) {
 				String fst = items[0].trim();
 				String snd = items[1].trim();
 				if (snd.equals("elite")) {
@@ -262,7 +263,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 					return getPoule(snd);
 				}
 			} else {
-				throw new Exception();
+				throw new Exception(text);
 			}
 		}
 	}
@@ -275,7 +276,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 			// return text.substring(index + 2);
 			return text;
 		} else {
-			throw new Exception();
+			throw new Exception(text);
 		}
 	}
 

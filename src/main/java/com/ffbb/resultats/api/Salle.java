@@ -101,4 +101,14 @@ public class Salle implements Extractable, Comparable<Salle> {
 		return id.compareTo(salle.getId());
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		try {
+			Salle salle = (Salle) object;
+			return this.compareTo(salle) == 0;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 }

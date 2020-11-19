@@ -1,9 +1,12 @@
 package com.ffbb.resultats.api;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Rencontre {
+public class Rencontre implements Comparable<Rencontre> {
 
+	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+	
 	private Integer journée;
 	
 	private Date horaire;
@@ -62,6 +65,29 @@ public class Rencontre {
 				+ "\t" + (domicile == null ? "Exempt" : domicile.getDénomination())
 				+ "\t" + (résultat == null ? "-" : résultat.getDomicile() + "-" + résultat.getVisiteur())
 				+ "\t" + (visiteur == null ? "Exempt" : visiteur.getDénomination());
+	}
+	
+	public String code() {
+		String dom = domicile.getOrganisation().getCode();
+		String vis = visiteur.getOrganisation().getCode();
+		Integer day = journée;
+		String date = dateFormatter.format(horaire);
+		return dom + "-" + vis + "-" + day + "-" + date;
+	}
+
+	@Override
+	public int compareTo(Rencontre rencontre) {
+		return code().compareTo(rencontre.code());
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		try {
+			Rencontre rencontre = (Rencontre) object;
+			return this.compareTo(rencontre) == 0;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 }

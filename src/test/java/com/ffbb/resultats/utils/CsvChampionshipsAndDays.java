@@ -105,8 +105,8 @@ public class CsvChampionshipsAndDays extends ResultatsExtraction {
 		organisations = new HashMap<String, Filtre>();
 		organisations.put("2226", filtreNort);
 		organisations.put("223c", filtreSaffre);
-		début = ffbbDateTimeFormatter.parse("2020-01-11 00:00");
-		fin = ffbbDateTimeFormatter.parse("2020-05-24 23:59");
+		début = ffbbDateTimeFormatter.parse("2020-09-01 00:00");
+		fin = ffbbDateTimeFormatter.parse("2020-10-31 23:59");
 	}
 	
 	@Test

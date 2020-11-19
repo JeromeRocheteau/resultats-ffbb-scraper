@@ -136,7 +136,7 @@ public class RencontresExtractor extends AbstractExtractor<List<Rencontre>> {
 				Integer visiteur = Integer.valueOf(items[1].trim());
 				return new Résultat(domicile, visiteur);				
 			} else {
-				throw new ExtractorException(1);
+				return null; // throw new ExtractorException(1);
 			}
 		}
 	}

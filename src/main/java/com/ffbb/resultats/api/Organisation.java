@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.ffbb.resultats.Extractable;
 
-public class Organisation implements Extractable {
+public class Organisation implements Extractable, Comparable<Organisation> {
 	
 	public enum Type {Club, Entente, ClubPro, Comité, Ligue, Fédération};
 	
@@ -74,6 +74,21 @@ public class Organisation implements Extractable {
 	@Override
 	public String toString() {
 		return name + " - " + ffbb + " - " + type.name();
+	}
+
+	@Override
+	public int compareTo(Organisation organisation) {
+		return code.compareTo(organisation.getCode());
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		try {
+			Organisation organisation = (Organisation) object;
+			return this.compareTo(organisation) == 0;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 }
