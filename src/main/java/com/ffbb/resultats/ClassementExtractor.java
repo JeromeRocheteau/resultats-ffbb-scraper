@@ -83,7 +83,7 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 			try {
 				Organisation organisation = new OrganisationExtractor().doExtract(code);
 				Équipe equipe = new Équipe(organisation, this.équipe.getCompétition());
-				equipe.setDénomination(name);
+				equipe.setNom(name);
 				this.doBind(Équipe.class, equipe.getURI(), equipe);
 				return equipe;
 			} catch (Exception e) {
@@ -96,7 +96,7 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 			}
 		} else {
 			Équipe équipe = this.doFind(Équipe.class, uri);
-			équipe.setDénomination(name);
+			équipe.setNom(name);
 			return équipe;
 		}
 	}

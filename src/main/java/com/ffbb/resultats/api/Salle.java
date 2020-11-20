@@ -4,7 +4,7 @@ import java.net.URI;
 
 import com.ffbb.resultats.Extractable;
 
-public class Salle implements Extractable, Comparable<Salle> {
+public class Salle extends Identifier implements Extractable, Comparable<Salle> {
 
 	private Long id;
 	

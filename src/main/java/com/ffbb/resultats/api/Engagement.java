@@ -1,6 +1,6 @@
 package com.ffbb.resultats.api;
 
-public class Engagement {
+public class Engagement extends Identifier {
 	
 	private Organisation organisation;
 	

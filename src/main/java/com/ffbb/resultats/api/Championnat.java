@@ -51,8 +51,8 @@ public class Championnat extends Compétition {
 		return équipes;
 	}
 
-	public Championnat(Paramètres parameter, Genre genre, Catégorie catégorie, Niveau niveau, Integer phase, Integer division, String poule) {
-		super(parameter, Compétition.Type.Championnat, genre, catégorie);
+	public Championnat(Paramètres parameter, Organisation organisation, Genre genre, Catégorie catégorie, Niveau niveau, Integer phase, Integer division, String poule) {
+		super(parameter, organisation, Compétition.Type.Championnat, genre, catégorie);
 		this.niveau = niveau;
 		this.phase = phase;
 		this.division = division;

@@ -220,7 +220,7 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 	private void doRencontre(Championnat championnat, Rencontre rencontre, StringBuilder html) {
 		boolean domicile = this.isDomicile(rencontre);
 		if (domicile) {
-			String adversaires = rencontre.getVisiteur().getDénomination();
+			String adversaires = rencontre.getVisiteur().getNom();
 			if (rencontre.getRésultat() == null) {
 				this.doRencontre(domicile, adversaires, 0, 0, false, html);
 			} else {
@@ -229,7 +229,7 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 				this.doRencontre(domicile, adversaires, nous, eux, nous > eux, html);				
 			}
 		} else {
-			String adversaires = rencontre.getDomicile().getDénomination();
+			String adversaires = rencontre.getDomicile().getNom();
 			if (rencontre.getRésultat() == null) {
 				this.doRencontre(domicile, adversaires, 0, 0, false, html);
 			} else {

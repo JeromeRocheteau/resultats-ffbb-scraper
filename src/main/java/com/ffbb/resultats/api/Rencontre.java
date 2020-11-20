@@ -3,9 +3,11 @@ package com.ffbb.resultats.api;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Rencontre implements Comparable<Rencontre> {
+public class Rencontre extends Identifier implements Comparable<Rencontre> {
 
 	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+	
+	private Compétition compétition;
 	
 	private Integer journée;
 	
@@ -18,6 +20,14 @@ public class Rencontre implements Comparable<Rencontre> {
 	private Résultat résultat;
 	
 	private Salle salle;
+
+	public Compétition getCompétition() {
+		return compétition;
+	}
+
+	public void setCompétition(Compétition compétition) {
+		this.compétition = compétition;
+	}
 
 	public Integer getJournée() {
 		return journée;
@@ -51,7 +61,8 @@ public class Rencontre implements Comparable<Rencontre> {
 		this.salle = salle;
 	}
 
-	public Rencontre(Équipe domicile, Équipe visiteur, Integer journée, Date horaire, Salle salle) {
+	public Rencontre(Compétition compétition, Équipe domicile, Équipe visiteur, Integer journée, Date horaire, Salle salle) {
+		this.compétition = compétition;
 		this.domicile = domicile;
 		this.visiteur = visiteur;
 		this.journée = journée;
@@ -62,9 +73,9 @@ public class Rencontre implements Comparable<Rencontre> {
 	@Override
 	public String toString() {
 		return journée + "\t" + horaire.toString()
-				+ "\t" + (domicile == null ? "Exempt" : domicile.getDénomination())
+				+ "\t" + (domicile == null ? "Exempt" : domicile.getNom())
 				+ "\t" + (résultat == null ? "-" : résultat.getDomicile() + "-" + résultat.getVisiteur())
-				+ "\t" + (visiteur == null ? "Exempt" : visiteur.getDénomination());
+				+ "\t" + (visiteur == null ? "Exempt" : visiteur.getNom());
 	}
 	
 	public String code() {

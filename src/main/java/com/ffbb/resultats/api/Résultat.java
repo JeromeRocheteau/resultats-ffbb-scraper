@@ -1,6 +1,6 @@
 package com.ffbb.resultats.api;
 
-public class Résultat {
+public class Résultat extends Identifier {
 
 	private Integer domicile;
 	
@@ -18,6 +18,11 @@ public class Résultat {
 		super();
 		this.domicile = domicile;
 		this.visiteur = visiteur;
+	}
+
+	@Override
+	public String toString() {
+		return this.getId() + " : " + domicile + "-" + visiteur;
 	}
 	
 }

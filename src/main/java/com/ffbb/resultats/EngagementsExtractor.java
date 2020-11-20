@@ -110,10 +110,10 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 		} else if (type == Compétition.Type.Championnat3x3) {
 			throw new Exception();
 		} else if (type == Compétition.Type.Coupe) {
-			return new Coupe(paramètres, genre, catégorie);
+			return new Coupe(paramètres, null, genre, catégorie);
 		} else if (type == Compétition.Type.Plateau) {
 			Integer numero = this.getNumero(text);
-			return new Plateau(paramètres, genre, catégorie, numero);
+			return new Plateau(paramètres, null, genre, catégorie, numero);
 		} else {
 			throw new Exception();
 		}
@@ -124,7 +124,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 		Integer phase = this.getPhase(head);
 		Integer division = this.getDivision(catégorie, niveau, phase, head, tail);
 		String poule = this.getPoule(catégorie, niveau, phase, tail);
-		return new Championnat(paramètres, genre, catégorie, niveau, phase, division, poule);
+		return new Championnat(paramètres, null, genre, catégorie, niveau, phase, division, poule);
 	}
 
 	private Integer getDivision(Catégorie catégorie, Niveau niveau, Integer phase, String head, String tail) throws Exception {

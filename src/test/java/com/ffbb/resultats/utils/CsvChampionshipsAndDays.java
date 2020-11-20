@@ -218,7 +218,7 @@ public class CsvChampionshipsAndDays extends ResultatsExtraction {
 		Équipe vist = rencontre.getVisiteur();
 		Salle salle = rencontre.getSalle();
 		boolean hosting = organisation.getCode() == host.getOrganisation().getCode();
-		String adversaire = hosting ? vist.getDénomination() : host.getDénomination();
+		String adversaire = hosting ? vist.getNom() : host.getNom();
 		String place = hosting ? "Doumer" : salle.getDénomination() + " - " + salle.getAdresse() + " " + salle.getVille();
 		int i = getIndex(headers, date);
 		if (i >= 0) {

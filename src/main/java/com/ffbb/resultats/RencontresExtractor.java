@@ -67,7 +67,7 @@ public class RencontresExtractor extends AbstractExtractor<List<Rencontre>> {
 					Équipe visiteur = this.getEquipe(cols.get(4));
 					Résultat résultat = this.getRésultat(cols.get(5).text());
 					Salle salle = this.getSalle(cols.get(6));
-					Rencontre rencontre = new Rencontre(domicile, visiteur, journée, horaire, salle);
+					Rencontre rencontre = new Rencontre(équipe.getCompétition(), domicile, visiteur, journée, horaire, salle);
 					rencontre.setRésultat(résultat);
 					équipe.getRencontres().add(rencontre);
 				}
@@ -105,12 +105,12 @@ public class RencontresExtractor extends AbstractExtractor<List<Rencontre>> {
 			String code = this.getCode(link);
 			Organisation organisation = new OrganisationExtractor().doExtract(code);
 			Équipe équipe = new Équipe(organisation, this.équipe.getCompétition());
-			équipe.setDénomination(name);
+			équipe.setNom(name);
 			this.doBind(Équipe.class, équipe.getURI(), équipe);
 			return équipe;
 		} else {
 			Équipe équipe = this.doFind(Équipe.class, uri);
-			équipe.setDénomination(name);
+			équipe.setNom(name);
 			return équipe;
 		}
 	}

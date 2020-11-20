@@ -6,32 +6,20 @@ import java.util.List;
 
 import com.ffbb.resultats.Extractable;
 
-public class Équipe implements Extractable {
+public class Équipe extends Engagement implements Extractable {
 
-	private Organisation organisation;
-	
-	private Compétition compétition;
-	
-	private String dénomination;
+	private String nom;
 	
 	private List<Rencontre> rencontres;
 	
 	private Classement classement;
 	
-	public Organisation getOrganisation() {
-		return organisation;
+	public String getNom() {
+		return nom;
 	}
 
-	public Compétition getCompétition() {
-		return compétition;
-	}
-
-	public String getDénomination() {
-		return dénomination;
-	}
-
-	public void setDénomination(String dénomination) {
-		this.dénomination = dénomination;
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
 
 	public Classement getClassement() {
@@ -51,17 +39,15 @@ public class Équipe implements Extractable {
 	}
 
 	public Équipe(Organisation organisation, Compétition compétition) {
-		super();
-		this.organisation = organisation;
-		this.compétition = compétition;
+		super(organisation, compétition);
 		this.rencontres = new LinkedList<Rencontre>();
 	}
 
 	public URI getURI() {
-		String link = "http://resultats.ffbb.com/championnat/equipe/" + organisation.getCode() + ".html" 
-				+ "?r=" + compétition.getParamètres().getR() 
-				+ "&p=" + compétition.getParamètres().getD()
-				+ "&d=" + organisation.getId();
+		String link = "http://resultats.ffbb.com/championnat/equipe/" + this.getOrganisation().getCode() + ".html" 
+				+ "?r=" + this.getCompétition().getParamètres().getR() 
+				+ "&p=" + this.getCompétition().getParamètres().getD()
+				+ "&d=" + this.getOrganisation().getId();
 		return URI.create(link);
 	}
 

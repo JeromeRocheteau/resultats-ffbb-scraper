@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.ffbb.resultats.Extractable;
 
-public class Organisation implements Extractable, Comparable<Organisation> {
+public class Organisation extends Identifier implements Extractable, Comparable<Organisation> {
 	
 	public enum Type {Club, Entente, ClubPro, Comité, Ligue, Fédération};
 	

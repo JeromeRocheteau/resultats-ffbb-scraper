@@ -90,7 +90,7 @@ public class Classement implements Comparable<Classement> {
 	public String toString() {
 		String fst = équipe.getCompétition().getGenre() == Genre.Masculin ? "ers" : "res";
 		String rank = rang + (rang > 1 ? fst : "es");
-		return "\t" + équipe.getDénomination() + "\t" + victoires + "v-" + défaites + "d (" + rank + ")"; 
+		return "\t" + équipe.getNom() + "\t" + victoires + "v-" + défaites + "d (" + rank + ")"; 
 	}
 	
 }

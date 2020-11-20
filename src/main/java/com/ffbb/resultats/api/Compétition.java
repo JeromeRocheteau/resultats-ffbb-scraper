@@ -4,11 +4,13 @@ import java.net.URI;
 
 import com.ffbb.resultats.Extractable;
 
-public abstract class Compétition implements Extractable {
+public abstract class Compétition extends Identifier implements Extractable {
 	
 	public enum Type {Championnat, Championnat3x3, Coupe, Plateau};
 	
 	private Paramètres paramètres;
+	
+	private Organisation organisateur;
 	
 	private Type type;
 	
@@ -18,6 +20,14 @@ public abstract class Compétition implements Extractable {
 
 	public Paramètres getParamètres() {
 		return paramètres;
+	}
+
+	public Organisation getOrganisateur() {
+		return organisateur;
+	}
+
+	public void setOrganisateur(Organisation organisateur) {
+		this.organisateur = organisateur;
 	}
 
 	public Type getType() {
@@ -32,9 +42,10 @@ public abstract class Compétition implements Extractable {
 		return catégorie;
 	}
 
-	protected Compétition(Paramètres paramètres, Compétition.Type type, Genre genre, Catégorie catégorie) {
+	protected Compétition(Paramètres paramètres, Organisation organisateur, Compétition.Type type, Genre genre, Catégorie catégorie) {
 		super();
 		this.paramètres = paramètres;
+		this.organisateur = organisateur;
 		this.type = type;
 		this.genre = genre;
 		this.catégorie = catégorie;

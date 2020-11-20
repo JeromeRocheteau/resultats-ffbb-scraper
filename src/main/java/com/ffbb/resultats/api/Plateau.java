@@ -4,8 +4,8 @@ public class Plateau extends Compétition {
 
 	private Integer numero;
 	
-	public Plateau(Paramètres parameter, Genre genre, Catégorie catégorie, Integer numero) {
-		super(parameter, Compétition.Type.Plateau, genre, catégorie);
+	public Plateau(Paramètres parameter, Organisation organisation, Genre genre, Catégorie catégorie, Integer numero) {
+		super(parameter, organisation, Compétition.Type.Plateau, genre, catégorie);
 		this.numero = numero;
 	}
 
