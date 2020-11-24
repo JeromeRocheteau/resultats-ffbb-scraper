@@ -3,9 +3,21 @@ package com.ffbb.resultats.api;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Rencontre extends Identifier implements Comparable<Rencontre> {
+public class Rencontre implements Identifiable, Comparable<Rencontre> {
 
 	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+	
+	private Long id; 
+	
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	private Compétition compétition;
 	

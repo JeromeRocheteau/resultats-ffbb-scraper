@@ -1,20 +1,27 @@
 package com.ffbb.resultats.api;
 
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Championnat extends Compétition {
+import com.ffbb.resultats.Extractable;
+
+public class Championnat extends Compétition implements Extractable {
+	
+	private Long index;
 	
 	private Niveau niveau;
 
 	private Integer phase;
 	
-	private Integer division;
-	
 	private String poule;
 	
 	private List<Équipe> équipes;
 	
+	public Long getIndex() {
+		return index;
+	}
+
 	public Niveau getNiveau() {
 		return niveau;
 	}
@@ -31,31 +38,19 @@ public class Championnat extends Compétition {
 		this.phase = phase;
 	}
 
-	public Integer getDivision() {
-		return division;
-	}
-
-	public void setDivision(Integer division) {
-		this.division = division;
-	}
-
 	public String getPoule() {
 		return poule;
-	}
-
-	public void setPoule(String poule) {
-		this.poule = poule;
 	}
 
 	public List<Équipe> getÉquipes() {
 		return équipes;
 	}
 
-	public Championnat(Paramètres parameter, Organisation organisation, Genre genre, Catégorie catégorie, Niveau niveau, Integer phase, Integer division, String poule) {
-		super(parameter, organisation, Compétition.Type.Championnat, genre, catégorie);
+	public Championnat(Long id, String code, String nom, Organisation organisateur, Compétition.Type type, Genre genre, Catégorie catégorie, Long index, Niveau niveau, Integer phase, String poule) {
+		super(id, code, nom, organisateur, type, genre, catégorie);
+		this.index = index;
 		this.niveau = niveau;
 		this.phase = phase;
-		this.division = division;
 		this.poule = poule;
 		this.équipes= new LinkedList<Équipe>();
 	}
@@ -63,43 +58,19 @@ public class Championnat extends Compétition {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder(128);
-		builder.append("Championnat : ");
-		if (this.getCatégorie() == Catégorie.Senior) {
-			builder.append(this.getNiveau().name());
-			builder.append("e ");
-			builder.append(this.getGenre().name().toLowerCase());
-			builder.append("e ");
-			builder.append("seniors");
-		} else {
-			builder.append(this.getNiveau().name());
-			builder.append(" ");
-			builder.append(this.getGenre().name().toLowerCase());
-			builder.append(" ");
-			builder.append(this.getCatégorie().name());
-		}
-		if (phase > 1) {
-			builder.append(" - Phase ");
-			builder.append(phase.toString());
-		}
-		if (division == null) {
-			
-		} else if (division > 0) {
-			if (this.getCatégorie() == Catégorie.Senior || this.getCatégorie() == Catégorie.U9) {
-				builder.append(" - Division ");
-			} else {
-				builder.append(" - ");
-				builder.append(this.getNiveau().toString());
-			}
-			builder.append(division);
-			if (poule != null) {
-				builder.append(" - Poule ");
-				builder.append(poule.toUpperCase());					
-			}
-		} else if (division == 0 && poule != null) {
-			builder.append(" - ");
-			builder.append(poule);
-		}
+		builder.append(super.toString());
+		builder.append(" | ");
+		builder.append(poule);
 		return builder.toString();
 	}
+
+	@Override
+	public URI getURI() {
+		String link = "http://resultats.ffbb.com/championnat/" + super.getCode() + ".html" 
+				+ "?r=" + super.getId()
+				+ "&d=" + index;
+		return URI.create(link);
+	}
+
 	
 }

@@ -5,24 +5,44 @@ import java.util.List;
 
 import com.ffbb.resultats.Extractable;
 
-public class Organisation extends Identifier implements Extractable, Comparable<Organisation> {
+public class Organisation implements Identifiable, Encodable, Extractable, Comparable<Organisation> {
 	
 	public enum Type {Club, Entente, ClubPro, Comité, Ligue, Fédération};
+	
+	private Long id;
 	
 	private String code;
 	
 	private Type type;
-
-	private Long id;
 	
 	private String ffbb;
 	
 	private String name;
 	
+	private Appartenances appartenances;
+	
 	private Engagements engagements;
+	
+	private Salle salle;
 
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Override
 	public String getCode() {
 		return code;
+	}
+
+	@Override
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public Type getType() {
@@ -31,14 +51,6 @@ public class Organisation extends Identifier implements Extractable, Comparable<
 
 	public void setType(Type type) {
 		this.type = type;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getFfbb() {
@@ -57,18 +69,28 @@ public class Organisation extends Identifier implements Extractable, Comparable<
 		this.name = name;
 	}
 
+	public Appartenances getAppartenances() {
+		return appartenances;
+	}
+
 	public List<Engagement> getEngagements() {
 		return engagements;
 	}
 
-	public Organisation(String code) {
-		super();
-		this.code = code;
-		this.engagements = new Engagements(this);
+	public Salle getSalle() {
+		return salle;
 	}
 
-	public URI getURI() {
-		return URI.create("http://resultats.ffbb.com/organisation/" + code + ".html");
+	public void setSalle(Salle salle) {
+		this.salle = salle;
+	}
+
+	public Organisation(Long id, String code) {
+		super();
+		this.setId(id);
+		this.code = code;
+		this.appartenances = new Appartenances(this);
+		this.engagements = new Engagements(this);
 	}
 	
 	@Override
@@ -89,6 +111,11 @@ public class Organisation extends Identifier implements Extractable, Comparable<
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	@Override
+	public URI getURI() {
+		return URI.create("http://resultats.ffbb.com/organisation/" + code + ".html");
 	}
 	
 }

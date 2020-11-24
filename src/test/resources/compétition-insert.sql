@@ -1,2 +1,2 @@
-INSERT INTO `compétitions` (`organisateur`,`type`,`genre`,`catégorie`) 
-VALUES (?,?,?,?);
+INSERT INTO `compétitions` (`id`,`code`,`organisateur`,`type`,`genre`,`catégorie`,`nom`) 
+VALUES (?,?,?,?,?,?,?);

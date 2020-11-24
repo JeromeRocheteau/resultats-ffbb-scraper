@@ -181,9 +181,9 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 	
 	private String doLink(Championnat championnat, Rencontre rencontre) {
 		Integer journée = rencontre.getJournée();
-		String id = championnat.getParamètres().getId();
-		Long d = championnat.getParamètres().getD();
-		Long r = championnat.getParamètres().getR();
+		String id = championnat.getCode();
+		Long d = championnat.getId();
+		Long r = 0L; // FIXME championnat.getParamètres().getR();
 		return "http://resultats.ffbb.com/championnat/" + id + ".html?r=" + r.toString() + "&d=" + d.toString() + "&p=" + journée.toString();
 	}
 
@@ -209,12 +209,7 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 	}
 
 	private void doChampionnat(Championnat championnat, StringBuilder html) {
-		String div = (championnat.getDivision() == null ? "" : (championnat.getDivision().intValue() == 0) ? "Elite" : championnat.getDivision().toString());
-		String niv = (championnat.getNiveau() == Niveau.National ? "N" : (championnat.getNiveau() == Niveau.Régional ? "R" : (div.isEmpty() || div.equals("Elite") ? "" : "D")));
-		String poule = (div.equals("Elite") ? " - " + championnat.getPoule() : (championnat.getPoule() == null ? "" : championnat.getPoule().toUpperCase()));
-		html.append(niv);
-		html.append(div);
-		html.append(poule);
+		html.append(championnat.getNom() + " " + championnat.getPoule());
 	}
 
 	private void doRencontre(Championnat championnat, Rencontre rencontre, StringBuilder html) {
@@ -340,12 +335,12 @@ public class HtmlWeeklyResultats extends ResultatsExtraction {
 				if (diff == 0) {
 					diff = niveauComparator.compare(c1.getNiveau(), c2.getNiveau());
 					if (diff == 0) {
-						diff = divisionComparator.compare(c1.getDivision(),  c2.getDivision());
-						if (diff == 0) {
-							return c1.getPoule().compareTo(c2.getPoule());
-						} else {
-							return diff;
-						}
+						return diff;
+						/*
+						 * diff = divisionComparator.compare(c1.getDivision(), c2.getDivision()); if
+						 * (diff == 0) { return c1.getPoule().compareTo(c2.getPoule()); } else { return
+						 * diff; }
+						 */
 					} else {
 						return diff;
 					}

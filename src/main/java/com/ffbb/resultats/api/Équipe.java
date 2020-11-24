@@ -45,8 +45,8 @@ public class Équipe extends Engagement implements Extractable {
 
 	public URI getURI() {
 		String link = "http://resultats.ffbb.com/championnat/equipe/" + this.getOrganisation().getCode() + ".html" 
-				+ "?r=" + this.getCompétition().getParamètres().getR() 
-				+ "&p=" + this.getCompétition().getParamètres().getD()
+				+ "?r=" + this.getCompétition().getId() 
+				// TODO + "&p=" + this.getCompétition().getParamètres().getD()
 				+ "&d=" + this.getOrganisation().getId();
 		return URI.create(link);
 	}

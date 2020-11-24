@@ -2,29 +2,29 @@ package com.ffbb.resultats.api;
 
 public class Paramètres {
 
-	private String id;
+	private Long id;
 
-	private Long r;
+	private String code;
 	
-	private Long d;
+	private Long division;
 	
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 	
-	public Long getR() {
-		return r;
+	public String getCode() {
+		return code;
 	}
 
-	public Long getD() {
-		return d;
+	public Long getDivision() {
+		return division;
 	}
 
-	public Paramètres(String id, Long r, Long d) {
+	public Paramètres(Long id, String code, Long division) {
 		super();
 		this.id = id;
-		this.r = r;
-		this.d = d;
+		this.code = code;
+		this.division = division;
 	}
 	
 }

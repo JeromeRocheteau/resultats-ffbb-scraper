@@ -31,12 +31,9 @@ public class ChampionnatReader extends Reader<Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
-		statement.setString(1, championnat.getGenre().name());
-		statement.setString(2, championnat.getCatégorie().name());
-		statement.setString(3, championnat.getNiveau().name());
-		statement.setInt(4, championnat.getPhase());
-		statement.setInt(5, championnat.getDivision());
-		statement.setString(6, championnat.getPoule());
+		statement.setString(1, championnat.getCode());
+		statement.setLong(2, championnat.getId());
+		statement.setLong(3, championnat.getIndex());
 	}
 
 }

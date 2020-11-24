@@ -1,2 +1,2 @@
-INSERT INTO `championnats` (`id`,`niveau`,`phase`,`division`,`poule`) 
+INSERT INTO `championnats` (`id`,`compétition`,`niveau`,`phase`,`poule`) 
 VALUES (?,?,?,?,?);

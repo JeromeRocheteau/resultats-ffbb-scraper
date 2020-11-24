@@ -76,13 +76,14 @@ public class ChampionnatFiltre extends CompétitionFiltre implements Filtre {
 	}
 
 	private boolean match(Championnat championnat) {
-		return this.match(championnat.getNiveau()) 
+		boolean match = this.niveau(championnat.getNiveau()) 
 				&& this.phase(championnat.getPhase())
-				&& this.division(championnat.getDivision())
+				&& this.division(championnat.getPoule())
 				&& this.poule(championnat.getPoule());
+		return match;
 	}
 	
-	private boolean match(Niveau niveau) {
+	private boolean niveau(Niveau niveau) {
 		if (niveaux.isEmpty()) {
 			return true;
 		} else {
@@ -108,12 +109,12 @@ public class ChampionnatFiltre extends CompétitionFiltre implements Filtre {
 		}
 	}
 	
-	private boolean division(Integer division) {
+	private boolean division(String nom) {
 		if (divisions.isEmpty()) {
 			return true;
 		} else {
 			for (Integer filter : divisions) {
-				if (filter == division) {
+				if (false) { // FIXME
 					return true;
 				}
 			}
@@ -121,12 +122,12 @@ public class ChampionnatFiltre extends CompétitionFiltre implements Filtre {
 		}
 	}
 	
-	private boolean poule(String poule) {
+	private boolean poule(String nom) {
 		if (poules.isEmpty()) {
 			return true;
 		} else {
 			for (String filter : poules) {
-				if (filter == poule) {
+				if (nom.toLowerCase().endsWith(filter.toLowerCase())) {
 					return true;
 				}
 			}

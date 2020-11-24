@@ -2,6 +2,7 @@ package com.ffbb.resultats.db;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 
 import com.ffbb.resultats.api.Salle;
 
@@ -33,7 +34,11 @@ public class SalleUpdater extends Updater<Boolean> {
 		statement.setFloat(2, salle.getLatitude().floatValue());
 		statement.setFloat(3, salle.getLongitude().floatValue());
 		statement.setString(4, salle.getDénomination());
-		statement.setString(5, salle.getAdresse());
+		if (salle.getAdresse() == null) {
+			statement.setNull(5, Types.VARCHAR);
+		} else {
+			statement.setString(5, salle.getAdresse());
+		}
 		statement.setString(6, salle.getCodePostal());
 		statement.setString(7, salle.getVille());
 	}

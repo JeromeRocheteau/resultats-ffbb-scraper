@@ -18,6 +18,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.ffbb.resultats.api.Appartenance;
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Compétition;
@@ -64,9 +65,11 @@ public class RésultatsDB extends ResultatsExtraction {
 		try {
 			Organisation organisation = extractor.getOrganisation("2226");
 			Assert.assertNotNull(organisation);
+			List<Appartenance> appartenances = extractor.getAppartenances(organisation);
+			Assert.assertNotNull(appartenances);
 			List<Engagement> engagements = extractor.getEngagements(organisation);
 			Assert.assertNotNull(engagements);
-			ChampionnatFiltre filtre = new ChampionnatFiltre().niveaux(Niveau.Départemental).catégories(Catégorie.U13).phases(1).genres(Genre.Féminin).divisions(0);
+			ChampionnatFiltre filtre = new ChampionnatFiltre().niveaux(Niveau.Départemental).catégories(Catégorie.U13).genres(Genre.Féminin).divisions(0);
 			engagements.forEach(engagement -> doExtract(engagement, filtre));
 			this.doInfo("fin de l'extraction");
 		} finally {
@@ -103,11 +106,12 @@ public class RésultatsDB extends ResultatsExtraction {
 			Compétition compétition = engagement.getCompétition();
 			if (filtre.match(compétition)) {
 				Championnat championnat = (Championnat) compétition;
-				Organisation current = organisation;
 				organisations.offer(organisation);
-				statues.put(organisation, Boolean.TRUE);
+				statues.put(organisation, Boolean.FALSE);
+				Organisation current = organisations.poll();
 				do {
 					this.doExtract(championnat, current);
+					statues.put(current, Boolean.TRUE);
 					current = organisations.poll();
 				} while (current != null);
 			}
@@ -119,7 +123,9 @@ public class RésultatsDB extends ResultatsExtraction {
 
 	private void doExtract(Championnat championnat, Organisation organisation) {
 		try {
+			this.doInfo("extraction des rencontres de " + organisation + " pour " + championnat);
 			List<Rencontre> rencontres = extractor.getRencontres(organisation, championnat, début, fin);
+			this.doInfo("extraction des " + rencontres.size() + " rencontres");
 			rencontres.forEach(rencontre -> doExtract(championnat, organisation, rencontre));
 		} catch (Exception e) {
 			this.doWarn(e.getMessage());
@@ -196,7 +202,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		Résultat résultat = rencontre.getRésultat();
 		if (this.done(rencontre) == false) {
 			long id = this.doing(rencontre);
-			if ((résultat == null) == false) {
+			if ((résultat == null) == false && id > 0) {
 				résultat.setId(id);
 			}
 		} else {
@@ -212,7 +218,12 @@ public class RésultatsDB extends ResultatsExtraction {
 	/* Organisation */
 
 	private boolean todo(Organisation organisation) throws Exception {
-		return organisations.contains(organisation) && statues.get(organisation).equals(Boolean.FALSE);
+		for (Organisation org : statues.keySet()) {
+			if (org.getCode().equals(organisation.getCode())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean done(Organisation organisation) throws Exception {
@@ -279,15 +290,21 @@ public class RésultatsDB extends ResultatsExtraction {
 
 	private long doing(Rencontre rencontre) throws Exception {
 		RencontreUpdater rencontreUpdater = new RencontreUpdater(rencontre);
-		long id = rencontreUpdater.doUpdate(connection).longValue();
-		this.doInfo("traitement de la rencontre de " + rencontre + " : " + (id > 0 ? "succès" : "échec"));
-		return id;
+		try {
+			long id = rencontreUpdater.doUpdate(connection).longValue();
+			this.doInfo("traitement de la rencontre de " + rencontre + " : " + (id > 0 ? "succès" : "échec"));
+			return id;
+		} catch (Exception e) {
+			this.doWarn(e.getMessage());
+			this.doWarn(rencontre.getSalle().toString());
+			return 0;
+		}
 	}
 
 	/* Salle */
 
 	private boolean defined(Salle salle) {
-		return (salle.getId() == null || salle.getLatitude() == null || salle.getLongitude() == null || salle.getDénomination() == null || salle.getAdresse() == null || salle.getCodePostal() == null || salle.getVille() == null) == false;
+		return (salle.getId() == null || salle.getLatitude() == null || salle.getLongitude() == null || salle.getDénomination() == null || salle.getCodePostal() == null || salle.getVille() == null) == false;
 	}
 
 	private boolean done(Salle salle) throws Exception {
@@ -304,7 +321,7 @@ public class RésultatsDB extends ResultatsExtraction {
 	/* Résultat */
 
 	private boolean defined(Résultat résultat) {
-		return (résultat == null || résultat.getDomicile() == null || résultat.getVisiteur() == null) == false;
+		return (résultat == null || résultat.getId() == null || résultat.getDomicile() == null || résultat.getVisiteur() == null) == false;
 	}
 
 	private boolean done(Résultat résultat) throws Exception {

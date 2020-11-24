@@ -42,11 +42,13 @@ public class RencontresExtractor extends AbstractExtractor<List<Rencontre>> {
 		Document doc = this.getDocument(uri);
 		Element iframe = doc.getElementById("idIframeRencontres");
 		String link = iframe.attr("src");
+		// this.doInfo(uri.toString() + " -> " + link);
 		this.getRencontres(URI.create("http://resultats.ffbb.com/championnat/equipe/" + link));
 		return équipe.getRencontres();
 	}
 	
 	private void getRencontres(URI uri) throws Exception {
+		try {
 		Document doc = this.getDocument(uri);
 		Element table = doc.select("table.liste").first();
 		Elements rows = table.select("tr");
@@ -72,6 +74,9 @@ public class RencontresExtractor extends AbstractExtractor<List<Rencontre>> {
 					équipe.getRencontres().add(rencontre);
 				}
 			}
+		}
+		} catch (Exception e) {
+			this.doWarn(e.getMessage() + " : " + uri.toString());
 		}
 	}
 

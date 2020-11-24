@@ -65,7 +65,7 @@ public class AbstractExtractor<T> {
 	
 	protected AbstractExtractor() {
 		mapper = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-		extract = new Extract();
+		extract = Extract.getInstance();
 	}
 	
 	protected Document getDocument(URI uri) throws Exception {

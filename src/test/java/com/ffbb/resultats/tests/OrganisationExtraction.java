@@ -69,7 +69,7 @@ public class OrganisationExtraction extends ResultatsExtraction {
 		Assert.assertNotNull(org.getType());
 		Assert.assertEquals(org.getCode(), "b5e6211d599a");
 		Assert.assertEquals(org.getId().longValue(), 200000002677146L);
-		Assert.assertEquals(org.getName(), "EN - Casson / Sucé sur Erdre");
+		Assert.assertEquals(org.getName(), "EN - Arthon / Pornic St Michel");
 		Assert.assertEquals(org.getFfbb(), "PDL0044003");
 		Assert.assertEquals(org.getType(), Organisation.Type.Entente);
 	}

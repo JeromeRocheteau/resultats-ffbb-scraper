@@ -1,10 +1,11 @@
 SELECT 
   c.`id`,
+  c.`code`,
   c.`organisateur`,
   c.`type`,
   c.`genre`,
-  c.`catégorie`
+  c.`catégorie`,
+  c.`nom`
 FROM `compétitions` AS c
-WHERE c.`type` = ?
-  AND c.`genre` = ?
-  AND  c.`catégorie` = ?;
+WHERE c.`code` = ?
+  AND c.`id` = ?;

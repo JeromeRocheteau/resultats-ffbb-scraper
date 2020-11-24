@@ -38,13 +38,15 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 	}
 
 	private Organisation doParse(Long id, String display) throws Exception { // 
-		Organisation organisation = new Organisation(code);
-		organisation.setId(id);
+		Organisation organisation = new Organisation(id, code);
 		if (display.endsWith(" - Club")) {
 			organisation.setType(Organisation.Type.Club);
 			this.doParse(organisation, display, true);
 		} else if (display.endsWith(" - Entente")) {
 			organisation.setType(Organisation.Type.Entente);
+			this.doParse(organisation, display, true);
+		} else if (display.endsWith(" - Association club professionnel")) {
+			organisation.setType(Organisation.Type.ClubPro);
 			this.doParse(organisation, display, true);
 		} else if (display.equals("FÉDÉRATION FRANCAISE BASKET-BALL - FEDE")) {
 			organisation.setType(Organisation.Type.Fédération);
@@ -56,8 +58,7 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 			organisation.setType(Organisation.Type.Ligue);
 			this.doParse(organisation, display, false);
 		} else {
-			organisation.setType(Organisation.Type.ClubPro);
-			this.doParse(organisation, display, false);
+			throw new Exception(display);
 		}
 		return organisation;
 	}

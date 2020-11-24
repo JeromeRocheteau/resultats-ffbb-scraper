@@ -34,14 +34,17 @@ public class CompétitionUpdater extends Updater<Long> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		statement.setLong(1, compétition.getId());
+		statement.setString(2, compétition.getCode());
 		if (compétition.getOrganisateur() == null || compétition.getOrganisateur().getId() == null) {
-			statement.setNull(1, Types.BIGINT);
+			statement.setNull(3, Types.BIGINT);
 		} else {
-			statement.setLong(1, compétition.getOrganisateur().getId());
+			statement.setLong(3, compétition.getOrganisateur().getId());
 		}
-		statement.setString(2, compétition.getType().name());
-		statement.setString(3, compétition.getGenre().name());
-		statement.setString(4, compétition.getCatégorie().name());
+		statement.setString(4, compétition.getType().name());
+		statement.setString(5, compétition.getGenre().name());
+		statement.setString(6, compétition.getCatégorie().name());
+		statement.setString(7, compétition.getNom());
 	}
 	
 }

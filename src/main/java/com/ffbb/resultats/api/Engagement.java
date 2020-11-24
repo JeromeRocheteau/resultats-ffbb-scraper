@@ -1,6 +1,18 @@
 package com.ffbb.resultats.api;
 
-public class Engagement extends Identifier {
+public class Engagement implements Identifiable {
+	
+	private Long id; 
+	
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	private Organisation organisation;
 	

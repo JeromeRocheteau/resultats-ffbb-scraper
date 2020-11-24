@@ -319,12 +319,12 @@ public class CsvChampionshipsAndDays extends ResultatsExtraction {
 				if (diff == 0) {
 					diff = niveauComparator.compare(c1.getNiveau(), c2.getNiveau());
 					if (diff == 0) {
-						diff = divisionComparator.compare(c1.getDivision(),  c2.getDivision());
-						if (diff == 0) {
-							return c1.getPoule().compareTo(c2.getPoule());
-						} else {
-							return diff;
-						}
+						return diff;
+						/*
+						 * diff = divisionComparator.compare(c1.getDivision(), c2.getDivision()); if
+						 * (diff == 0) { return c1.getPoule().compareTo(c2.getPoule()); } else { return
+						 * diff; }
+						 */
 					} else {
 						return diff;
 					}

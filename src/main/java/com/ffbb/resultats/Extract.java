@@ -8,6 +8,15 @@ import com.ffbb.resultats.api.Organisation;
 
 public class Extract {
 
+	private static Extract instance;
+	
+	public static Extract getInstance() {
+		if (instance == null) {
+			instance = new Extract();
+		}
+		return instance;
+	}
+	
 	protected Map<String, Extractable> resources;
 	
 	@SuppressWarnings("unchecked")
@@ -19,10 +28,10 @@ public class Extract {
 		resources.put(uri.toString(), resource);
 	}
 	
-	public Extract() {
+	private Extract() {
 		resources = new HashMap<String, Extractable>(1024);
-		URI uri = URI.create("http://resultats.ffbb.com/organisation/fffffffffffffffb.html");
-		Organisation exempt = new Organisation("fffffffffffffffb");
+		URI uri = URI.create("http://resultats.ffbb.com/organisation/0.html");
+		Organisation exempt = new Organisation(0L, "0");
 		exempt.setName("Exempt");
 		exempt.setType(Organisation.Type.Entente);
 		this.doBind(Organisation.class, uri, exempt);

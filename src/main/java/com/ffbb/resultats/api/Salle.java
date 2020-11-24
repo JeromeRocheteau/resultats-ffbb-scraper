@@ -4,7 +4,7 @@ import java.net.URI;
 
 import com.ffbb.resultats.Extractable;
 
-public class Salle extends Identifier implements Extractable, Comparable<Salle> {
+public class Salle implements Identifiable, Extractable, Comparable<Salle> {
 
 	private Long id;
 	
@@ -19,6 +19,16 @@ public class Salle extends Identifier implements Extractable, Comparable<Salle> 
 	private String codePostal;
 	
 	private String ville;
+	
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Float getLatitude() {
 		return latitude;
@@ -68,12 +78,8 @@ public class Salle extends Identifier implements Extractable, Comparable<Salle> 
 		this.ville = ville;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
 	public Salle(Long id) {
-		this.id = id;
+		this.setId(id);
 	}
 	
 	public Salle(Long id, Float latitude, Float longitude, String dénomnation, String adresse, String codePostal, String ville) {
@@ -93,7 +99,7 @@ public class Salle extends Identifier implements Extractable, Comparable<Salle> 
 
 	@Override
 	public String toString() {
-		return dénomination + " " + adresse + " "  + codePostal + " " + ville;
+		return id + " " + dénomination + " " + adresse + " "  + codePostal + " " + ville + "(" + latitude + "," + longitude + ")";
 	}
 
 	@Override

@@ -31,9 +31,8 @@ public class CompétitionReader extends Reader<Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
-		statement.setString(1, compétition.getType().name());
-		statement.setString(2, compétition.getGenre().name());
-		statement.setString(3, compétition.getCatégorie().name());
+		statement.setString(1, compétition.getCode());
+		statement.setLong(2, compétition.getId());
 	}
 
 }
