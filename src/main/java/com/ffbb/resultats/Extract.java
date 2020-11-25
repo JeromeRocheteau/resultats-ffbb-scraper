@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ffbb.resultats.api.Extractable;
 import com.ffbb.resultats.api.Organisation;
 
 public class Extract {
@@ -32,7 +33,7 @@ public class Extract {
 		resources = new HashMap<String, Extractable>(1024);
 		URI uri = URI.create("http://resultats.ffbb.com/organisation/0.html");
 		Organisation exempt = new Organisation(0L, "0");
-		exempt.setName("Exempt");
+		exempt.setNom("Exempt");
 		exempt.setType(Organisation.Type.Entente);
 		this.doBind(Organisation.class, uri, exempt);
 	}

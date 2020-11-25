@@ -42,8 +42,8 @@ public class CompétitionUpdater extends Updater<Long> {
 			statement.setLong(3, compétition.getOrganisateur().getId());
 		}
 		statement.setString(4, compétition.getType().name());
-		statement.setString(5, compétition.getGenre().name());
-		statement.setString(6, compétition.getCatégorie().name());
+		// statement.setString(5, compétition.getGenre().name());
+		// statement.setString(6, compétition.getCatégorie().name());
 		statement.setString(7, compétition.getNom());
 	}
 	

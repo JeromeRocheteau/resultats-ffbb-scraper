@@ -2,8 +2,6 @@ package com.ffbb.resultats.api;
 
 import java.net.URI;
 
-import com.ffbb.resultats.Extractable;
-
 public class Salle implements Identifiable, Extractable, Comparable<Salle> {
 
 	private Long id;
@@ -12,7 +10,7 @@ public class Salle implements Identifiable, Extractable, Comparable<Salle> {
 	
 	private Float longitude;
 	
-	private String dénomination;
+	private String nom;
 	
 	private String adresse;
 	
@@ -25,7 +23,6 @@ public class Salle implements Identifiable, Extractable, Comparable<Salle> {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -46,12 +43,12 @@ public class Salle implements Identifiable, Extractable, Comparable<Salle> {
 		this.longitude = longitude;
 	}
 
-	public String getDénomination() {
-		return dénomination;
+	public String getNom() {
+		return nom;
 	}
 
-	public void setDénomination(String dénomination) {
-		this.dénomination = dénomination;
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
 
 	public String getAdresse() {
@@ -79,14 +76,14 @@ public class Salle implements Identifiable, Extractable, Comparable<Salle> {
 	}
 
 	public Salle(Long id) {
-		this.setId(id);
+		this.id = id;
 	}
 	
-	public Salle(Long id, Float latitude, Float longitude, String dénomnation, String adresse, String codePostal, String ville) {
+	public Salle(Long id, Float latitude, Float longitude, String nom, String adresse, String codePostal, String ville) {
 		this(id);
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.dénomination = dénomnation;
+		this.nom = nom;
 		this.adresse = adresse;
 		this.codePostal = codePostal;
 		this.ville = ville;
@@ -99,7 +96,7 @@ public class Salle implements Identifiable, Extractable, Comparable<Salle> {
 
 	@Override
 	public String toString() {
-		return id + " " + dénomination + " " + adresse + " "  + codePostal + " " + ville + "(" + latitude + "," + longitude + ")";
+		return id + " " + nom + " " + adresse + " "  + codePostal + " " + ville + "(" + latitude + "," + longitude + ")";
 	}
 
 	@Override

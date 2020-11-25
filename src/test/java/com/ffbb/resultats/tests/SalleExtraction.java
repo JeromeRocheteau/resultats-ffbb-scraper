@@ -18,7 +18,7 @@ public class SalleExtraction extends ResultatsExtraction {
 		Salle salle = extractor.getSalle(organisation);
 		Assert.assertNotNull(salle);
 		Assert.assertNotNull(salle.getId());
-		Assert.assertNotNull(salle.getDénomination());
+		Assert.assertNotNull(salle.getNom());
 		Assert.assertNotNull(salle.getCodePostal());
 		Assert.assertNotNull(salle.getVille());
 		Assert.assertNotNull(salle.getLatitude());
@@ -48,7 +48,7 @@ public class SalleExtraction extends ResultatsExtraction {
 		Salle salle = extractor.getSalle(organisation);
 		Assert.assertNotNull(salle);
 		Assert.assertNotNull(salle.getId());
-		Assert.assertNotNull(salle.getDénomination());
+		Assert.assertNotNull(salle.getNom());
 		Assert.assertNotNull(salle.getCodePostal());
 		Assert.assertNotNull(salle.getVille());
 		Assert.assertNotNull(salle.getLatitude());
@@ -62,7 +62,7 @@ public class SalleExtraction extends ResultatsExtraction {
 		Salle salle = extractor.getSalle(organisation);
 		Assert.assertNotNull(salle);
 		Assert.assertNotNull(salle.getId());
-		Assert.assertNotNull(salle.getDénomination());
+		Assert.assertNotNull(salle.getNom());
 		Assert.assertNotNull(salle.getCodePostal());
 		Assert.assertNotNull(salle.getVille());
 		Assert.assertNotNull(salle.getLatitude());

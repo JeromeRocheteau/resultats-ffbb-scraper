@@ -1,4 +1,4 @@
-package com.ffbb.resultats;
+package com.ffbb.resultats.api;
 
 import java.net.URI;
 

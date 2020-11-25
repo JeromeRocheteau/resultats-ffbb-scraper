@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.ffbb.resultats.Extractable;
-
 public class Équipe extends Engagement implements Extractable {
 
 	private String nom;

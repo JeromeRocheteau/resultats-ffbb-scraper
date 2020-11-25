@@ -88,8 +88,7 @@ public class Classement implements Comparable<Classement> {
 	
 	@Override
 	public String toString() {
-		String fst = équipe.getCompétition().getGenre() == Genre.Masculin ? "ers" : "res";
-		String rank = rang + (rang > 1 ? fst : "es");
+		String rank = rang + (rang > 1 ? "ers" : "es");
 		return "\t" + équipe.getNom() + "\t" + victoires + "v-" + défaites + "d (" + rank + ")"; 
 	}
 	

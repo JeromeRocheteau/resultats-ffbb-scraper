@@ -1,6 +1,8 @@
 package com.ffbb.resultats;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,6 +10,7 @@ import org.jsoup.nodes.Element;
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Compétition;
+import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
@@ -18,13 +21,13 @@ public class ChampionnatExtractor extends AbstractExtractor<Championnat> {
 	
 	private String code;
 	
-	private Long index;
+	private Long idDivision;
 		
-	public Championnat doExtract(Long id, String code, Long index) throws Exception {
+	public Championnat doExtract(Long id, String code, Long division) throws Exception {
 		this.id = id;
 		this.code = code;
-		this.index = index;
-		String link = "https://resultats.ffbb.com/championnat/" + code + ".html?r=" + id + "&d=" + index;
+		this.idDivision = division;
+		String link = "https://resultats.ffbb.com/championnat/" + code + ".html?r=" + id + "&d=" + division;
 		URI uri = URI.create(link);
 		if (this.doFind(Championnat.class, uri) == null) {
 			return this.doExtract(uri);
@@ -40,30 +43,74 @@ public class ChampionnatExtractor extends AbstractExtractor<Championnat> {
 		
 		Element element = td.getElementById("idTdDivision");
 		String nom = element.text();
-		// String script = element.selectFirst("script").data();
-		// Map<String, Long> codes = this.getDivisions(script);
+		String script = element.selectFirst("script").data();
 
-		String[] words = element.text().split("\\s+");
-		Niveau niveau = this.getNiveau(words);
-		Genre genre = this.getGenre(words);
-		Catégorie catégorie = this.getCatégorie(words);
+		// String[] words = element.text().split("\\s+");
+		// Niveau niveau = this.getNiveau(words);
+		// Genre genre = this.getGenre(words);
+		// Catégorie catégorie = this.getCatégorie(words);
 		
-		Element tag = td.getElementById("idTdPoule").select("option[selected]").first();
-		String poule = tag.text();
-		
-		Integer phase = 1; // FIXME
-		
+		Element pouleElement = td.getElementById("idTdPoule");
+		String nomDivision = this.getPoule(pouleElement);
+		String codeDivision = this.getCode(pouleElement);
+		System.out.println(nomDivision + " -> " + codeDivision);
+				
 		String href = td.select("tr").get(2).select("td").get(1).selectFirst("a").attr("href");
 		String link = "http://resultats.ffbb.com/" + href.substring(3);
 
 		Organisation organisateur = new OrganisationExtractor().doExtract(URI.create(link));
 		System.out.println(organisateur.toString());
 		
-		Championnat championnat = new Championnat(this.id, this.code, nom, organisateur, Compétition.Type.Championnat, genre, catégorie, index, niveau, phase, poule);
+		Championnat championnat = new Championnat(id, code, nom, organisateur);
+		this.doBind(Championnat.class, uri, championnat);
+		System.out.println(championnat.toString());
+
+		Division division = new Division(this.idDivision, codeDivision, nomDivision, championnat);
+		this.doBind(Division.class, uri, division);
 		System.out.println(championnat.toString());
 		
-		this.doBind(Championnat.class, uri, championnat);
 		return championnat;
+	}
+	
+	private Map<String, Long> getDivisions(String script) {
+		String data = script.substring(script.indexOf("[[") + 2, script.lastIndexOf("]]"))
+				.replaceAll("\\],\\[", "\n")
+				.replaceAll("'", "")
+				.replaceAll(",", "\t");
+		String[] items = data.split("\n");
+		Map<String, Long> codes = new HashMap<String, Long>(items.length);
+		for (String item : items) {
+			String[] elements = item.split("\t");
+			String name = elements[1];
+			Long numD = Long.valueOf(elements[0]);
+			codes.put(name, numD);
+		}
+		return codes;
+	}
+
+	private String getPoule(Element pouleElement) {
+		String poule = pouleElement.text();
+		try { poule = pouleElement.select("option[selected]").first().text(); } catch (Exception e) { }
+		return poule;
+	}
+
+	private String getCode(Element pouleElement) {
+		Element defaultPoule = null;
+		String journée = "";
+		try { 
+			defaultPoule = pouleElement.select("option[selected]").first();
+			journée = defaultPoule.attr("value");
+			int inf = journée.indexOf('/');
+			int sup = journée.lastIndexOf('.');
+			journée = journée.substring(inf + 1, sup);
+		} catch (Exception e) {
+			defaultPoule = pouleElement.select("input[type=hidden]").first();
+			journée = defaultPoule.attr("value");
+			int inf = journée.indexOf('/');
+			int sup = journée.lastIndexOf('.');
+			journée = journée.substring(inf + 1, sup);
+		}
+		return journée;
 	}
 
 	private Niveau getNiveau(String[] words) throws Exception {

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ffbb.resultats.api.Catégorie;
-import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Compétition;
 import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Compétition.Type;
@@ -22,7 +21,7 @@ public class ChampionnatFiltre extends CompétitionFiltre implements Filtre {
 	protected List<String> poules;
 	
 	@Override
-	public ChampionnatFiltre types(Type... types) {
+	public ChampionnatFiltre types(Type... types) { 
 		this.types.clear();
 		this.types.add(Type.Championnat);
 		return this;
@@ -65,74 +64,16 @@ public class ChampionnatFiltre extends CompétitionFiltre implements Filtre {
 	public ChampionnatFiltre() {
 		super();
 		niveaux = new LinkedList<Niveau>();
-		phases = new LinkedList<Integer>();
 		divisions = new LinkedList<Integer>();
 		poules = new LinkedList<String>();
 	}
-	
+
+	@Override
 	public boolean match(Compétition compétition) {
-		return super.match(compétition) 
-				&& (compétition instanceof Championnat ? this.match((Championnat) compétition) : false); 
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-	private boolean match(Championnat championnat) {
-		boolean match = this.niveau(championnat.getNiveau()) 
-				&& this.phase(championnat.getPhase())
-				&& this.division(championnat.getPoule())
-				&& this.poule(championnat.getPoule());
-		return match;
-	}
 	
-	private boolean niveau(Niveau niveau) {
-		if (niveaux.isEmpty()) {
-			return true;
-		} else {
-			for (Niveau filter : niveaux) {
-				if (filter == niveau) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
-	
-	private boolean phase(Integer phase) {
-		if (phases.isEmpty()) {
-			return true;
-		} else {
-			for (Integer filter : phases) {
-				if (filter == phase) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
-	
-	private boolean division(String nom) {
-		if (divisions.isEmpty()) {
-			return true;
-		} else {
-			for (Integer filter : divisions) {
-				if (false) { // FIXME
-					return true;
-				}
-			}
-			return false;
-		}
-	}
-	
-	private boolean poule(String nom) {
-		if (poules.isEmpty()) {
-			return true;
-		} else {
-			for (String filter : poules) {
-				if (nom.toLowerCase().endsWith(filter.toLowerCase())) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
 	
 }

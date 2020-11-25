@@ -37,7 +37,7 @@ public class OrganisationUpdater extends Updater<Boolean> {
 		} else {
 			statement.setString(3, organisation.getFfbb());			
 		}
-		statement.setString(4, organisation.getName());
+		statement.setString(4, organisation.getNom());
 	}
 	
 }

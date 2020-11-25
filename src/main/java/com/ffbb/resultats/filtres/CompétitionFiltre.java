@@ -5,11 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ffbb.resultats.api.Catégorie;
-import com.ffbb.resultats.api.Compétition;
 import com.ffbb.resultats.api.Compétition.Type;
 import com.ffbb.resultats.api.Genre;
 
-public class CompétitionFiltre implements Filtre {
+public abstract class CompétitionFiltre implements Filtre {
 
 	protected List<Type> types;
 	
@@ -41,49 +40,22 @@ public class CompétitionFiltre implements Filtre {
 		genres = new LinkedList<Genre>();
 	}
 	
-	public boolean match(Compétition compétition) {
-		return this.match(compétition.getType()) 
-				&& this.match(compétition.getCatégorie()) 
-				&& this.match(compétition.getGenre()); 
-	}
-
-	private boolean match(Type type) {
-		if (types.isEmpty()) {
-			return true;
-		} else {
-			for (Type filter : types) {
-				if (filter == type) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
-
-	private boolean match(Catégorie catégorie) {
-		if (catégories.isEmpty()) {
-			return true;
-		} else {
-			for (Catégorie filter : catégories) {
-				if (filter == catégorie) {
-					return true;
-				}
-			}
-		return false;
-		}
-	}
-
-	private boolean match(Genre genre) {
-		if (genres.isEmpty()) {
-			return true;
-		} else {
-			for (Genre filter : genres) {
-				if (filter == genre) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
+	/*
+	 * public boolean match(Compétition compétition) { return
+	 * this.match(compétition.getType()) && this.match(compétition.getCatégorie())
+	 * && this.match(compétition.getGenre()); }
+	 * 
+	 * private boolean match(Type type) { if (types.isEmpty()) { return true; } else
+	 * { for (Type filter : types) { if (filter == type) { return true; } } return
+	 * false; } }
+	 * 
+	 * private boolean match(Catégorie catégorie) { if (catégories.isEmpty()) {
+	 * return true; } else { for (Catégorie filter : catégories) { if (filter ==
+	 * catégorie) { return true; } } return false; } }
+	 * 
+	 * private boolean match(Genre genre) { if (genres.isEmpty()) { return true; }
+	 * else { for (Genre filter : genres) { if (filter == genre) { return true; } }
+	 * return false; } }
+	 */
 	
 }

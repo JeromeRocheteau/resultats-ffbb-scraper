@@ -18,6 +18,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.ffbb.resultats.ChampionnatExtractor;
 import com.ffbb.resultats.api.Appartenance;
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
@@ -69,8 +70,9 @@ public class RésultatsDB extends ResultatsExtraction {
 			Assert.assertNotNull(appartenances);
 			List<Engagement> engagements = extractor.getEngagements(organisation);
 			Assert.assertNotNull(engagements);
-			ChampionnatFiltre filtre = new ChampionnatFiltre().niveaux(Niveau.Départemental).catégories(Catégorie.U13).genres(Genre.Féminin).divisions(0);
-			engagements.forEach(engagement -> doExtract(engagement, filtre));
+			//ChampionnatFiltre filtre = new ChampionnatFiltre().niveaux(Niveau.Départemental).catégories(Catégorie.U13).genres(Genre.Féminin).divisions(0);
+			// engagements.forEach(engagement -> doExtract(engagement, filtre));
+			engagements.forEach(engagement -> this.doInfo(engagement.toString()));
 			this.doInfo("fin de l'extraction");
 		} finally {
 			this.doInfo("déconnexion de la base de données");
@@ -304,7 +306,7 @@ public class RésultatsDB extends ResultatsExtraction {
 	/* Salle */
 
 	private boolean defined(Salle salle) {
-		return (salle.getId() == null || salle.getLatitude() == null || salle.getLongitude() == null || salle.getDénomination() == null || salle.getCodePostal() == null || salle.getVille() == null) == false;
+		return (salle.getId() == null || salle.getLatitude() == null || salle.getLongitude() == null || salle.getNom() == null || salle.getCodePostal() == null || salle.getVille() == null) == false;
 	}
 
 	private boolean done(Salle salle) throws Exception {

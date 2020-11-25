@@ -54,6 +54,9 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	}
 	
 	private void getEngagements(Element table) throws Exception {
+		if (extractor == null) {
+			extractor = new ChampionnatExtractor();
+		}
 		Elements rows = table.select("tr");
 		Iterator<Element> iter = rows.iterator();
 		Compétition.Type type = null; 
@@ -87,14 +90,14 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 		}
 	}
 		
-	private Paramètres getParamètres(String link) throws Exception { // FIXME
+	private Paramètres getParamètres(String link) throws Exception {
 		Pattern pattern = Pattern.compile("\\.\\./\\.\\./championnat/(.*)\\.html\\?r=(.*)&d=(.*)");
 		Matcher matcher = pattern.matcher(link);
 		if (matcher.matches() && matcher.groupCount() == 3) {
-			String id = matcher.group(1);
-			Long r = Long.valueOf(matcher.group(2));
-			Long d = Long.valueOf(matcher.group(3));
-			return new Paramètres(r, id, d);
+			String code = matcher.group(1);
+			Long id = Long.valueOf(matcher.group(2));
+			Long division = Long.valueOf(matcher.group(3));
+			return new Paramètres(id, code, division);
 		} else {
 			throw new Exception(link);
 		}

@@ -31,9 +31,8 @@ public class ChampionnatUpdater extends Updater<Boolean> {
 	public void setParameters(PreparedStatement statement) throws Exception {
 		statement.setLong(1, championnat.getId());
 		statement.setLong(2, 0L);
-		statement.setString(3, championnat.getNiveau().name());
-		statement.setInt(4, championnat.getPhase());
-		statement.setString(5, championnat.getPoule());
+		// FIXME statement.setString(3, championnat.getNiveau().name());
+		// statement.setString(4, championnat.getPoule());
 	}
 	
 }

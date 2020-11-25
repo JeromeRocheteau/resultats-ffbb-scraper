@@ -75,7 +75,7 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 		}
 		String ffbb = items[last].trim();
 		organisation.setFfbb(ffbb);
-		organisation.setName(name.toString());
+		organisation.setNom(name.toString());
 	}
 	
 }

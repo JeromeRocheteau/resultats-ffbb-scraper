@@ -33,7 +33,7 @@ public class SalleUpdater extends Updater<Boolean> {
 		statement.setLong(1, salle.getId().longValue());
 		statement.setFloat(2, salle.getLatitude().floatValue());
 		statement.setFloat(3, salle.getLongitude().floatValue());
-		statement.setString(4, salle.getDénomination());
+		statement.setString(4, salle.getNom());
 		if (salle.getAdresse() == null) {
 			statement.setNull(5, Types.VARCHAR);
 		} else {

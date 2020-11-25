@@ -16,12 +16,12 @@ public class OrganisationExtraction extends ResultatsExtraction {
 		Assert.assertNotNull(org);
 		Assert.assertNotNull(org.getCode());
 		Assert.assertNotNull(org.getId());
-		Assert.assertNotNull(org.getName());
+		Assert.assertNotNull(org.getNom());
 		Assert.assertNotNull(org.getFfbb());
 		Assert.assertNotNull(org.getType());
 		Assert.assertEquals(org.getCode(), "2226");
 		Assert.assertEquals(org.getId().longValue(), 8742L);
-		Assert.assertEquals(org.getName(), "NORT SUR ERDRE AC LES TOUCHES BASKET");
+		Assert.assertEquals(org.getNom(), "NORT SUR ERDRE AC LES TOUCHES BASKET");
 		Assert.assertEquals(org.getFfbb(), "PDL0044146");
 		Assert.assertEquals(org.getType(), Organisation.Type.Club);
 	}
@@ -32,12 +32,12 @@ public class OrganisationExtraction extends ResultatsExtraction {
 		Assert.assertNotNull(org);
 		Assert.assertNotNull(org.getCode());
 		Assert.assertNotNull(org.getId());
-		Assert.assertNotNull(org.getName());
+		Assert.assertNotNull(org.getNom());
 		Assert.assertNotNull(org.getFfbb());
 		Assert.assertNotNull(org.getType());
 		Assert.assertEquals(org.getCode(), "816");
 		Assert.assertEquals(org.getId().longValue(), 2070L);
-		Assert.assertEquals(org.getName(), "COMITE DE LA LOIRE-ATLANTIQUE DE BASKET-BALL");
+		Assert.assertEquals(org.getNom(), "COMITE DE LA LOIRE-ATLANTIQUE DE BASKET-BALL");
 		Assert.assertEquals(org.getFfbb(), "0044");
 		Assert.assertEquals(org.getType(), Organisation.Type.Comité);
 	}
@@ -48,12 +48,12 @@ public class OrganisationExtraction extends ResultatsExtraction {
 		Assert.assertNotNull(org);
 		Assert.assertNotNull(org.getCode());
 		Assert.assertNotNull(org.getId());
-		Assert.assertNotNull(org.getName());
+		Assert.assertNotNull(org.getNom());
 		Assert.assertNotNull(org.getFfbb());
 		Assert.assertNotNull(org.getType());
 		Assert.assertEquals(org.getCode(), "5d1");
 		Assert.assertEquals(org.getId().longValue(), 1489L);
-		Assert.assertEquals(org.getName(), "LIGUE REGIONALE DES PAYS-DE-LA-LOIRE DE BASKET-BALL");
+		Assert.assertEquals(org.getNom(), "LIGUE REGIONALE DES PAYS-DE-LA-LOIRE DE BASKET-BALL");
 		Assert.assertEquals(org.getFfbb(), "PDL");
 		Assert.assertEquals(org.getType(), Organisation.Type.Ligue);
 	}
@@ -64,12 +64,12 @@ public class OrganisationExtraction extends ResultatsExtraction {
 		Assert.assertNotNull(org);
 		Assert.assertNotNull(org.getCode());
 		Assert.assertNotNull(org.getId());
-		Assert.assertNotNull(org.getName());
+		Assert.assertNotNull(org.getNom());
 		Assert.assertNotNull(org.getFfbb());
 		Assert.assertNotNull(org.getType());
 		Assert.assertEquals(org.getCode(), "b5e6211d599a");
 		Assert.assertEquals(org.getId().longValue(), 200000002677146L);
-		Assert.assertEquals(org.getName(), "EN - Arthon / Pornic St Michel");
+		Assert.assertEquals(org.getNom(), "EN - Arthon / Pornic St Michel");
 		Assert.assertEquals(org.getFfbb(), "PDL0044003");
 		Assert.assertEquals(org.getType(), Organisation.Type.Entente);
 	}
@@ -80,12 +80,12 @@ public class OrganisationExtraction extends ResultatsExtraction {
 		Assert.assertNotNull(org);
 		Assert.assertNotNull(org.getCode());
 		Assert.assertNotNull(org.getId());
-		Assert.assertNotNull(org.getName());
+		Assert.assertNotNull(org.getNom());
 		Assert.assertNotNull(org.getFfbb());
 		Assert.assertNotNull(org.getType());
 		Assert.assertEquals(org.getCode(), "21ac");
 		Assert.assertEquals(org.getId().longValue(), 8620L);
-		Assert.assertEquals(org.getName(), "REZE BASKET 44");
+		Assert.assertEquals(org.getNom(), "REZE BASKET 44");
 		Assert.assertEquals(org.getFfbb(), "PDL0044004");
 		Assert.assertEquals(org.getType(), Organisation.Type.ClubPro);
 	}
@@ -96,12 +96,12 @@ public class OrganisationExtraction extends ResultatsExtraction {
 		Assert.assertNotNull(org);
 		Assert.assertNotNull(org.getCode());
 		Assert.assertNotNull(org.getId());
-		Assert.assertNotNull(org.getName());
+		Assert.assertNotNull(org.getNom());
 		Assert.assertNotNull(org.getFfbb());
 		Assert.assertNotNull(org.getType());
 		Assert.assertEquals(org.getCode(), "5c0");
 		Assert.assertEquals(org.getId().longValue(), 1472L);
-		Assert.assertEquals(org.getName(), "FÉDÉRATION FRANCAISE BASKET-BALL");
+		Assert.assertEquals(org.getNom(), "FÉDÉRATION FRANCAISE BASKET-BALL");
 		Assert.assertEquals(org.getFfbb(), "FEDE");
 		Assert.assertEquals(org.getType(), Organisation.Type.Fédération);
 	}	

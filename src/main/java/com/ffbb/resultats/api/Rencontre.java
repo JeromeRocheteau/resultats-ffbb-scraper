@@ -14,7 +14,6 @@ public class Rencontre implements Identifiable, Comparable<Rencontre> {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

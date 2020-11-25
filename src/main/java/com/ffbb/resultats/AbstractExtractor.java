@@ -20,6 +20,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.ProtocolHandshake;
 
+import com.ffbb.resultats.api.Extractable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

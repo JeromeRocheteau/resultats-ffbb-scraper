@@ -83,13 +83,13 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 		if (hasMatches && matcher.groupCount() == 8) {
 			Float latitude = Float.valueOf(matcher.group(1));
 			Float longitude = Float.valueOf(matcher.group(2));
-			String dénomination = matcher.group(3);
+			String nom = matcher.group(3);
 			String adresse = matcher.group(4);
 			String codePostal = matcher.group(5);
 			String ville = matcher.group(6);
 			salle.setLatitude(latitude);
 			salle.setLongitude(longitude);
-			salle.setDénomination(dénomination);
+			salle.setNom(nom);
 			salle.setAdresse(adresse);
 			salle.setCodePostal(codePostal);
 			salle.setVille(ville);
@@ -103,12 +103,12 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 		if (hasMatches && matcher.groupCount() == 7) {
 			Float latitude = Float.valueOf(matcher.group(1));
 			Float longitude = Float.valueOf(matcher.group(2));
-			String dénomination = matcher.group(3);
+			String nom = matcher.group(3);
 			String codePostal = matcher.group(4);
 			String ville = matcher.group(5);
 			salle.setLatitude(latitude);
 			salle.setLongitude(longitude);
-			salle.setDénomination(dénomination);
+			salle.setNom(nom);
 			salle.setCodePostal(codePostal);
 			salle.setVille(ville);
 		}

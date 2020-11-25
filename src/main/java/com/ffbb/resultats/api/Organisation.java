@@ -3,8 +3,6 @@ package com.ffbb.resultats.api;
 import java.net.URI;
 import java.util.List;
 
-import com.ffbb.resultats.Extractable;
-
 public class Organisation implements Identifiable, Encodable, Extractable, Comparable<Organisation> {
 	
 	public enum Type {Club, Entente, ClubPro, Comité, Ligue, Fédération};
@@ -17,7 +15,7 @@ public class Organisation implements Identifiable, Encodable, Extractable, Compa
 	
 	private String ffbb;
 	
-	private String name;
+	private String nom;
 	
 	private Appartenances appartenances;
 	
@@ -30,7 +28,6 @@ public class Organisation implements Identifiable, Encodable, Extractable, Compa
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -38,11 +35,6 @@ public class Organisation implements Identifiable, Encodable, Extractable, Compa
 	@Override
 	public String getCode() {
 		return code;
-	}
-
-	@Override
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	public Type getType() {
@@ -61,15 +53,15 @@ public class Organisation implements Identifiable, Encodable, Extractable, Compa
 		this.ffbb = ffbb;
 	}
 
-	public String getName() {
-		return name;
+	public String getNom() {
+		return nom;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
 
-	public Appartenances getAppartenances() {
+	public List<Appartenance> getAppartenances() {
 		return appartenances;
 	}
 
@@ -87,7 +79,7 @@ public class Organisation implements Identifiable, Encodable, Extractable, Compa
 
 	public Organisation(Long id, String code) {
 		super();
-		this.setId(id);
+		this.id = id;
 		this.code = code;
 		this.appartenances = new Appartenances(this);
 		this.engagements = new Engagements(this);
@@ -95,7 +87,7 @@ public class Organisation implements Identifiable, Encodable, Extractable, Compa
 	
 	@Override
 	public String toString() {
-		return name + " - " + ffbb + " - " + type.name();
+		return nom + " - " + ffbb + " - " + type.name();
 	}
 
 	@Override

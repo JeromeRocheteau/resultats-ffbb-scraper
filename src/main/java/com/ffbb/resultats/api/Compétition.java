@@ -14,16 +14,11 @@ public abstract class Compétition implements Identifiable, Encodable {
 		
 	private Type type;
 	
-	private Genre genre;
-	
-	private Catégorie catégorie;
-	
 	@Override
 	public Long getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -33,8 +28,7 @@ public abstract class Compétition implements Identifiable, Encodable {
 		return code;
 	}
 
-	@Override
-	public void setCode(String code) {
+	protected void setCode(String code) {
 		this.code = code;
 	}
 
@@ -42,11 +36,15 @@ public abstract class Compétition implements Identifiable, Encodable {
 		return nom;
 	}
 
+	protected void setNom(String nom) {
+		this.nom = nom;
+	}
+
 	public Organisation getOrganisateur() {
 		return organisateur;
 	}
 
-	public void setOrganisateur(Organisation organisateur) {
+	protected void setOrganisateur(Organisation organisateur) {
 		this.organisateur = organisateur;
 	}
 
@@ -54,23 +52,8 @@ public abstract class Compétition implements Identifiable, Encodable {
 		return type;
 	}
 
-	public Genre getGenre() {
-		return genre;
-	}
-
-	public Catégorie getCatégorie() {
-		return catégorie;
-	}
-
-	protected Compétition(Long id, String code, String nom, Organisation organisateur, Compétition.Type type, Genre genre, Catégorie catégorie) {
-		super();
-		this.setId(id);
-		this.setCode(code);
-		this.organisateur = organisateur;
+	protected void setType(Type type) {
 		this.type = type;
-		this.genre = genre;
-		this.catégorie = catégorie;
-		this.nom = nom;
 	}
 
 	@Override

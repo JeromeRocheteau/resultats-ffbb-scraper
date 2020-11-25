@@ -9,7 +9,6 @@ public class Résultat implements Identifiable {
 		return id;
 	}
 
-	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

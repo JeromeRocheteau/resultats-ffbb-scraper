@@ -33,7 +33,7 @@ public class ChampionnatReader extends Reader<Boolean> {
 	public void setParameters(PreparedStatement statement) throws Exception {
 		statement.setString(1, championnat.getCode());
 		statement.setLong(2, championnat.getId());
-		statement.setLong(3, championnat.getIndex());
+		// TODO statement.setLong(3, championnat.getIndex());
 	}
 
 }
