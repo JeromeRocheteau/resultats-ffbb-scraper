@@ -1,4 +1,4 @@
-package com.ffbb.resultats;
+package com.ffbb.resultats.core;
 
 import java.net.URI;
 import java.util.logging.Level;

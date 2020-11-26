@@ -18,7 +18,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.ffbb.resultats.ChampionnatExtractor;
 import com.ffbb.resultats.api.Appartenance;
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
@@ -31,6 +30,7 @@ import com.ffbb.resultats.api.Rencontre;
 import com.ffbb.resultats.api.Résultat;
 import com.ffbb.resultats.api.Salle;
 import com.ffbb.resultats.api.Équipe;
+import com.ffbb.resultats.core.ChampionnatExtractor;
 import com.ffbb.resultats.filtres.ChampionnatFiltre;
 import com.ffbb.resultats.filtres.Filtre;
 import com.ffbb.resultats.tests.ResultatsExtraction;

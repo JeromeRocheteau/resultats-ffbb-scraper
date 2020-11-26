@@ -7,8 +7,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.ffbb.resultats.ChampionnatExtractor;
 import com.ffbb.resultats.api.Championnat;
+import com.ffbb.resultats.core.ChampionnatExtractor;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ChampionnatExtraction {

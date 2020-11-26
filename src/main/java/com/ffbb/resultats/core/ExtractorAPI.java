@@ -1,4 +1,4 @@
-package com.ffbb.resultats;
+package com.ffbb.resultats.core;
 
 import java.util.Date;
 import java.util.List;
