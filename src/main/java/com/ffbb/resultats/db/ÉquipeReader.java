@@ -32,7 +32,7 @@ public class ÉquipeReader extends Reader<Boolean> {
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
 		statement.setLong(1, équipe.getOrganisation().getId());
-		statement.setLong(2, équipe.getCompétition().getId());
+		statement.setLong(2, équipe.getDivision().getId());
 	}
 
 }

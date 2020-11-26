@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Compétition;
 import com.ffbb.resultats.api.Compétition.Type;
+import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Engagement;
 import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Organisation;
@@ -34,7 +35,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	
 	private Organisation organisation;
 	
-	private ChampionnatExtractor extractor;
+	private DivisionExtractor extractor;
 	
 	public List<Engagement> doExtract(Organisation organisation) throws Exception {
 		this.organisation = organisation;
@@ -55,7 +56,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	
 	private void getEngagements(Element table) throws Exception {
 		if (extractor == null) {
-			extractor = new ChampionnatExtractor();
+			extractor = new DivisionExtractor();
 		}
 		Elements rows = table.select("tr");
 		Iterator<Element> iter = rows.iterator();
@@ -82,7 +83,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 				String link = cell.select("a").attr("href");
 				Paramètres paramètres = this.getParamètres(link);
 				if (type == Type.Championnat) {
-					Championnat championnat = extractor.doExtract(paramètres.getId(), paramètres.getCode(), paramètres.getDivision());
+					Division championnat = extractor.doExtract(paramètres.getId(), paramètres.getCode(), paramètres.getDivision());
 					Engagement engagement = new Engagement(organisation, championnat);
 					organisation.getEngagements().add(engagement);
 				}

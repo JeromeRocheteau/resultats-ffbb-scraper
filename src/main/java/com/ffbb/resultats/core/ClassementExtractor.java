@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 
 import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Classement;
+import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Équipe;
 import com.ffbb.resultats.api.Organisation;
 
@@ -19,7 +20,7 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 		
 	private Équipe équipe;
 	
-	public Classement doExtract(Organisation organisation, Championnat championnat) throws Exception {
+	public Classement doExtract(Organisation organisation, Division championnat) throws Exception {
 		this.équipe = new Équipe(organisation, championnat);
 		this.doBind(Équipe.class, équipe.getURI(), équipe);
 		return this.doExtract(équipe.getURI());
@@ -30,11 +31,12 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 		Element iframe = doc.getElementById("idIframeClassements");
 		String link = iframe.attr("src").substring(3);
 		URI u = URI.create("http://resultats.ffbb.com/championnat/" + link);
-		this.getClassement(u);
-		return équipe.getClassement();
+		return null;
 	}
 	
-	private void getClassement(URI uri) throws Exception {
+	/*
+	
+	private Classement getClassement(URI uri) throws Exception {
 		Document doc = this.getDocument(uri);
 		Element table = doc.select("table.liste").first();
 		Elements rows = table.select("tr");
@@ -49,11 +51,7 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 					Integer pour = Integer.valueOf(cols.get(15).text());
 					Integer contre = Integer.valueOf(cols.get(16).text());
 					Classement classement = new Classement(équipe, rang, victoires, défaites, pour, contre);
-					if (équipe == null) {
-						
-					} else if (équipe.getURI().equals(this.équipe.getURI())) {
-						this.équipe.setClassement(classement);
-					}
+					return classement;
 				} else if (cols.size() == 17) {
 					Integer rang = Integer.valueOf(cols.get(0).text());
 					Équipe équipe = this.getÉquipe(cols.get(1));
@@ -62,11 +60,7 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 					Integer pour = Integer.valueOf(cols.get(14).text());
 					Integer contre = Integer.valueOf(cols.get(15).text());
 					Classement classement = new Classement(équipe, rang, victoires, défaites, pour, contre);
-					if (équipe == null) {
-						
-					} if (équipe.getURI().equals(this.équipe.getURI())) {
-						this.équipe.setClassement(classement);
-					}
+					return classement;
 				}
 			}
 		}
@@ -111,5 +105,7 @@ public class ClassementExtractor extends AbstractExtractor<Classement> {
 			throw new Exception();
 		}
 	}
+	
+	*/
 	
 }

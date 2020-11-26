@@ -1,8 +1,10 @@
 package com.ffbb.resultats.api;
 
 import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
 
-public class Division implements Identifiable, Encodable, Extractable {
+public class Division implements Identifiable, Encodable, Extractable, Comparable<Division> {
 	
 	private Long id;
 	
@@ -11,6 +13,10 @@ public class Division implements Identifiable, Encodable, Extractable {
 	private String nom;
 	
 	private Championnat championnat;
+	
+	private List<Équipe> équipes;
+	
+	private List<Journée> journées;
 	
 	@Override
 	public Long getId() {
@@ -29,6 +35,14 @@ public class Division implements Identifiable, Encodable, Extractable {
 	public Championnat getChampionnat() {
 		return championnat;
 	}
+	
+	public List<Équipe> getÉquipes() {
+		return équipes;
+	}
+	
+	public List<Journée> getJournées() {
+		return journées;
+	}
 
 	public Division(Long id, String code, String nom, Championnat championnat) {
 		super();
@@ -36,6 +50,8 @@ public class Division implements Identifiable, Encodable, Extractable {
 		this.code = code;
 		this.nom = nom;
 		this.championnat = championnat;
+		this.équipes = new LinkedList<Équipe>();
+		this.journées = new LinkedList<Journée>();
 	}
 
 	@Override
@@ -44,6 +60,31 @@ public class Division implements Identifiable, Encodable, Extractable {
 				+ "?r=" + this.getChampionnat().getId()
 				+ "&d=" + this.getId();
 		return URI.create(link);
+	}
+
+	public URI getAlternateURI() {
+		String link = "http://resultats.ffbb.com/championnat/division/" + this.getCode() + ".html";
+		return URI.create(link);
+	}
+
+	@Override
+	public String toString() {
+		return championnat.toString() + " | " + nom;
+	}
+
+	@Override
+	public int compareTo(Division division) {
+		return code.compareTo(division.getCode());
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof Division) {
+			Division division = (Division) object;
+			return this.compareTo(division) == 0;
+		} else {
+			return false;
+		}
 	}
 	
 }

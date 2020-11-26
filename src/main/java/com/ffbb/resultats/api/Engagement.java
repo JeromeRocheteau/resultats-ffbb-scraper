@@ -15,20 +15,20 @@ public class Engagement implements Identifiable {
 	
 	private Organisation organisation;
 	
-	private Compétition compétition;
+	private Division division;
 
 	public Organisation getOrganisation() {
 		return organisation;
 	}
 
-	public Compétition getCompétition() {
-		return compétition;
+	public Division getDivision() {
+		return division;
 	}
 	
-	public Engagement(Organisation organisation, Compétition compétition) {
+	public Engagement(Organisation organisation, Division division) {
 		super();
 		this.organisation = organisation;
-		this.compétition = compétition;
+		this.division = division;
 	}
 	
 }

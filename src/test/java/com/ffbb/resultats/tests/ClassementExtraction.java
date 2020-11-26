@@ -18,18 +18,7 @@ public class ClassementExtraction extends ResultatsExtraction {
 
 	@Test
 	public void test_01() throws Exception {
-		Organisation organisation = extractor.getOrganisation("2226");
-		Assert.assertNotNull(organisation);
-		List<Engagement> engagements = extractor.getEngagements(organisation);
-		Assert.assertNotNull(engagements);
-		for (Engagement engagement : engagements) {
-			if (engagement.getCompétition().getType() == Compétition.Type.Championnat) {
-				Championnat championnat = (Championnat) engagement.getCompétition();
-				Classement classement = extractor.getClassement(organisation, championnat);
-				System.out.println(championnat);
-				System.out.println(classement);
-			}
-		}
+		
 	}
 	
 }

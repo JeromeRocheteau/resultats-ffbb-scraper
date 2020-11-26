@@ -34,7 +34,7 @@ public class EngagementUpdater extends Updater<Long> {
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
 		statement.setLong(1, engagement.getOrganisation().getId());
-		statement.setLong(2, engagement.getCompétition().getId());
+		statement.setLong(2, engagement.getDivision().getId());
 	}
 	
 }

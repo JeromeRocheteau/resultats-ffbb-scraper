@@ -35,8 +35,8 @@ public class RencontreUpdater extends Updater<Long> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
-		statement.setLong(1, rencontre.getCompétition().getId());
-		statement.setInt(2, rencontre.getJournée());
+		// statement.setLong(1, rencontre.getCompétition().getId());
+		// statement.setInt(2, rencontre.getJournée());
 		statement.setDate(3, new Date(rencontre.getHoraire().getTime()));
 		statement.setLong(4, rencontre.getDomicile().getId());
 		statement.setLong(5, rencontre.getVisiteur().getId());

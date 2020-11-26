@@ -2,13 +2,10 @@ package com.ffbb.resultats.core;
 
 import java.net.URI;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
@@ -17,77 +14,88 @@ import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
 
-public class ChampionnatExtractor extends AbstractExtractor<Championnat> {
+public class DivisionExtractor extends AbstractExtractor<Division> {
 			
-	public Championnat doExtract(String code) throws Exception {
-		String link = "https://resultats.ffbb.com/championnat/" + code + ".html";
+	public Division doExtract(Long id, String code, Long division) throws Exception {
+		String link = "https://resultats.ffbb.com/championnat/" + code + ".html?r=" + id + "&d=" + division;
 		URI uri = URI.create(link);
-		if (this.doFind(Championnat.class, uri) == null) {
+		if (this.doFind(Division.class, uri) == null) {
 			return this.doExtract(uri);
 		} else {
-			return this.doFind(Championnat.class, uri);
+			return this.doFind(Division.class, uri);
 		}
 	}
 
-	public Championnat doExtract(URI uri) throws Exception {
-		String code = uri.toString();
-		code = code.substring("https://resultats.ffbb.com/championnat/".length(), code.length() - 5);
+	public Division doExtract(URI uri) throws Exception {
 		Document document = this.getDocument(uri);
+		Championnat championnat = this.getChampionnat(document, uri);
 		Element cadre = document.getElementById("idTableCoupeChampionnat");		
 		Element element = cadre.getElementById("idTdDivision");
 		String script = element.selectFirst("script").data();
-		String nom = element.text();
-		Long id = this.getIdentifier(script);
-		String href = cadre.select("tr").get(2).select("td").get(1).selectFirst("a").attr("href");
-		String link = "http://resultats.ffbb.com/" + href.substring(3);
-		Organisation organisateur = new OrganisationExtractor().doExtract(URI.create(link));
-		Championnat championnat = new Championnat(id, code, nom, organisateur);
-		String[] words = element.text().split("\\s+");
-		Niveau niveau = this.getNiveau(words);
-		Catégorie catégorie = this.getCatégorie(words);
-		Genre genre = this.getGenre(words);
-		championnat.setNiveau(niveau);
-		championnat.setCatégorie(catégorie);
-		championnat.setGenre(genre);
-		this.doBind(Championnat.class, championnat.getURI(), championnat);
-		List<Division> divisions = this.getDivisions(document, script, championnat);
-		for (Division division : divisions) {
-			this.doBind(Division.class, division.getURI(), division);
-			this.doBind(Division.class, division.getAlternateURI(), division);
+		Division division = this.getDivision(document, script, championnat);
+		this.doBind(Division.class, division.getURI(), division);
+		this.doBind(Division.class, division.getAlternateURI(), division);
+		if (championnat.getDivisions().contains(division) == false) {
+			championnat.getDivisions().add(division);
 		}
-		championnat.getDivisions().addAll(divisions);
-		return championnat;
+		return division;
 	}
 	
-	private List<Division> getDivisions(Document document, String script, Championnat championnat) {
+	private Championnat getChampionnat(Document document, URI uri) throws Exception {
+		String championnatLink = uri.toString();
+		championnatLink = championnatLink.substring(0, championnatLink.indexOf('?'));
+		URI championnatURI = URI.create(championnatLink);
+		if (this.doFind(Championnat.class, championnatURI) == null) {
+			String code = championnatLink.substring("https://resultats.ffbb.com/championnat/".length(), championnatLink.length() - 5);
+			Element cadre = document.getElementById("idTableCoupeChampionnat");		
+			Element element = cadre.getElementById("idTdDivision");
+			String script = element.selectFirst("script").data();
+			String nom = element.text();
+			Long id = this.getIdentifier(script);
+			String href = cadre.select("tr").get(2).select("td").get(1).selectFirst("a").attr("href");
+			String link = "http://resultats.ffbb.com/" + href.substring(3);
+			Organisation organisateur = new OrganisationExtractor().doExtract(URI.create(link));
+			Championnat championnat = new Championnat(id, code, nom, organisateur);
+			String[] words = element.text().split("\\s+");
+			Niveau niveau = this.getNiveau(words);
+			Catégorie catégorie = this.getCatégorie(words);
+			Genre genre = this.getGenre(words);
+			championnat.setNiveau(niveau);
+			championnat.setCatégorie(catégorie);
+			championnat.setGenre(genre);
+			this.doBind(Championnat.class, championnat.getURI(), championnat);
+			return championnat;
+		} else {
+			return this.doFind(Championnat.class, championnatURI);
+		}
+	}
+
+	private Division getDivision(Document document, String script, Championnat championnat) {
 		Element td = document.getElementById("idTableCoupeChampionnat");
 		Map<String, Long> codes = this.getIdentifiers(script);
 		Element element = td.getElementById("idTdPoule");
-		List<Division> divisions = new LinkedList<Division>();
-		Elements elements = element.select("option");
-		if (elements == null || elements.size() == 0) {
+		Element elt = element.select("option[selected]").first();
+		if (elt == null) {
 			String nom = element.text();
 			Long id = codes.get(nom);
-			Element elt = element.select("input[type=hidden]").first();
+			elt = element.select("input[type=hidden]").first();
 			String code = elt.attr("value");
 			int inf = code.indexOf('/');
 			int sup = code.lastIndexOf('.');
 			code = code.substring(inf + 1, sup);
 			Division division = new Division(id, code, nom, championnat);
-			divisions.add(division);
+			return division;
+			
 		} else {
-			for (Element elt : elements) {
-				String nom = elt.text();
-				Long id = codes.get(nom);
-				String code = elt.attr("value");
-				int inf = code.indexOf('/');
-				int sup = code.lastIndexOf('.');
-				code = code.substring(inf + 1, sup);
-				Division division = new Division(id, code, nom, championnat);
-				divisions.add(division);
-			}			
+			String nom = elt.text();
+			Long id = codes.get(nom);
+			String code = elt.attr("value");
+			int inf = code.indexOf('/');
+			int sup = code.lastIndexOf('.');
+			code = code.substring(inf + 1, sup);
+			Division division = new Division(id, code, nom, championnat);
+			return division;
 		}
-		return divisions;
 	}
 
 	private Long getIdentifier(String script) {

@@ -4,10 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Journée {
-
+	
 	private Division division;
 	
-	private Integer journée;
+	private Integer numéro;
 	
 	private List<Rencontre> rencontres;
 
@@ -15,16 +15,16 @@ public class Journée {
 		return division;
 	}
 
-	public Integer getJournée() {
-		return journée;
+	public Integer getNuméro() {
+		return numéro;
 	}
 	
 	public List<Rencontre> getRencontres() {
 		return rencontres;
 	}
 
-	public Journée(Integer journée, Division division) {
-		this.journée = journée;
+	public Journée(Integer numéro, Division division) {
+		this.numéro = numéro;
 		this.division = division;
 		this.rencontres = new LinkedList<Rencontre>();
 	}

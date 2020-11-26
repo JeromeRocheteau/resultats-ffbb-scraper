@@ -32,7 +32,7 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 		return this.doParse(uri);
 	}
 	
-	public Salle doParse(URI uri) throws Exception {
+	private Salle doParse(URI uri) throws Exception {
 		try {
 			Document doc = this.getDocument(uri);
 			Element body = doc.getElementById("idIfType");
@@ -44,7 +44,6 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 			String link = PREFIX + suffix;
 			Salle salle = this.doExtract(URI.create(link));
 			this.organisation.setSalle(salle);
-			this.doInfo(salle.toString());
 			return salle;
 		} catch (Exception e) {
 			this.doWarn(e.getMessage());
@@ -66,7 +65,6 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 				int inf = DATA_PREFIX.length();
 				int sup = data.length() - DATA_SUFFIX.length();
 				String code = data.substring(inf, sup);
-				this.doInfo("processing : " + code);
 				if (matchWithAddress(salle, code) == false) {
 					if (matchWithoutAddress(salle, code) == false) {
 						salle = null;

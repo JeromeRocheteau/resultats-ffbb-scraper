@@ -1,26 +1,12 @@
 package com.ffbb.resultats.api;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Rencontre implements Identifiable, Comparable<Rencontre> {
-
-	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+public class Rencontre implements Comparable<Rencontre> {
 	
-	private Long id; 
+	private Journée journée;
 	
-	@Override
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	private Compétition compétition;
-	
-	private Integer journée;
+	private Integer numéro;
 	
 	private Date horaire;
 	
@@ -32,15 +18,7 @@ public class Rencontre implements Identifiable, Comparable<Rencontre> {
 	
 	private Salle salle;
 
-	public Compétition getCompétition() {
-		return compétition;
-	}
-
-	public void setCompétition(Compétition compétition) {
-		this.compétition = compétition;
-	}
-
-	public Integer getJournée() {
+	public Journée getJournée() {
 		return journée;
 	}
 
@@ -72,8 +50,9 @@ public class Rencontre implements Identifiable, Comparable<Rencontre> {
 		this.salle = salle;
 	}
 
-	public Rencontre(Compétition compétition, Équipe domicile, Équipe visiteur, Integer journée, Date horaire, Salle salle) {
-		this.compétition = compétition;
+	public Rencontre(Journée journée, Integer numéro, Équipe domicile, Équipe visiteur, Date horaire, Salle salle) {
+		this.journée = journée;
+		this.numéro = numéro;
 		this.domicile = domicile;
 		this.visiteur = visiteur;
 		this.journée = journée;
@@ -83,18 +62,14 @@ public class Rencontre implements Identifiable, Comparable<Rencontre> {
 	
 	@Override
 	public String toString() {
-		return journée + "\t" + horaire.toString()
+		return numéro + "\t" + journée.getNuméro() + "\t" + horaire.toString()
 				+ "\t" + (domicile == null ? "Exempt" : domicile.getNom())
 				+ "\t" + (résultat == null ? "-" : résultat.getDomicile() + "-" + résultat.getVisiteur())
 				+ "\t" + (visiteur == null ? "Exempt" : visiteur.getNom());
 	}
 	
 	public String code() {
-		String dom = domicile.getOrganisation().getCode();
-		String vis = visiteur.getOrganisation().getCode();
-		Integer day = journée;
-		String date = dateFormatter.format(horaire);
-		return dom + "-" + vis + "-" + day + "-" + date;
+		return journée.getDivision().getCode() + "-" + numéro;
 	}
 
 	@Override

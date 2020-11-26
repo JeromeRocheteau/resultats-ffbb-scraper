@@ -22,6 +22,7 @@ import com.ffbb.resultats.api.Appartenance;
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Compétition;
+import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Engagement;
 import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Niveau;
@@ -105,30 +106,27 @@ public class RésultatsDB extends ResultatsExtraction {
 			organisations.clear();
 			statues.clear();
 			Organisation organisation = engagement.getOrganisation();
-			Compétition compétition = engagement.getCompétition();
-			if (filtre.match(compétition)) {
-				Championnat championnat = (Championnat) compétition;
-				organisations.offer(organisation);
-				statues.put(organisation, Boolean.FALSE);
-				Organisation current = organisations.poll();
-				do {
-					this.doExtract(championnat, current);
-					statues.put(current, Boolean.TRUE);
-					current = organisations.poll();
-				} while (current != null);
-			}
+			Division division = engagement.getDivision();
+			organisations.offer(organisation);
+			statues.put(organisation, Boolean.FALSE);
+			Organisation current = organisations.poll();
+			do {
+				this.doExtract(division, current);
+				statues.put(current, Boolean.TRUE);
+				current = organisations.poll();
+			} while (current != null);
 		} catch (Exception e) {
 			this.doWarn(e.getMessage());
 			e.printStackTrace();			
 		}
 	}
 
-	private void doExtract(Championnat championnat, Organisation organisation) {
+	private void doExtract(Division championnat, Organisation organisation) {
 		try {
 			this.doInfo("extraction des rencontres de " + organisation + " pour " + championnat);
-			List<Rencontre> rencontres = extractor.getRencontres(organisation, championnat, début, fin);
-			this.doInfo("extraction des " + rencontres.size() + " rencontres");
-			rencontres.forEach(rencontre -> doExtract(championnat, organisation, rencontre));
+			// List<Rencontre> rencontres = extractor.getRencontres(organisation, championnat, début, fin);
+			// this.doInfo("extraction des " + rencontres.size() + " rencontres");
+			// rencontres.forEach(rencontre -> doExtract(championnat, organisation, rencontre));
 		} catch (Exception e) {
 			this.doWarn(e.getMessage());
 			e.printStackTrace();
@@ -209,7 +207,7 @@ public class RésultatsDB extends ResultatsExtraction {
 			}
 		} else {
 			if ((résultat == null) == false) {
-				résultat.setId(rencontre.getId());
+				// résultat.setId(rencontre.getId());
 			}
 		}
 		if (this.defined(résultat) == true && done(résultat) == false) {

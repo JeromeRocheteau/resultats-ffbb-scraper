@@ -4,21 +4,52 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Championnat extends Compétition implements Identifiable, Encodable, Extractable {
+public class Championnat extends Compétition implements Extractable {
 	
-	private List<Équipe> équipes;
+	private Niveau niveau;
 	
-	public List<Équipe> getÉquipes() {
-		return équipes;
+	private Catégorie catégorie;
+	
+	private Genre genre;
+	
+	private List<Division> divisions;
+
+	public Niveau getNiveau() {
+		return niveau;
+	}
+
+	public void setNiveau(Niveau niveau) {
+		this.niveau = niveau;
+	}
+
+	public Catégorie getCatégorie() {
+		return catégorie;
+	}
+
+	public void setCatégorie(Catégorie catégorie) {
+		this.catégorie = catégorie;
+	}
+
+	public Genre getGenre() {
+		return genre;
+	}
+
+	public void setGenre(Genre genre) {
+		this.genre = genre;
+	}
+
+	public List<Division> getDivisions() {
+		return divisions;
 	}
 
 	public Championnat(Long id, String code, String nom, Organisation organisateur) {
+		super();
 		this.setId(id);
 		this.setCode(code);
 		this.setNom(nom);
 		this.setOrganisateur(organisateur);
 		this.setType(Type.Championnat);
-		this.équipes= new LinkedList<Équipe>();
+		this.divisions = new LinkedList<Division>();
 	}
 
 	@Override

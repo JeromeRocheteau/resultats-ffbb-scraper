@@ -20,15 +20,22 @@ public class ChampionnatExtraction {
 	}
 	
 	@Test
-	public void test_01_naclt_u13f1() throws Exception {
-		String url = "https://resultats.ffbb.com/championnat/b5e6211f1950.html?r=200000002791760&d=200000002873755";
+	public void test_01_816_u13f() throws Exception {
+		String url = "https://resultats.ffbb.com/championnat/b5e6211f1950.html";
 		Championnat championnat = extractor.doExtract(URI.create(url));
 		Assert.assertNotNull(championnat);
 	}
 	
 	@Test
-	public void test_02_naclt_sm1() throws Exception {
-		String url = "https://resultats.ffbb.com/championnat/b5e6211eeed6.html?r=200000002780886&d=200000002862119";
+	public void test_02_816_prm() throws Exception {
+		String url = "https://resultats.ffbb.com/championnat/b5e6211eeed6.html";
+		Championnat championnat = extractor.doExtract(URI.create(url));
+		Assert.assertNotNull(championnat);
+	}
+	
+	@Test
+	public void test_03_816_u9m_bleu() throws Exception {
+		String url = "https://resultats.ffbb.com/championnat/b5e6211f1931.html";
 		Championnat championnat = extractor.doExtract(URI.create(url));
 		Assert.assertNotNull(championnat);
 	}
