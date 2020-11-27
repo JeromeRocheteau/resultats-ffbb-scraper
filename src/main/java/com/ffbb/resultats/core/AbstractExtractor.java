@@ -1,12 +1,5 @@
 package com.ffbb.resultats.core;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -20,53 +13,62 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.ProtocolHandshake;
 
+import com.ffbb.resultats.RésultatsFFBB;
+import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Extractable;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.ffbb.resultats.api.Organisation;
+import com.ffbb.resultats.api.Salle;
+import com.ffbb.resultats.api.Équipe;
 
-public class AbstractExtractor<T> {
+public abstract class AbstractExtractor<T> {
 
-	private Gson mapper;
+	private RésultatsFFBB résultatsFFBB;
 	
-	private Extract extract;
+	private Ressources ressources;
+	
+	protected Organisation getOrganisation(String code) throws Exception {
+		return résultatsFFBB.getOrganisation(code); 
+	}
+	
+	protected Salle getSalle(Long id) throws Exception {
+		return résultatsFFBB.getSalle(id); 
+	}
+	
+	protected Division getDivision(Long id, String code, Long division) throws Exception {
+		return résultatsFFBB.getDivision(id, code, division);
+	}
+	
+	protected Équipe getÉquipe(Division division, Long id, String code) throws Exception {
+		return résultatsFFBB.getÉquipe(division, id, code);
+	}
 	
 	protected void doInfo(String message) {
-		Logger.getLogger(ExtractorAPI.class.getSimpleName()).log(Level.INFO, message);
+		Logger.getLogger(RésultatsFFBB.class.getSimpleName()).log(Level.INFO, message);
 	}
 
 	protected void doWarn(String message) {
-		Logger.getLogger(ExtractorAPI.class.getSimpleName()).log(Level.WARNING, message);
+		Logger.getLogger(RésultatsFFBB.class.getSimpleName()).log(Level.WARNING, message);
 	}
 
 	protected void doFailure(String message) {
-		Logger.getLogger(ExtractorAPI.class.getSimpleName()).log(Level.SEVERE, message);
+		Logger.getLogger(RésultatsFFBB.class.getSimpleName()).log(Level.SEVERE, message);
 	}
 
 	protected <U extends Extractable> U doFind(Class<U> type, URI uri) throws Exception {
-		return extract.doFind(type, uri);
+		return ressources.doFind(type, uri);
 	}
 	
 	protected <U extends Extractable> void doBind(Class<U> type, URI uri, U resource) throws Exception {
 		if (this.doFind(type, uri) == null) {
-			extract.doBind(type, uri, resource);			
+			ressources.doBind(type, uri, resource);			
 		} else {
 			this.doWarn("Already bound resource of " + type.getSimpleName() + " for URI: " + uri);
 		}
 	}
 	
-	public void doStore(OutputStream output) throws IOException {
-		Writer writer = new OutputStreamWriter(output);
-		mapper.toJson(extract, writer);
-	}
-	
-	public void doLoad(InputStream input) throws IOException {
-		Reader reader = new InputStreamReader(input);
-		extract = mapper.fromJson(reader, Extract.class);
-	}
-	
-	protected AbstractExtractor() {
-		mapper = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-		extract = Extract.getInstance();
+	protected AbstractExtractor(RésultatsFFBB résultatsFFBB) {
+		ressources = Ressources.getInstance();
+		this.résultatsFFBB = résultatsFFBB;
 	}
 	
 	protected Document getDocument(URI uri) throws Exception {

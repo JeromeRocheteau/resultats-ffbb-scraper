@@ -5,24 +5,29 @@ import java.net.URI;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import com.ffbb.resultats.RésultatsFFBB;
 import com.ffbb.resultats.api.Organisation;
 
 public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 	
-	private String code;
-	
-	public Organisation doExtract(String code) throws Exception {
-		this.code = code;
-		String link = "http://resultats.ffbb.com/organisation/" + code + ".html";
-		URI uri = URI.create(link);
+	public OrganisationExtractor(RésultatsFFBB résultatsFFBB) {
+		super(résultatsFFBB);
+	}
+
+	public Organisation doExtract(URI uri) throws Exception {
 		if (this.doFind(Organisation.class, uri) == null) {
-			return this.doExtract(uri);
+			Organisation organisation = this.doParse(uri);
+			this.doBind(Organisation.class, uri, organisation);
+			return organisation;
 		} else {
 			return this.doFind(Organisation.class, uri);
 		}
 	}
 
-	public Organisation doExtract(URI uri) throws Exception {
+	private Organisation doParse(URI uri) throws Exception {
+		String prefix = "http://resultats.ffbb.com/organisation/";
+		String link = uri.toString();
+		String code = link.substring(prefix.length(), link.length() - 5);
 		Document doc = this.getDocument(uri);
 		Element td = doc.getElementById("idTdOrganisme");
 		td = td.selectFirst("table")
@@ -32,12 +37,11 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 		String display = td.text();
 		Element input = doc.getElementById("idOrganisme");
 		Long id = Long.valueOf(input.attr("value"));
-		Organisation organisation = this.doParse(id, display);
-		this.doBind(Organisation.class, uri, organisation);
+		Organisation organisation = this.doParse(id, code, display);
 		return organisation;
 	}
 
-	private Organisation doParse(Long id, String display) throws Exception { // 
+	private Organisation doParse(Long id, String code, String display) throws Exception { // 
 		Organisation organisation = new Organisation(id, code);
 		if (display.endsWith(" - Club")) {
 			organisation.setType(Organisation.Type.Club);

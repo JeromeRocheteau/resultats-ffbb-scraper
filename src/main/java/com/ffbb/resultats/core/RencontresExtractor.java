@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.ffbb.resultats.api.Division;
+import com.ffbb.resultats.RésultatsFFBB;
 import com.ffbb.resultats.api.Journée;
 import com.ffbb.resultats.api.Rencontre;
 import com.ffbb.resultats.api.Rencontres;
@@ -17,39 +17,33 @@ import com.ffbb.resultats.api.Salle;
 import com.ffbb.resultats.api.Équipe;
 
 public class RencontresExtractor extends AbstractExtractor<Rencontres> {
-	
-	private SalleExtractor salleExtractor;
-	
-	private ÉquipeExtractor équipeExtractor;
-	
-	public RencontresExtractor() {
-		salleExtractor = new SalleExtractor();
-		équipeExtractor = new ÉquipeExtractor();
+
+	public RencontresExtractor(RésultatsFFBB résultatsFFBB) {
+		super(résultatsFFBB);
 	}
-		
-	public Rencontres doExtract(String code, Integer numéro) throws Exception {
-		String link = "https://resultats.ffbb.com/championnat/rencontres/" + code + Integer.toHexString(numéro.intValue()) + ".html";
-		URI uri = URI.create(link);
+
+	private Journée journée;
+	
+	public Journée getJournée() {
+		return journée;
+	}
+
+	public void setJournée(Journée journée) {
+		this.journée = journée;
+	}
+
+	public Rencontres doExtract(URI uri) throws Exception {
 		if (this.doFind(Rencontres.class, uri) == null) {
-			return this.doExtract(uri);
+			Rencontres rencontres = this.doParse(uri);
+			this.doBind(Rencontres.class, uri, rencontres);
+			journée.getRencontres().addAll(rencontres);
+			return rencontres;
 		} else {
 			return this.doFind(Rencontres.class, uri);
 		}
 	}
 
-	public Rencontres doExtract(URI uri) throws Exception {
-		String link = uri.toString();
-		link = link.substring("https://resultats.ffbb.com/championnat/rencontres/".length(), link.length() - 5);
-		String code = link.substring(0, 24);
-		Integer numéro = Integer.parseInt(link.substring(24), 16);
-		Division division = this.getDivision(code);
-		équipeExtractor.setDivision(division);
-		Journée journée = new Journée(numéro, division);
-		Rencontres rencontres = this.getRencontres(journée, uri);
-		return rencontres;
-	}
-	
-	private Rencontres getRencontres(Journée journée, URI uri) throws Exception {
+	public Rencontres doParse(URI uri) throws Exception {
 		Rencontres rencontres = new Rencontres(journée);
 		Document doc = this.getDocument(uri);
 		Element table = doc.select("table.liste").first();
@@ -76,25 +70,6 @@ public class RencontresExtractor extends AbstractExtractor<Rencontres> {
 		return rencontres;
 	}
 
-	private Division getDivision(String code) throws Exception {
-		String link = "http://resultats.ffbb.com/championnat/division/" + code + ".html";
-		URI uri = URI.create(link);
-		if (this.doFind(Division.class, uri) == null) {
-			/*
-			String subcode = code.substring(0, 12);
-			Championnat championnat = extractor.doExtract(subcode);
-			for (Division division : championnat.getDivisions()) {
-				if (division.getCode().equals(code)) {
-					return division;
-				}
-			}
-			*/
-			throw new Exception("no division found for code: " + code);
-		} else {
-			return this.doFind(Division.class, uri);
-		}
-	}
-
 	private Résultat getRésultat(String text) throws Exception {
 		String[] items = text.split("-");
 		if (items.length == 2) {
@@ -109,16 +84,12 @@ public class RencontresExtractor extends AbstractExtractor<Rencontres> {
 	private Équipe getÉquipe(Element element) throws Exception {
 		Element anchor = element.select("a").first();
 		String nom = anchor.text();
-		String prefix = "https://resultats.ffbb.com/championnat/";
-		String link = prefix + anchor.attr("href").substring(3);
-		URI uri = URI.create(link);
-		if (this.doFind(Équipe.class, uri) == null) {
-			Équipe équipe = équipeExtractor.doExtract(uri);
-			équipe.setNom(nom);
-			return équipe;			
-		} else {
-			return this.doFind(Équipe.class, uri);
-		}
+		String link = anchor.attr("href").substring("../equipe/".length());
+		Long id = Long.valueOf(link.substring(link.indexOf("&d=") + 3));
+		String code = link.substring(0, link.indexOf(".html"));
+		Équipe équipe = this.getÉquipe(journée.getDivision(), id, code);
+		équipe.setNom(nom);
+		return équipe;	
 	}
 	
 	private Salle getSalle(Element element) throws Exception {
@@ -126,16 +97,8 @@ public class RencontresExtractor extends AbstractExtractor<Rencontres> {
 		String href = a.attr("href");
 		int inf = "javascript:openHere('".length();
 		int sup = href.length() - "')".length();
-		String id = href.substring(inf, sup);
-		URI uri = URI.create("https://resultats.ffbb.com/here/here_popup.php?id=" + id);
-		if (this.doFind(Salle.class, uri) == null) {
-			Salle salle = salleExtractor.doExtract(uri);
-			this.doBind(Salle.class, salle.getURI(), salle);
-			return salle;
-		} else {
-			Salle salle = this.doFind(Salle.class, uri);
-			return salle;
-		}
+		Long id = Long.valueOf(href.substring(inf, sup));
+		return this.getSalle(id);
 	}
 	
 	/*

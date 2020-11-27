@@ -6,11 +6,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.ffbb.resultats.RésultatsFFBB;
 import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Équipe;
 
 public class ÉquipeExtractor extends AbstractExtractor<Équipe> {
+
+	public ÉquipeExtractor(RésultatsFFBB résultatsFFBB) {
+		super(résultatsFFBB);
+	}
 
 	private Division division;
 	
@@ -22,15 +27,7 @@ public class ÉquipeExtractor extends AbstractExtractor<Équipe> {
 		this.division = division;
 	}
 
-	private OrganisationExtractor organisationExtractor;
-	
-	public ÉquipeExtractor() {
-		organisationExtractor = new OrganisationExtractor();
-	}
-			
 	public Équipe doExtract(URI uri) throws Exception {
-		// String link = "https://resultats.ffbb.com/championnat/equipe/" + code + ".html?r=" + championnat + "&p=" + division + "&d=" + organisation;
-		// URI uri = URI.create(link);
 		if (this.doFind(Équipe.class, uri) == null) {
 			Équipe équipe = this.doParse(uri);
 			this.doBind(Équipe.class, uri, équipe);
@@ -41,7 +38,6 @@ public class ÉquipeExtractor extends AbstractExtractor<Équipe> {
 	}
 
 	public Équipe doParse(URI uri) throws Exception {
-		
 		/*
 		String link = uri.toString();
 		link = link.substring("https://resultats.ffbb.com/championnat/equipe/".length());
@@ -52,13 +48,13 @@ public class ÉquipeExtractor extends AbstractExtractor<Équipe> {
 		Long div = Long.valueOf(parameters.substring(parameters.indexOf("&p=") + 3, parameters.indexOf("&d=")));
 		Long org = Long.valueOf(parameters.substring(parameters.indexOf("&d=") + 3));
 		*/
-		
 		Document document = this.getDocument(uri);
 		Element td = document.getElementById("idTableClub");
 		Elements trs = td.select("tr");
 		Element a = trs.get(0).select("a").first();
-		Organisation organisation = this.getOrganisation(a);
-		
+		String code = a.attr("href");
+		code = code.substring("../../organisation/".length(), code.length() - 5);
+		Organisation organisation = this.getOrganisation(code);
 		/*
 		Elements elts = trs.get(3).select("option");
 		for (Element elt : elts) {
@@ -76,12 +72,5 @@ public class ÉquipeExtractor extends AbstractExtractor<Équipe> {
 		Équipe équipe = new Équipe(organisation, division);
 		return équipe;
 	}
-
-	private Organisation getOrganisation(Element a) throws Exception {
-		String prefix = "http://resultats.ffbb.com/";
-		String link = prefix + a.attr("href").substring("../../".length());
-		URI uri = URI.create(link);
-		return organisationExtractor.doExtract(uri);
-	}	
 	
 }

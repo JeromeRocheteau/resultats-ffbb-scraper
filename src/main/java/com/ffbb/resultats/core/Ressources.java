@@ -7,17 +7,17 @@ import java.util.Map;
 import com.ffbb.resultats.api.Extractable;
 import com.ffbb.resultats.api.Organisation;
 
-public class Extract {
-
-	private static Extract instance;
+public class Ressources {
 	
-	public static Extract getInstance() {
+	private static Ressources instance;
+	
+	public static Ressources getInstance() {
 		if (instance == null) {
-			instance = new Extract();
+			instance = new Ressources();
 		}
 		return instance;
 	}
-	
+
 	protected Map<String, Extractable> resources;
 	
 	@SuppressWarnings("unchecked")
@@ -29,14 +29,17 @@ public class Extract {
 		resources.put(uri.toString(), resource);
 	}
 	
-	private Extract() {
+	public Ressources() {
 		resources = new HashMap<String, Extractable>(1024);
+		this.setExempt();
+	}
+	
+	private void setExempt() {
 		URI uri = URI.create("http://resultats.ffbb.com/organisation/0.html");
 		Organisation exempt = new Organisation(0L, "0");
 		exempt.setNom("Exempt");
 		exempt.setType(Organisation.Type.Entente);
 		this.doBind(Organisation.class, uri, exempt);
 	}
-
 	
 }

@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ffbb.resultats</groupId>
   <artifactId>resultats-ffbb-scraper</artifactId>
-  <version>0.1-1</version>
+  <version>0.7-1</version>
   <packaging>jar</packaging>
   <name>ffbb-resultats</name>
   <url>https://resultats.ffbb.com</url>
@@ -31,12 +31,6 @@
       <version>1.4.4</version>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.8.2</version>
-      <scope>compile</scope>
-    </dependency>  
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>

@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.ffbb.resultats.RésultatsFFBB;
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Division;
@@ -19,17 +20,19 @@ import com.ffbb.resultats.api.Organisation;
 
 public class ChampionnatExtractor extends AbstractExtractor<Championnat> {
 			
-	public Championnat doExtract(String code) throws Exception {
-		String link = "https://resultats.ffbb.com/championnat/" + code + ".html";
-		URI uri = URI.create(link);
+	public ChampionnatExtractor(RésultatsFFBB résultatsFFBB) {
+		super(résultatsFFBB);
+	}
+
+	public Championnat doExtract(URI uri) throws Exception {
 		if (this.doFind(Championnat.class, uri) == null) {
-			return this.doExtract(uri);
+			return this.doParse(uri);
 		} else {
 			return this.doFind(Championnat.class, uri);
 		}
 	}
 
-	public Championnat doExtract(URI uri) throws Exception {
+	private Championnat doParse(URI uri) throws Exception {
 		String code = uri.toString();
 		code = code.substring("https://resultats.ffbb.com/championnat/".length(), code.length() - 5);
 		Document document = this.getDocument(uri);
@@ -39,8 +42,8 @@ public class ChampionnatExtractor extends AbstractExtractor<Championnat> {
 		String nom = element.text();
 		Long id = this.getIdentifier(script);
 		String href = cadre.select("tr").get(2).select("td").get(1).selectFirst("a").attr("href");
-		String link = "http://resultats.ffbb.com/" + href.substring(3);
-		Organisation organisateur = new OrganisationExtractor().doExtract(URI.create(link));
+		String org = href.substring("../organisation/".length(), href.length() - 5);
+		Organisation organisateur = this.getOrganisation(org);
 		Championnat championnat = new Championnat(id, code, nom, organisateur);
 		String[] words = element.text().split("\\s+");
 		Niveau niveau = this.getNiveau(words);

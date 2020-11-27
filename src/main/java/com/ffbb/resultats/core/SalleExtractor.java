@@ -8,52 +8,60 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.ffbb.resultats.RésultatsFFBB;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Salle;
 
 public class SalleExtractor extends AbstractExtractor<Salle> {
 	
-	private static final String PREFIX = "https://resultats.ffbb.com/here/here_popup.php?id=";
-	
-	private static final String DATA_PREFIX = "/*<![CDATA[*/";
-	private static final String DATA_SUFFIX = ";/*]]>*/";
+	public SalleExtractor(RésultatsFFBB résultatsFFBB) {
+		super(résultatsFFBB);
+	}
 
-	private static final Pattern PATTERN_1 = Pattern.compile("var cartoFbi=\\{\"latitude\":(.*),\"longitude\":(.*),\"title\":\"(.*)\",\"cp\":\"(.*)\",\"city\":\"(.*)\",\"errors\":\\[\\]\\};var appId=\"(.*)\";var appCode=\"(.*)\";");
-
-	private static final Pattern PATTERN_2 = Pattern.compile("var cartoFbi=\\{\"latitude\":(.*),\"longitude\":(.*),\"title\":\"(.*)\",\"adress\":\"(.*)\",\"cp\":\"(.*)\",\"city\":\"(.*)\",\"errors\":\\[\\]\\};var appId=\"(.*)\";var appCode=\"(.*)\";");
+	public Salle doExtract(URI uri) throws Exception {
+		String prefix = "http://resultats.ffbb.com/organisation/salle/";
+		String link = uri.toString(); 
+		if (this.doFind(Salle.class, uri) == null) {
+			if (link.startsWith(prefix)) {
+				String code = link.substring(prefix.length(), link.length() - 5);
+				Organisation organisation = this.getOrganisation(code);
+				try {
+					Salle salle = this.doGrab(organisation, uri);
+					this.doBind(Salle.class, uri, salle);
+					return salle;
+				} catch (Exception e) {
+					return null;
+				}
+			} else {
+				Salle salle = this.doParse(uri);
+				this.doBind(Salle.class, uri, salle);
+				return salle;				
+			}
+		} else {
+			return this.doFind(Salle.class, uri);
+		}
+	}
 	
-	private Organisation organisation;
-	
-	public Salle doExtract(Organisation organisation) throws Exception {
-		this.organisation = organisation;
-		String code = organisation.getCode();
-		String link = "http://resultats.ffbb.com/organisation/salle/" + code + ".html";
-		URI uri = URI.create(link);
-		return this.doParse(uri);
+	private Salle doGrab(Organisation organisation, URI uri) throws Exception {
+		String prefix = "https://resultats.ffbb.com/here/here_popup.php?id=";
+		Document doc = this.getDocument(uri);
+		Element body = doc.getElementById("idIfType");
+		String value = body.select("table").get(0)
+				.select("tr").get(2)
+				.select("td").get(1)
+				.select("a").attr("href");
+		String suffix = value.substring("javascript:openHere('".length(), value.length() - 2);
+		String link = prefix + suffix;
+		Salle salle = this.doExtract(URI.create(link));
+		organisation.setSalle(salle);
+		return salle;
 	}
 	
 	private Salle doParse(URI uri) throws Exception {
-		try {
-			Document doc = this.getDocument(uri);
-			Element body = doc.getElementById("idIfType");
-			String value = body.select("table").get(0)
-					.select("tr").get(2)
-					.select("td").get(1)
-					.select("a").attr("href");
-			String suffix = value.substring("javascript:openHere('".length(), value.length() - 2);
-			String link = PREFIX + suffix;
-			Salle salle = this.doExtract(URI.create(link));
-			this.organisation.setSalle(salle);
-			return salle;
-		} catch (Exception e) {
-			this.doWarn(e.getMessage());
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public Salle doExtract(URI uri) throws Exception {
-		String id = uri.toString().substring(PREFIX.length());
+		String prefix = "https://resultats.ffbb.com/here/here_popup.php?id=";
+		String DATA_PREFIX = "/*<![CDATA[*/";
+		String DATA_SUFFIX = ";/*]]>*/";
+		String id = uri.toString().substring(prefix.length());
 		Salle salle = new Salle(Long.valueOf(id));
 		Document doc = this.getDocument(uri);
 		Elements scripts = doc.getElementsByTag("script");
@@ -76,7 +84,8 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 	}
 
 	private boolean matchWithAddress(Salle salle, String code) {
-		Matcher matcher = PATTERN_2.matcher(code);
+		Pattern pattern = Pattern.compile("var cartoFbi=\\{\"latitude\":(.*),\"longitude\":(.*),\"title\":\"(.*)\",\"adress\":\"(.*)\",\"cp\":\"(.*)\",\"city\":\"(.*)\",\"errors\":\\[\\]\\};var appId=\"(.*)\";var appCode=\"(.*)\";");
+		Matcher matcher = pattern.matcher(code);
 		boolean hasMatches = matcher.matches();
 		if (hasMatches && matcher.groupCount() == 8) {
 			Float latitude = Float.valueOf(matcher.group(1));
@@ -96,7 +105,8 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 	}
 
 	private boolean matchWithoutAddress(Salle salle, String code) {
-		Matcher matcher = PATTERN_1.matcher(code);
+		Pattern pattern = Pattern.compile("var cartoFbi=\\{\"latitude\":(.*),\"longitude\":(.*),\"title\":\"(.*)\",\"cp\":\"(.*)\",\"city\":\"(.*)\",\"errors\":\\[\\]\\};var appId=\"(.*)\";var appCode=\"(.*)\";");
+		Matcher matcher = pattern.matcher(code);
 		boolean hasMatches = matcher.matches();
 		if (hasMatches && matcher.groupCount() == 7) {
 			Float latitude = Float.valueOf(matcher.group(1));

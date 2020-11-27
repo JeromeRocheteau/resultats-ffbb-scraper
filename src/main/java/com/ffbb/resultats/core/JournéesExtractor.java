@@ -6,26 +6,41 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.ffbb.resultats.RésultatsFFBB;
 import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Journée;
 import com.ffbb.resultats.api.Journées;
 
 public class JournéesExtractor extends AbstractExtractor<Journées> {
+
+	public JournéesExtractor(RésultatsFFBB résultatsFFBB) {
+		super(résultatsFFBB);
+	}
+
+	private Division division;
 	
-	public Journées doExtract(String code) throws Exception {
-		String link = "https://resultats.ffbb.com/championnat/journees/" + code + ".html";
-		URI uri = URI.create(link);
+	public Division getDivision() {
+		return division;
+	}
+
+	public void setDivision(Division division) {
+		this.division = division;
+	}
+
+	public Journées doExtract(URI uri) throws Exception {
 		if (this.doFind(Journées.class, uri) == null) {
-			return this.doExtract(uri);
+			Journées journées = this.doParse(uri);
+			this.doBind(Journées.class, uri, journées);
+			division.getJournées().addAll(journées);
+			return journées;
 		} else {
 			return this.doFind(Journées.class, uri);
 		}
 	}
 
-	public Journées doExtract(URI uri) throws Exception {
+	public Journées doParse(URI uri) throws Exception {
 		String code = uri.toString();
 		code = code.substring("https://resultats.ffbb.com/championnat/journees/".length(), code.length() - 5);
-		Division division = this.getDivision(code);
 		Journées journées = this.getJournées(division, uri);
 		return journées;
 	}
@@ -46,25 +61,6 @@ public class JournéesExtractor extends AbstractExtractor<Journées> {
 			}
 		}
 		return journées;
-	}
-
-	private Division getDivision(String code) throws Exception {
-		String link = "http://resultats.ffbb.com/championnat/division/" + code + ".html";
-		URI uri = URI.create(link);
-		if (this.doFind(Division.class, uri) == null) {
-			/*
-			String subcode = code.substring(0, 12);
-			Championnat championnat = extractor.doExtract(subcode);
-			for (Division division : championnat.getDivisions()) {
-				if (division.getCode().equals(code)) {
-					return division;
-				}
-			}
-			*/
-			throw new Exception("no division found for code: " + code);
-		} else {
-			return this.doFind(Division.class, uri);
-		}
 	}
 		
 }

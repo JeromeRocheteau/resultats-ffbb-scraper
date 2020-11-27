@@ -7,6 +7,7 @@ import java.util.Map;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import com.ffbb.resultats.RésultatsFFBB;
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Division;
@@ -16,25 +17,28 @@ import com.ffbb.resultats.api.Organisation;
 
 public class DivisionExtractor extends AbstractExtractor<Division> {
 			
-	public Division doExtract(Long id, String code, Long division) throws Exception {
-		String link = "https://resultats.ffbb.com/championnat/" + code + ".html?r=" + id + "&d=" + division;
-		URI uri = URI.create(link);
+	public DivisionExtractor(RésultatsFFBB résultatsFFBB) {
+		super(résultatsFFBB);
+	}
+
+	public Division doExtract(URI uri) throws Exception {
 		if (this.doFind(Division.class, uri) == null) {
-			return this.doExtract(uri);
+			Division division = this.doParse(uri);
+			this.doBind(Division.class, division.getURI(), division);
+			this.doBind(Division.class, division.getAlternateURI(), division);
+			return division;
 		} else {
 			return this.doFind(Division.class, uri);
 		}
 	}
 
-	public Division doExtract(URI uri) throws Exception {
+	private Division doParse(URI uri) throws Exception {
 		Document document = this.getDocument(uri);
 		Championnat championnat = this.getChampionnat(document, uri);
 		Element cadre = document.getElementById("idTableCoupeChampionnat");		
 		Element element = cadre.getElementById("idTdDivision");
 		String script = element.selectFirst("script").data();
 		Division division = this.getDivision(document, script, championnat);
-		this.doBind(Division.class, division.getURI(), division);
-		this.doBind(Division.class, division.getAlternateURI(), division);
 		if (championnat.getDivisions().contains(division) == false) {
 			championnat.getDivisions().add(division);
 		}
@@ -53,8 +57,8 @@ public class DivisionExtractor extends AbstractExtractor<Division> {
 			String nom = element.text();
 			Long id = this.getIdentifier(script);
 			String href = cadre.select("tr").get(2).select("td").get(1).selectFirst("a").attr("href");
-			String link = "http://resultats.ffbb.com/" + href.substring(3);
-			Organisation organisateur = new OrganisationExtractor().doExtract(URI.create(link));
+			String org = href.substring("../organisation/".length(), href.length() - 5);
+			Organisation organisateur = this.getOrganisation(org);
 			Championnat championnat = new Championnat(id, code, nom, organisateur);
 			String[] words = element.text().split("\\s+");
 			Niveau niveau = this.getNiveau(words);

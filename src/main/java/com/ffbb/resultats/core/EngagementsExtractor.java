@@ -10,17 +10,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.ffbb.resultats.api.Championnat;
+import com.ffbb.resultats.RésultatsFFBB;
 import com.ffbb.resultats.api.Compétition;
 import com.ffbb.resultats.api.Compétition.Type;
 import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Engagement;
-import com.ffbb.resultats.api.Genre;
+import com.ffbb.resultats.api.Engagements;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Paramètres;
 
 public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 		
+	public EngagementsExtractor(RésultatsFFBB résultatsFFBB) {
+		super(résultatsFFBB);
+	}
+
 	private static final String CHAMPIONNAT = "Equipes engagées en championnat";
 
 	private static final String CHAMPIONNAT3x3 = "Equipes engagées en championnat 3x3";
@@ -35,33 +39,39 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	
 	private Organisation organisation;
 	
-	private DivisionExtractor extractor;
-	
-	public List<Engagement> doExtract(Organisation organisation) throws Exception {
-		this.organisation = organisation;
-		String code = organisation.getCode();
-		String link = "http://resultats.ffbb.com/organisation/engagements/" + code + ".html";
-		URI uri = URI.create(link);
-		return this.doExtract(uri);
+	public Organisation getOrganisation() {
+		return organisation;
 	}
 
-	public List<Engagement> doExtract(URI uri) throws Exception {
-		Document doc = this.getDocument(uri);
-		Elements tbodies = doc.select("table.liste"); // FIXME
-		for (Element tbody : tbodies) {
-			this.getEngagements(tbody);
+	public void setOrganisation(Organisation organisation) {
+		this.organisation = organisation;
+	}
+
+	public Engagements doExtract(URI uri) throws Exception {
+		if (this.doFind(Engagements.class, uri) == null) {
+			Engagements engagements = this.doPase(uri);
+			this.doBind(Engagements.class, uri, engagements);
+			return engagements;
+		} else {
+			return this.doFind(Engagements.class, uri);
 		}
-		return organisation.getEngagements();
 	}
 	
-	private void getEngagements(Element table) throws Exception {
-		if (extractor == null) {
-			extractor = new DivisionExtractor();
+	private Engagements doPase(URI uri) throws Exception {
+		Engagements engagements = new Engagements(organisation);
+		Document doc = this.getDocument(uri);
+		Elements tbodies = doc.select("table.liste");
+		for (Element tbody : tbodies) {
+			this.addEngagements(engagements, tbody);
 		}
+		return engagements;
+	}
+	
+	private void addEngagements(Engagements engagements, Element table) throws Exception {
 		Elements rows = table.select("tr");
 		Iterator<Element> iter = rows.iterator();
-		Compétition.Type type = null; 
-		Genre genre = null;
+		Compétition.Type type = null;
+		// Genre genre = null;
 		while (iter.hasNext()) {
 			Element row = iter.next();
 			Elements cols = row.select("td");
@@ -76,16 +86,16 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 			} else if (PLATEAU.equals(text)) {
 				type = Compétition.Type.Plateau;
 			} else if (MASCULIN.equals(text)) {
-				genre = Genre.Masculin;
+				// genre = Genre.Masculin;
 			} else if (FÉMININ.equals(text)) {
-				genre = Genre.Féminin;
+				// genre = Genre.Féminin;
 			} else if (cols.size() > 1) {
 				String link = cell.select("a").attr("href");
 				Paramètres paramètres = this.getParamètres(link);
 				if (type == Type.Championnat) {
-					Division championnat = extractor.doExtract(paramètres.getId(), paramètres.getCode(), paramètres.getDivision());
-					Engagement engagement = new Engagement(organisation, championnat);
-					organisation.getEngagements().add(engagement);
+					Division division = this.getDivision(paramètres.getId(), paramètres.getCode(), paramètres.getDivision());
+					Engagement engagement = new Engagement(organisation, division);
+					engagements.add(engagement);
 				}
 			}
 		}

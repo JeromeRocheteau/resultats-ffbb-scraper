@@ -69,11 +69,11 @@ public class RésultatsDB extends ResultatsExtraction {
 			Assert.assertNotNull(organisation);
 			List<Appartenance> appartenances = extractor.getAppartenances(organisation);
 			Assert.assertNotNull(appartenances);
-			List<Engagement> engagements = extractor.getEngagements(organisation);
-			Assert.assertNotNull(engagements);
+			// List<Engagement> engagements = extractor.getEngagements(organisation);
+			// Assert.assertNotNull(engagements);
 			//ChampionnatFiltre filtre = new ChampionnatFiltre().niveaux(Niveau.Départemental).catégories(Catégorie.U13).genres(Genre.Féminin).divisions(0);
 			// engagements.forEach(engagement -> doExtract(engagement, filtre));
-			engagements.forEach(engagement -> this.doInfo(engagement.toString()));
+			// engagements.forEach(engagement -> this.doInfo(engagement.toString()));
 			this.doInfo("fin de l'extraction");
 		} finally {
 			this.doInfo("déconnexion de la base de données");
