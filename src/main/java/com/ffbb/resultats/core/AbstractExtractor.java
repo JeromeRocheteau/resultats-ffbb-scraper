@@ -14,8 +14,11 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.ProtocolHandshake;
 
 import com.ffbb.resultats.RésultatsFFBB;
+import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Extractable;
+import com.ffbb.resultats.api.Genre;
+import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Salle;
 import com.ffbb.resultats.api.Équipe;
@@ -86,6 +89,107 @@ public abstract class AbstractExtractor<T> {
 		} finally {
 			driver.quit();
 		}
+	}	
+	
+	protected Niveau getNiveau(String[] words) throws Exception {
+		boolean pré = false;
+		for (String word : words) {
+			pré = pré || this.getPré(word);
+		}
+		for (String word : words) {
+			Niveau niveau = this.getNiveau(word, pré);
+			if ((niveau == null) == false) {
+				return niveau;
+			}
+		}
+		return null;
 	}
+	
+	private Niveau getNiveau(String word, boolean pré) throws Exception {
+		String text = word.toLowerCase();
+		if (text.startsWith(Niveau.Départemental.name().toLowerCase())) {
+			return Niveau.Départemental;
+		} else if (text.startsWith(Niveau.Régional.name().toLowerCase())) {
+			return pré ? Niveau.PréRégional : Niveau.Régional;
+		} else if (text.startsWith(Niveau.National.name().toLowerCase())) {
+			return pré ? Niveau.PréNational : Niveau.National;
+		} else {
+			return null;
+		}
+	}
+	
+	private boolean getPré(String word) throws Exception {
+		if (word.equals("Pré")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	protected Integer getPhase(String[] words) throws Exception {
+		boolean next = false;
+		for (String word : words) {
+			if (next) {
+				return Integer.valueOf(word);
+			} else if (word.equalsIgnoreCase("phase")) {
+				next = true;
+			}
+			
+		}
+		return 1;
+	}
+
+	protected Genre getGenre(String[] words) throws Exception {
+		for (String word : words) {
+			Genre genre = this.getGenre(word);
+			if ((genre == null) == false) {
+				return genre;
+			}
+		}
+		return null;
+	}
+
+	private Genre getGenre(String word) throws Exception {
+		if (word.toLowerCase().startsWith(Genre.Féminin.name().toLowerCase())) {
+			return Genre.Féminin;
+		} else if (word.toLowerCase().startsWith(Genre.Masculin.name().toLowerCase())) {
+			return Genre.Masculin;
+		} else {
+			return null;
+		}
+	}
+
+	protected Catégorie getCatégorie(String[] words) throws Exception {
+		for (String word : words) {
+			Catégorie catégorie = this.getCatégorie(word);
+			if ((catégorie == null) == false) {
+				return catégorie;
+			}
+		}
+		return Catégorie.Senior;
+	}
+	
+	private Catégorie getCatégorie(String word) throws Exception {
+		if (word.equalsIgnoreCase(Catégorie.Senior.name())) {
+			return Catégorie.Senior;
+		} else if (word.equalsIgnoreCase(Catégorie.U20.name())) {
+			return Catégorie.U20;
+		} else if (word.equalsIgnoreCase(Catégorie.U18.name())) {
+			return Catégorie.U18;
+		} else if (word.equalsIgnoreCase(Catégorie.U17.name())) {
+			return Catégorie.U17;
+		} else if (word.equalsIgnoreCase(Catégorie.U15.name())) {
+			return Catégorie.U15;
+		} else if (word.equalsIgnoreCase(Catégorie.U13.name())) {
+			return Catégorie.U13;
+		} else if (word.equalsIgnoreCase(Catégorie.U11.name())) {
+			return Catégorie.U11;
+		} else if (word.equalsIgnoreCase(Catégorie.U9.name())) {
+			return Catégorie.U9;
+		} else {
+			return null;
+		}
+	}
+
 
 }

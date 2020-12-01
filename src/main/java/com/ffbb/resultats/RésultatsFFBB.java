@@ -6,10 +6,13 @@ import com.ffbb.resultats.api.Appartenances;
 import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Classements;
 import com.ffbb.resultats.api.Division;
+import com.ffbb.resultats.api.Engagement;
 import com.ffbb.resultats.api.Engagements;
+import com.ffbb.resultats.api.Filtre;
 import com.ffbb.resultats.api.Journée;
 import com.ffbb.resultats.api.Journées;
 import com.ffbb.resultats.api.Organisation;
+import com.ffbb.resultats.api.Rencontre;
 import com.ffbb.resultats.api.Rencontres;
 import com.ffbb.resultats.api.Salle;
 import com.ffbb.resultats.api.Équipe;
@@ -46,6 +49,8 @@ public class RésultatsFFBB {
 	
 	private ClassementsExtractor classementsExtractor;
 	
+	private Filtre filtre;
+	
 	public RésultatsFFBB() {
 		organisationExtractor = new OrganisationExtractor(this);
 		appartenancesExtractor = new AppartenancesExtractor(this);
@@ -57,8 +62,14 @@ public class RésultatsFFBB {
 		journéesExtractor = new JournéesExtractor(this);
 		rencontresExtractor = new RencontresExtractor(this);
 		classementsExtractor = new ClassementsExtractor(this);
+		filtre = new Filtre();
 	}
 
+	public Filtre filtre() {
+		filtre.clear();
+		return filtre;
+	}
+	
 	public Organisation getOrganisation(String code) throws Exception {
 		String link = "http://resultats.ffbb.com/organisation/" + code + ".html";
 		URI uri = URI.create(link);
@@ -89,7 +100,18 @@ public class RésultatsFFBB {
 		String link = "http://resultats.ffbb.com/organisation/engagements/" + code + ".html";
 		URI uri = URI.create(link);
 		engagementsExtractor.setOrganisation(organisation);
-		return engagementsExtractor.doExtract(uri);
+		Engagements engagements = engagementsExtractor.doExtract(uri);
+		return this.doFilter(organisation, engagements);
+	}
+
+	private Engagements doFilter(Organisation organisation, Engagements engagements) {
+		Engagements results = new Engagements(organisation);
+		for (Engagement engagement : engagements) {
+			if (filtre.match(engagement.getDivision())) {
+				results.add(engagement);
+			}
+		}
+		return results;
 	}
 
 	public Championnat getChampionnat(String code) throws Exception {
@@ -108,7 +130,18 @@ public class RésultatsFFBB {
 		String link = "https://resultats.ffbb.com/championnat/journees/" + division.getCode() + ".html";
 		URI uri = URI.create(link);
 		journéesExtractor.setDivision(division);
-		return journéesExtractor.doExtract(uri);
+		Journées journées = journéesExtractor.doExtract(uri);
+		return this.doFilter(division, journées);
+	}
+
+	private Journées doFilter(Division division, Journées journées) {
+		Journées results = new Journées(division);
+		for (Journée journée : journées) {
+			if (filtre.match(journée)) {
+				results.add(journée);
+			}
+		}
+		return results;
 	}
 
 	public Rencontres getRencontres(Journée journée) throws Exception {
@@ -117,7 +150,18 @@ public class RésultatsFFBB {
 		String link = "https://resultats.ffbb.com/championnat/rencontres/" + prefix + suffix + ".html";
 		URI uri = URI.create(link);
 		rencontresExtractor.setJournée(journée);
-		return rencontresExtractor.doExtract(uri);
+		Rencontres rencontres = rencontresExtractor.doExtract(uri);
+		return this.doFilter(journée, rencontres);
+	}
+
+	private Rencontres doFilter(Journée journée, Rencontres rencontres) {
+		Rencontres results = new Rencontres(journée);
+		for (Rencontre rencontre : rencontres) {
+			if (filtre.match(rencontre)) {
+				results.add(rencontre);
+			}
+		}
+		return results;
 	}
 
 	public Classements getClassements(Division division) throws Exception {

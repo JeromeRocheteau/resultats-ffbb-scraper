@@ -38,7 +38,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	private static final String FÉMININ = "Equipes féminines";
 	
 	private Organisation organisation;
-	
+		
 	public Organisation getOrganisation() {
 		return organisation;
 	}

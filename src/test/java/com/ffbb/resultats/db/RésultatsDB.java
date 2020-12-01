@@ -24,6 +24,7 @@ import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Compétition;
 import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Engagement;
+import com.ffbb.resultats.api.Filtre;
 import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
@@ -32,8 +33,6 @@ import com.ffbb.resultats.api.Résultat;
 import com.ffbb.resultats.api.Salle;
 import com.ffbb.resultats.api.Équipe;
 import com.ffbb.resultats.core.ChampionnatExtractor;
-import com.ffbb.resultats.filtres.ChampionnatFiltre;
-import com.ffbb.resultats.filtres.Filtre;
 import com.ffbb.resultats.tests.ResultatsExtraction;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

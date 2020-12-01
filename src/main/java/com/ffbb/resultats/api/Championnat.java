@@ -12,6 +12,8 @@ public class Championnat extends Compétition implements Extractable {
 	
 	private Genre genre;
 	
+	private Integer phase;
+	
 	private List<Division> divisions;
 
 	public Niveau getNiveau() {
@@ -36,6 +38,14 @@ public class Championnat extends Compétition implements Extractable {
 
 	public void setGenre(Genre genre) {
 		this.genre = genre;
+	}
+
+	public Integer getPhase() {
+		return phase;
+	}
+
+	public void setPhase(Integer phase) {
+		this.phase = phase;
 	}
 
 	public List<Division> getDivisions() {
