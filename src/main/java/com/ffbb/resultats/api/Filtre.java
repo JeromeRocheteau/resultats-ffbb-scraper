@@ -112,7 +112,8 @@ public class Filtre {
 	}
 
 	public boolean match(Rencontre rencontre) {
-		return this.matchPériode(rencontre.getHoraire());
+		return this.match(rencontre.getJournée()) 
+				&& this.matchPériode(rencontre.getHoraire());
 	}
 
 	private boolean matchPériode(Date date) {
