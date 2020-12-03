@@ -226,12 +226,14 @@ public class RésultatsDB extends ResultatsExtraction {
 	}
 
 	private boolean done(Organisation organisation) throws Exception {
-		OrganisationReader organisationReader = new OrganisationReader(organisation);
+		OrganisationReader organisationReader = new OrganisationReader();
+		organisationReader.setObject(organisation);
 		return organisationReader.doRead(connection).booleanValue();	
 	}
 	
 	private void doing(Organisation organisation) throws Exception {
-		OrganisationUpdater organisationUpdater = new OrganisationUpdater(organisation);
+		OrganisationUpdater organisationUpdater = new OrganisationUpdater();
+		organisationUpdater.setObject(organisation);
 		boolean done = organisationUpdater.doUpdate(connection).booleanValue();
 		this.doInfo("traitement de l'organisation " + organisation + " : " + (done ? "succès" : "échec"));		
 	}
@@ -239,7 +241,8 @@ public class RésultatsDB extends ResultatsExtraction {
 	/* Compétition */
 	
 	private long doing(Compétition compétition) throws Exception {
-		CompétitionUpdater compétitionUpdater = new CompétitionUpdater(compétition);
+		CompétitionUpdater compétitionUpdater = new CompétitionUpdater();
+		compétitionUpdater.setObject(compétition);
 		long id = compétitionUpdater.doUpdate(connection).longValue();
 		this.doInfo("traitement de la rencontre de " + compétition + " : " + (id > 0 ? "succès" : "échec"));
 		return id;
@@ -248,12 +251,14 @@ public class RésultatsDB extends ResultatsExtraction {
 	/* Championnat */
 
 	private boolean done(Championnat championnat) throws Exception {
-		ChampionnatReader championnatReader = new ChampionnatReader(championnat);
+		ChampionnatReader championnatReader = new ChampionnatReader();
+		championnatReader.setObject(championnat);
 		return championnatReader.doRead(connection).booleanValue();	
 	}
 
 	private void doing(Championnat championnat) throws Exception {
-		ChampionnatUpdater championnatUpdater = new ChampionnatUpdater(championnat);
+		ChampionnatUpdater championnatUpdater = new ChampionnatUpdater();
+		championnatUpdater.setObject(championnat);
 		boolean done = championnatUpdater.doUpdate(connection).booleanValue();
 		this.doInfo("traitement du championnat " + championnat + " : " + (done ? "succès" : "échec"));	
 	}
@@ -261,7 +266,8 @@ public class RésultatsDB extends ResultatsExtraction {
 	/* Engagement */
 
 	private long doing(Engagement engagement) throws Exception {
-		EngagementUpdater engagementUpdater = new EngagementUpdater(engagement);
+		EngagementUpdater engagementUpdater = new EngagementUpdater();
+		engagementUpdater.setObject(engagement);
 		long id = engagementUpdater.doUpdate(connection).longValue();
 		this.doInfo("traitement de l'engagement de " + engagement + " : " + (id > 0 ? "succès" : "échec"));
 		return id;
@@ -270,12 +276,14 @@ public class RésultatsDB extends ResultatsExtraction {
 	/* Équipe */
 
 	private boolean done(Équipe équipe) throws Exception {
-		ÉquipeReader équipeReader = new ÉquipeReader(équipe);
+		ÉquipeReader équipeReader = new ÉquipeReader();
+		équipeReader.setObject(équipe);
 		return équipeReader.doRead(connection).booleanValue();
 	}
 
 	private void doing(Équipe équipe) throws Exception {
-		ÉquipeUpdater équipeUpdater = new ÉquipeUpdater(équipe);
+		ÉquipeUpdater équipeUpdater = new ÉquipeUpdater();
+		équipeUpdater.setObject(équipe);
 		boolean done = équipeUpdater.doUpdate(connection).booleanValue();
 		this.doInfo("traitement de l'équipe " + équipe + " : " + (done ? "succès" : "échec"));	
 	}
@@ -283,12 +291,14 @@ public class RésultatsDB extends ResultatsExtraction {
 	/* Rencontre */
 
 	private boolean done(Rencontre rencontre) throws Exception {
-		RencontreReader rencontreReader = new RencontreReader(rencontre);
+		RencontreReader rencontreReader = new RencontreReader();
+		rencontreReader.setObject(rencontre);
 		return rencontreReader.doRead(connection).booleanValue();
 	}
 
 	private long doing(Rencontre rencontre) throws Exception {
-		RencontreUpdater rencontreUpdater = new RencontreUpdater(rencontre);
+		RencontreUpdater rencontreUpdater = new RencontreUpdater();
+		rencontreUpdater.setObject(rencontre);
 		try {
 			long id = rencontreUpdater.doUpdate(connection).longValue();
 			this.doInfo("traitement de la rencontre de " + rencontre + " : " + (id > 0 ? "succès" : "échec"));
@@ -307,12 +317,14 @@ public class RésultatsDB extends ResultatsExtraction {
 	}
 
 	private boolean done(Salle salle) throws Exception {
-		SalleReader salleReader = new SalleReader(salle);
+		SalleReader salleReader = new SalleReader();
+		salleReader.setObject(salle);
 		return salleReader.doRead(connection).booleanValue();		
 	}
 
 	private void doing(Salle salle) throws Exception {
-		SalleUpdater salleUpdater = new SalleUpdater(salle);
+		SalleUpdater salleUpdater = new SalleUpdater();
+		salleUpdater.setObject(salle);
 		boolean done = salleUpdater.doUpdate(connection).booleanValue();
 		this.doInfo("traitement de la salle " + salle + " : " + (done ? "succès" : "échec"));
 	}
@@ -324,12 +336,14 @@ public class RésultatsDB extends ResultatsExtraction {
 	}
 
 	private boolean done(Résultat résultat) throws Exception {
-		RésultatReader résultatReader = new RésultatReader(résultat);
+		RésultatReader résultatReader = new RésultatReader();
+		résultatReader.setObject(résultat);
 		return résultatReader.doRead(connection).booleanValue();		
 	}
 
 	private void doing(Résultat résultat) throws Exception {
-		RésultatUpdater résultatUpdater = new RésultatUpdater(résultat);
+		RésultatUpdater résultatUpdater = new RésultatUpdater();
+		résultatUpdater.setObject(résultat);
 		boolean done = résultatUpdater.doUpdate(connection).booleanValue();
 		this.doInfo("traitement du résultat " + résultat + " : " + (done ? "succès" : "échec"));
 	}

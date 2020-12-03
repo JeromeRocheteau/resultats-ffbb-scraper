@@ -19,6 +19,8 @@ public class Filtre {
 
 	private List<Integer> phases;
 	
+	private List<Integer> divisions;
+	
 	private List<String> poules;
 	
 	private List<Integer> journées;
@@ -31,6 +33,7 @@ public class Filtre {
 		this.genres.clear();
 		this.niveaux.clear();
 		this.phases.clear();
+		this.divisions.clear();
 		this.poules.clear();
 		this.journées.clear();
 		this.dates.clear();
@@ -61,6 +64,11 @@ public class Filtre {
 		this.phases.addAll(Arrays.asList(phases));
 		return this;
 	}
+
+	public Filtre divisions(Integer... divisions) {
+		this.divisions.addAll(Arrays.asList(divisions));
+		return this;
+	}
 	
 	public Filtre poules(String... poules) {
 		this.poules.addAll(Arrays.asList(poules));
@@ -83,6 +91,7 @@ public class Filtre {
 		genres = new LinkedList<Genre>();
 		niveaux = new LinkedList<Niveau>();
 		phases = new LinkedList<Integer>();
+		divisions = new LinkedList<Integer>();
 		poules = new LinkedList<String>();
 		journées = new LinkedList<Integer>();
 		dates = new LinkedList<Dates>();
@@ -93,9 +102,10 @@ public class Filtre {
 		return this.matchType(championnat.getType()) 
 				&& this.matchCatégorie(championnat.getCatégorie())
 				&& this.matchGenre(championnat.getGenre())
-				&& this.match(championnat.getNiveau())
+				&& this.matchNiveau(championnat.getNiveau())
 				&& this.matchPhase(championnat.getPhase())
-				&& this.matchPoule(division.getNom());
+				&& this.matchNum(championnat.getNum())
+				&& this.matchPoule(division.getNom(), division.getNum());
 	}
 
 	public boolean match(Journée journée) {
@@ -170,7 +180,7 @@ public class Filtre {
 		}
 	}
 
-	private boolean match(Niveau niveau) {
+	private boolean matchNiveau(Niveau niveau) {
 		if (niveaux.isEmpty()) {
 			return true;
 		} else {
@@ -195,13 +205,32 @@ public class Filtre {
 			return false;
 		}
 	}
+
+	private boolean matchNum(Integer division) {
+		if (divisions.isEmpty()) {
+			return true;
+		} else if (division == null) {
+			return false;
+		} else {
+			for (Integer filter : divisions) {
+				if (filter == division) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 	
-	private boolean matchPoule(String poule) {
+	private boolean matchPoule(String poule, String num) {
 		if (poules.isEmpty()) {
 			return true;
 		} else {
 			for (String filter : poules) {
 				if (poule.equalsIgnoreCase(filter)) {
+					return true;
+				} else if (num == null) {
+					continue;
+				} else if (num.equalsIgnoreCase(filter)) {
 					return true;
 				}
 			}

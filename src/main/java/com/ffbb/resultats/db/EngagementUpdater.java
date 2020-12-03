@@ -5,13 +5,7 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Engagement;
 
-public class EngagementUpdater extends Updater<Long> {
-
-	private Engagement engagement;
-	
-	public EngagementUpdater(Engagement engagement) {
-		this.engagement = engagement;
-	}
+public class EngagementUpdater extends Updater<Engagement, Long> {
 
 	@Override
 	public String getScriptPath() {
@@ -33,6 +27,7 @@ public class EngagementUpdater extends Updater<Long> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		Engagement engagement = this.getObject();
 		statement.setLong(1, engagement.getOrganisation().getId());
 		statement.setLong(2, engagement.getDivision().getId());
 	}

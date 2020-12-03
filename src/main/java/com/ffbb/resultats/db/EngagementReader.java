@@ -5,13 +5,7 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Engagement;
 
-public class EngagementReader extends Reader<Boolean> {
-
-	private Engagement engagement;
-
-	public EngagementReader(Engagement engagement) {
-		this.engagement = engagement;
-	}
+public class EngagementReader extends Reader<Engagement, Boolean> {
 
 	@Override
 	public String getScriptPath() {
@@ -20,6 +14,7 @@ public class EngagementReader extends Reader<Boolean> {
 
 	@Override
 	public Boolean getResult(ResultSet resultSet) throws Exception {
+		Engagement engagement = this.getObject();
 		if (resultSet.next()) {
 			Long id = resultSet.getLong(1);
 			engagement.setId(id);
@@ -31,6 +26,7 @@ public class EngagementReader extends Reader<Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		Engagement engagement = this.getObject();
 		statement.setLong(1, engagement.getOrganisation().getId());
 		statement.setLong(2, engagement.getDivision().getId());
 	}

@@ -5,13 +5,7 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Salle;
 
-public class SalleReader extends Reader<Boolean> {
-
-	private Salle salle;
-	
-	public SalleReader(Salle salle) {
-		this.salle = salle;
-	}
+public class SalleReader extends Reader<Salle, Boolean> {
 
 	@Override
 	public String getScriptPath() {
@@ -20,6 +14,7 @@ public class SalleReader extends Reader<Boolean> {
 
 	@Override
 	public Boolean getResult(ResultSet resultSet) throws Exception {
+		Salle salle = this.getObject();
 		if (resultSet.next()) {
 			Long id = resultSet.getLong(1);
 			salle.setId(id);
@@ -31,6 +26,7 @@ public class SalleReader extends Reader<Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		Salle salle = this.getObject();
 		statement.setLong(1, salle.getId().longValue());
 	}
 	

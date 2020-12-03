@@ -12,6 +12,8 @@ public class Division implements Identifiable, Encodable, Extractable, Comparabl
 		
 	private String nom;
 	
+	private String num;
+	
 	private Championnat championnat;
 	
 	private List<Équipe> équipes;
@@ -30,6 +32,14 @@ public class Division implements Identifiable, Encodable, Extractable, Comparabl
 
 	public String getNom() {
 		return nom;
+	}
+
+	public String getNum() {
+		return num;
+	}
+
+	public void setNum(String num) {
+		this.num = num;
 	}
 
 	public Championnat getChampionnat() {

@@ -6,13 +6,7 @@ import java.sql.Types;
 
 import com.ffbb.resultats.api.Compétition;
 
-public class CompétitionUpdater extends Updater<Long> {
-
-	private Compétition compétition;
-	
-	public CompétitionUpdater(Compétition compétition) {
-		this.compétition = compétition;
-	}
+public class CompétitionUpdater extends Updater<Compétition,Long> {
 
 	@Override
 	public String getScriptPath() {
@@ -34,6 +28,7 @@ public class CompétitionUpdater extends Updater<Long> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		Compétition compétition = this.getObject();
 		statement.setLong(1, compétition.getId());
 		statement.setString(2, compétition.getCode());
 		if (compétition.getOrganisateur() == null || compétition.getOrganisateur().getId() == null) {

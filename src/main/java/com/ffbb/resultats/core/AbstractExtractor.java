@@ -15,6 +15,7 @@ import org.openqa.selenium.remote.ProtocolHandshake;
 
 import com.ffbb.resultats.RésultatsFFBB;
 import com.ffbb.resultats.api.Catégorie;
+import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Extractable;
 import com.ffbb.resultats.api.Genre;
@@ -137,6 +138,60 @@ public abstract class AbstractExtractor<T> {
 			
 		}
 		return 1;
+	}
+	
+	protected Integer getDivNum(String[] words) {
+		boolean next = false;
+		for (String word : words) {
+			if (next) {
+				return Integer.valueOf(word);
+			} else if (word.equalsIgnoreCase("division")) {
+				next = true;
+			}
+			
+		}
+		return null;
+	}
+	
+	protected Integer getDivNum(Niveau niveau, String[] words) {
+		String niv = niveau.toString();
+		int len = niv.length();
+		for (String word : words) {
+			if (word.startsWith(niv)) {
+				try {
+					String val = word.substring(len);
+					return Integer.valueOf(val);
+				} catch (Exception e) {
+					continue;
+				}
+			}
+			
+		}
+		return null;
+	}
+	
+	protected void setDivNum(Championnat championnat, String[] words) {
+		if (championnat.getNum() == null) {
+			Integer num = this.getDivNum(championnat.getNiveau(), words);
+			System.out.println(championnat + " | division = " + num);
+			championnat.setNum(num);
+		} else {
+			System.out.println(championnat + " | division = null");
+		}
+	}
+	
+	protected String getPouleNum(String[] words) {
+		boolean next = false;
+		for (String word : words) {
+			if (next) {
+				System.out.println("poule = " + word);
+				return word;
+			} else if (word.equalsIgnoreCase("poule")) {
+				next = true;
+			}
+			
+		}
+		return null;
 	}
 
 	protected Genre getGenre(String[] words) throws Exception {

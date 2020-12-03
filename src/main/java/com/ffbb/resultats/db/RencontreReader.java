@@ -6,13 +6,7 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Rencontre;
 
-public class RencontreReader extends Reader<Boolean> {
-
-	private Rencontre rencontre;
-
-	public RencontreReader(Rencontre rencontre) {
-		this.rencontre = rencontre;
-	}
+public class RencontreReader extends Reader<Rencontre, Boolean> {
 
 	@Override
 	public String getScriptPath() {
@@ -32,6 +26,7 @@ public class RencontreReader extends Reader<Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		Rencontre rencontre = this.getObject();
 		// statement.setLong(1, rencontre.getCompétition().getId());
 		//statement.setInt(2, rencontre.getJournée());
 		statement.setDate(3, new Date(rencontre.getHoraire().getTime()));

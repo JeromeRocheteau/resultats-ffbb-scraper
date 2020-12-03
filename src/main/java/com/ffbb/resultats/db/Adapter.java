@@ -8,6 +8,20 @@ import org.apache.commons.io.output.StringBuilderWriter;
 
 public abstract class Adapter<T> {
 	
+	private T object;
+	
+	public final T getObject() {
+		return this.object;
+	}
+	
+	public final void setObject(T object) {
+		this.object = object;
+	}
+	
+	public final boolean isValidated() {
+		return object != null;
+	}
+	
 	public abstract String getScriptPath();
 	
 	public abstract void setParameters(PreparedStatement statement) throws Exception;

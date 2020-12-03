@@ -6,13 +6,7 @@ import java.sql.Types;
 
 import com.ffbb.resultats.api.Salle;
 
-public class SalleUpdater extends Updater<Boolean> {
-
-	private Salle salle;
-	
-	public SalleUpdater(Salle salle) {
-		this.salle = salle;
-	}
+public class SalleUpdater extends Updater<Salle, Boolean> {
 
 	@Override
 	public String getScriptPath() {
@@ -30,6 +24,7 @@ public class SalleUpdater extends Updater<Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		Salle salle = this.getObject();
 		statement.setLong(1, salle.getId().longValue());
 		statement.setFloat(2, salle.getLatitude().floatValue());
 		statement.setFloat(3, salle.getLongitude().floatValue());

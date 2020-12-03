@@ -6,13 +6,7 @@ import java.sql.Types;
 
 import com.ffbb.resultats.api.Organisation;
 
-public class OrganisationUpdater extends Updater<Boolean> {
-
-	private Organisation organisation;
-	
-	public OrganisationUpdater(Organisation organisation) {
-		this.organisation = organisation;
-	}
+public class OrganisationUpdater extends Updater<Organisation, Boolean> {
 
 	@Override
 	public String getScriptPath() {
@@ -30,6 +24,7 @@ public class OrganisationUpdater extends Updater<Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		Organisation organisation = this.getObject();
 		statement.setString(1, organisation.getCode());
 		statement.setString(2, organisation.getType().name());
 		if (organisation.getFfbb() == null) {

@@ -5,13 +5,7 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Résultat;
 
-public class RésultatUpdater extends Updater<Boolean> {
-
-	private Résultat résultat;
-	
-	public RésultatUpdater(Résultat résultat) {
-		this.résultat = résultat;
-	}
+public class RésultatUpdater extends Updater<Résultat, Boolean> {
 
 	@Override
 	public String getScriptPath() {
@@ -29,6 +23,7 @@ public class RésultatUpdater extends Updater<Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		Résultat résultat = this.getObject();
 		statement.setLong(1, résultat.getId());
 		statement.setInt(2, résultat.getDomicile());
 		statement.setInt(3, résultat.getVisiteur());

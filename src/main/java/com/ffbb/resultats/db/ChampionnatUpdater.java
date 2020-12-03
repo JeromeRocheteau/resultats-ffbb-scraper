@@ -5,13 +5,7 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Championnat;
 
-public class ChampionnatUpdater extends Updater<Boolean> {
-
-	private Championnat championnat;
-	
-	public ChampionnatUpdater(Championnat championnat) {
-		this.championnat = championnat;
-	}
+public class ChampionnatUpdater extends Updater<Championnat, Boolean> {
 
 	@Override
 	public String getScriptPath() {
@@ -29,6 +23,7 @@ public class ChampionnatUpdater extends Updater<Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		Championnat championnat = this.getObject();
 		statement.setLong(1, championnat.getId());
 		statement.setLong(2, 0L);
 		// FIXME statement.setString(3, championnat.getNiveau().name());

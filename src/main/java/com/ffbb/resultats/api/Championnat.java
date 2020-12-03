@@ -14,6 +14,8 @@ public class Championnat extends Compétition implements Extractable {
 	
 	private Integer phase;
 	
+	private Integer num;
+	
 	private List<Division> divisions;
 
 	public Niveau getNiveau() {
@@ -46,6 +48,14 @@ public class Championnat extends Compétition implements Extractable {
 
 	public void setPhase(Integer phase) {
 		this.phase = phase;
+	}
+
+	public Integer getNum() {
+		return num;
+	}
+
+	public void setNum(Integer num) {
+		this.num = num;
 	}
 
 	public List<Division> getDivisions() {

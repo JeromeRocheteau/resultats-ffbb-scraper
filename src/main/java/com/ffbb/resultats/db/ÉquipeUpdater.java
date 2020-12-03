@@ -5,13 +5,7 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Équipe;
 
-public class ÉquipeUpdater extends Updater<Boolean> {
-
-	private Équipe équipe;
-	
-	public ÉquipeUpdater(Équipe équipe) {
-		this.équipe = équipe;
-	}
+public class ÉquipeUpdater extends Updater<Équipe, Boolean> {
 
 	@Override
 	public String getScriptPath() {
@@ -29,6 +23,7 @@ public class ÉquipeUpdater extends Updater<Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
+		Équipe équipe = this.getObject();
 		statement.setLong(1, équipe.getId());
 		statement.setString(2, équipe.getNom());
 	}
