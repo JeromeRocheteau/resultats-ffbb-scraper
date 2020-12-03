@@ -77,7 +77,7 @@ public abstract class AbstractExtractor<T> {
 	protected Document getDocument(URI uri) throws Exception {
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 		capabilities.setJavascriptEnabled(true);  
-		capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/usr/bin/phantomjs");
+		capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, résultatsFFBB.getPhantomJsPath());
 		capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[] {"--webdriver-loglevel=NONE"});
 		Logger.getLogger(PhantomJSDriverService.class.getName()).setLevel(Level.OFF);
 		Logger.getLogger(ProtocolHandshake.class.getName()).setLevel(Level.OFF);		

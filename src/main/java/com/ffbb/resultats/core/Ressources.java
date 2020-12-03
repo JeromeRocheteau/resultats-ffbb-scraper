@@ -17,7 +17,7 @@ public class Ressources {
 		}
 		return instance;
 	}
-
+	
 	protected Map<String, Extractable> resources;
 	
 	@SuppressWarnings("unchecked")

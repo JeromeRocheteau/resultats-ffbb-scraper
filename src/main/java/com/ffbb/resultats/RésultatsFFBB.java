@@ -51,7 +51,14 @@ public class RésultatsFFBB {
 	
 	private Filtre filtre;
 	
-	public RésultatsFFBB() {
+	private String phantomJsPath;
+	
+	public String getPhantomJsPath() {
+		return phantomJsPath;
+	}
+
+	public RésultatsFFBB(String phantomjsPath) {
+		this.phantomJsPath = phantomjsPath;
 		organisationExtractor = new OrganisationExtractor(this);
 		appartenancesExtractor = new AppartenancesExtractor(this);
 		salleExtractor = new SalleExtractor(this);

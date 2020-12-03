@@ -10,7 +10,7 @@ public abstract class ResultatsExtraction {
 	
 	@Before
 	public void setUp() {
-		extractor = new RésultatsFFBB();
+		extractor = new RésultatsFFBB("/usr/bin/phantomjs");
 	}
 	
 }
