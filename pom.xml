@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ffbb.resultats</groupId>
   <artifactId>resultats-ffbb-scraper</artifactId>
-  <version>0.7-2</version>
+  <version>0.8-0</version>
   <packaging>jar</packaging>
   <name>ffbb-resultats</name>
   <url>https://resultats.ffbb.com</url>
