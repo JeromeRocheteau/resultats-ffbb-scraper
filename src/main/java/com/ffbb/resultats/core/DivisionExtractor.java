@@ -64,11 +64,9 @@ public class DivisionExtractor extends AbstractExtractor<Division> {
 			Niveau niveau = this.getNiveau(words);
 			Catégorie catégorie = this.getCatégorie(words);
 			Genre genre = this.getGenre(words);
-			Integer divnum = this.getDivNum(words);
 			championnat.setNiveau(niveau);
 			championnat.setCatégorie(catégorie);
 			championnat.setGenre(genre);
-			championnat.setNum(divnum);
 			this.doBind(Championnat.class, championnat.getURI(), championnat);
 			return championnat;
 		} else {
@@ -83,9 +81,6 @@ public class DivisionExtractor extends AbstractExtractor<Division> {
 		Element elt = element.select("option[selected]").first();
 		if (elt == null) {
 			String nom = element.text();
-			String[] words = nom.split("\\s+");
-			String num = this.getPouleNum(words);
-			this.setDivNum(championnat, words);
 			Long id = codes.get(nom);
 			elt = element.select("input[type=hidden]").first();
 			String code = elt.attr("value");
@@ -93,20 +88,16 @@ public class DivisionExtractor extends AbstractExtractor<Division> {
 			int sup = code.lastIndexOf('.');
 			code = code.substring(inf + 1, sup);
 			Division division = new Division(id, code, nom, championnat);
-			division.setNum(num);
+			// division.setNum(num);
 			return division;
 		} else {
 			String nom = elt.text();
-			String[] words = nom.split("\\s+");
-			String num = this.getPouleNum(words);
-			this.setDivNum(championnat, words);
 			Long id = codes.get(nom);
 			String code = elt.attr("value");
 			int inf = code.indexOf('/');
 			int sup = code.lastIndexOf('.');
 			code = code.substring(inf + 1, sup);
 			Division division = new Division(id, code, nom, championnat);
-			division.setNum(num);
 			return division;
 		}
 	}

@@ -18,9 +18,7 @@ public class Filtre {
 	private List<Genre> genres;
 
 	private List<Integer> phases;
-	
-	private List<Integer> divisions;
-	
+		
 	private List<String> poules;
 	
 	private List<Integer> journées;
@@ -33,7 +31,6 @@ public class Filtre {
 		this.genres.clear();
 		this.niveaux.clear();
 		this.phases.clear();
-		this.divisions.clear();
 		this.poules.clear();
 		this.journées.clear();
 		this.dates.clear();
@@ -64,11 +61,6 @@ public class Filtre {
 		this.phases.addAll(Arrays.asList(phases));
 		return this;
 	}
-
-	public Filtre divisions(Integer... divisions) {
-		this.divisions.addAll(Arrays.asList(divisions));
-		return this;
-	}
 	
 	public Filtre poules(String... poules) {
 		this.poules.addAll(Arrays.asList(poules));
@@ -91,7 +83,6 @@ public class Filtre {
 		genres = new LinkedList<Genre>();
 		niveaux = new LinkedList<Niveau>();
 		phases = new LinkedList<Integer>();
-		divisions = new LinkedList<Integer>();
 		poules = new LinkedList<String>();
 		journées = new LinkedList<Integer>();
 		dates = new LinkedList<Dates>();
@@ -104,8 +95,7 @@ public class Filtre {
 				&& this.matchGenre(championnat.getGenre())
 				&& this.matchNiveau(championnat.getNiveau())
 				&& this.matchPhase(championnat.getPhase())
-				&& this.matchNum(championnat.getNum())
-				&& this.matchPoule(division.getNom(), division.getNum());
+				&& this.matchPoule(division.getNom());
 	}
 
 	public boolean match(Journée journée) {
@@ -205,33 +195,24 @@ public class Filtre {
 			return false;
 		}
 	}
-
-	private boolean matchNum(Integer division) {
-		if (divisions.isEmpty()) {
-			return true;
-		} else if (division == null) {
-			return false;
-		} else {
-			for (Integer filter : divisions) {
-				if (filter == division) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
 	
-	private boolean matchPoule(String poule, String num) {
+	private boolean matchPoule(String poule) {
 		if (poules.isEmpty()) {
 			return true;
 		} else {
 			for (String filter : poules) {
 				if (poule.equalsIgnoreCase(filter)) {
 					return true;
-				} else if (num == null) {
-					continue;
-				} else if (num.equalsIgnoreCase(filter)) {
-					return true;
+				} else if (filter.startsWith("starts-with:")) {
+					String pattern = filter.substring("starts-with:".length()).toLowerCase();
+					if (poule.toLowerCase().startsWith(pattern)) {
+						return true;
+					}
+				} else if (filter.startsWith("ends-with:")) {
+					String pattern = filter.substring("ends-with:".length()).toLowerCase();
+					if (poule.toLowerCase().endsWith(pattern)) {
+						return true;
+					}
 				}
 			}
 			return false;

@@ -50,12 +50,10 @@ public class ChampionnatExtractor extends AbstractExtractor<Championnat> {
 		Catégorie catégorie = this.getCatégorie(words);
 		Genre genre = this.getGenre(words);
 		Integer phase = this.getPhase(words);
-		Integer divnum = this.getDivNum(words);
 		championnat.setNiveau(niveau);
 		championnat.setCatégorie(catégorie);
 		championnat.setGenre(genre);
 		championnat.setPhase(phase);
-		championnat.setNum(divnum);
 		this.doBind(Championnat.class, championnat.getURI(), championnat);
 		List<Division> divisions = this.getDivisions(document, script, championnat);
 		for (Division division : divisions) {
@@ -74,9 +72,6 @@ public class ChampionnatExtractor extends AbstractExtractor<Championnat> {
 		Elements elements = element.select("option");
 		if (elements == null || elements.size() == 0) {
 			String nom = element.text();
-			String[] words = nom.split("\\s+");
-			String num = this.getPouleNum(words);
-			this.setDivNum(championnat, words);
 			Long id = codes.get(nom);
 			Element elt = element.select("input[type=hidden]").first();
 			String code = elt.attr("value");
@@ -84,20 +79,16 @@ public class ChampionnatExtractor extends AbstractExtractor<Championnat> {
 			int sup = code.lastIndexOf('.');
 			code = code.substring(inf + 1, sup);
 			Division division = new Division(id, code, nom, championnat);
-			division.setNum(num);
 			divisions.add(division);
 		} else {
 			for (Element elt : elements) {
 				String nom = elt.text();
-				String[] words = nom.split("\\s+");
-				String num = this.getPouleNum(words);
 				Long id = codes.get(nom);
 				String code = elt.attr("value");
 				int inf = code.indexOf('/');
 				int sup = code.lastIndexOf('.');
 				code = code.substring(inf + 1, sup);
 				Division division = new Division(id, code, nom, championnat);
-				division.setNum(num);
 				divisions.add(division);
 			}			
 		}

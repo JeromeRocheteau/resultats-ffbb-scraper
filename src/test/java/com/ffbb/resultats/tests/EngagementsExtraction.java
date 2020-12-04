@@ -89,7 +89,7 @@ public class EngagementsExtraction extends ResultatsExtraction {
 	public void test_08_2226() throws Exception {
 		Organisation organisation = extractor.getOrganisation("2226");
 		Assert.assertNotNull(organisation);
-		extractor.filtre().types(Type.Championnat).catégories(Catégorie.U13).genres(Genre.Féminin).niveaux(Niveau.Départemental).divisions(2).poules("D");
+		extractor.filtre().types(Type.Championnat).catégories(Catégorie.U13).genres(Genre.Féminin).niveaux(Niveau.Départemental).poules("starts-with:D2");
 		Engagements engagements = extractor.getEngagements(organisation);
 		Assert.assertNotNull(engagements);
 		Assert.assertEquals(1, engagements.size());
@@ -99,7 +99,7 @@ public class EngagementsExtraction extends ResultatsExtraction {
 	public void test_09_2226() throws Exception {
 		Organisation organisation = extractor.getOrganisation("2226");
 		Assert.assertNotNull(organisation);
-		extractor.filtre().types(Type.Championnat).catégories(Catégorie.U13).genres(Genre.Féminin).niveaux(Niveau.Départemental).divisions(3).poules("C");
+		extractor.filtre().types(Type.Championnat).catégories(Catégorie.U13).genres(Genre.Féminin).niveaux(Niveau.Départemental).poules("ends-with:Poule D");
 		Engagements engagements = extractor.getEngagements(organisation);
 		Assert.assertNotNull(engagements);
 		Assert.assertEquals(1, engagements.size());
@@ -109,7 +109,17 @@ public class EngagementsExtraction extends ResultatsExtraction {
 	public void test_10_2226() throws Exception {
 		Organisation organisation = extractor.getOrganisation("2226");
 		Assert.assertNotNull(organisation);
-		extractor.filtre().types(Type.Championnat).catégories(Catégorie.U13).genres(Genre.Féminin).niveaux(Niveau.Départemental).divisions(2, 3);
+		extractor.filtre().types(Type.Championnat).catégories(Catégorie.U13).genres(Genre.Féminin).niveaux(Niveau.Départemental).poules("starts-with:D3", "ends-with:Poule C");
+		Engagements engagements = extractor.getEngagements(organisation);
+		Assert.assertNotNull(engagements);
+		Assert.assertEquals(1, engagements.size());
+	}
+
+	@Test
+	public void test_11_2226() throws Exception {
+		Organisation organisation = extractor.getOrganisation("2226");
+		Assert.assertNotNull(organisation);
+		extractor.filtre().types(Type.Championnat).catégories(Catégorie.U13).genres(Genre.Féminin).niveaux(Niveau.Départemental).poules("starts-with:D2", "starts-with:D3");
 		Engagements engagements = extractor.getEngagements(organisation);
 		Assert.assertNotNull(engagements);
 		Assert.assertEquals(2, engagements.size());
