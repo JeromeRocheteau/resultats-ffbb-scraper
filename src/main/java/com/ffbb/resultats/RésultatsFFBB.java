@@ -1,6 +1,8 @@
 package com.ffbb.resultats;
 
 import java.net.URI;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import com.ffbb.resultats.api.Appartenances;
 import com.ffbb.resultats.api.Championnat;
@@ -55,6 +57,19 @@ public class RésultatsFFBB {
 	
 	public String getPhantomJsPath() {
 		return phantomJsPath;
+	}
+	
+	public void setConnection(Connection connection) throws SQLException {
+		organisationExtractor.setConnection(connection);
+		appartenancesExtractor.setConnection(connection);
+		salleExtractor.setConnection(connection);
+		engagementsExtractor.setConnection(connection);
+		championnatExtractor.setConnection(connection);
+		divisionExtractor.setConnection(connection);
+		équipeExtractor.setConnection(connection);
+		journéesExtractor.setConnection(connection);
+		rencontresExtractor.setConnection(connection);
+		classementsExtractor.setConnection(connection);
 	}
 
 	public RésultatsFFBB(String phantomjsPath) {

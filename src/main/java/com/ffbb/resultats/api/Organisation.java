@@ -45,6 +45,22 @@ public class Organisation implements Identifiable, Encodable, Extractable, Compa
 		this.type = type;
 	}
 
+	public void setType(String type) {
+		if (type.equals(Type.Club.name())) {
+			this.type = Type.Club;
+		} else if (type.equals(Type.ClubPro.name())) {
+			this.type = Type.ClubPro;
+		} else if (type.equals(Type.Entente.name())) {
+			this.type = Type.Entente;
+		} else if (type.equals(Type.Comité.name())) {
+			this.type = Type.Comité;
+		} else if (type.equals(Type.Ligue.name())) {
+			this.type = Type.Ligue;
+		} else if (type.equals(Type.Fédération.name())) {
+			this.type = Type.Fédération;
+		}
+	}
+
 	public String getFfbb() {
 		return ffbb;
 	}
@@ -85,6 +101,13 @@ public class Organisation implements Identifiable, Encodable, Extractable, Compa
 		this.engagements = new Engagements(this);
 	}
 	
+	public Organisation(Long id, String code, String type, String ffbb, String nom) {
+		this(id, code);
+		this.setType(type);
+		this.setFfbb(ffbb);
+		this.setNom(nom);
+	}
+
 	@Override
 	public String toString() {
 		return nom + " - " + ffbb + " - " + type.name();

@@ -1,6 +1,8 @@
 package com.ffbb.resultats.core;
 
 import java.net.URI;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,15 +64,15 @@ public abstract class AbstractExtractor<T> {
 	}
 	
 	protected <U extends Extractable> void doBind(Class<U> type, URI uri, U resource) throws Exception {
-		if (this.doFind(type, uri) == null) {
-			ressources.doBind(type, uri, resource);			
-		} else {
-			this.doWarn("Already bound resource of " + type.getSimpleName() + " for URI: " + uri);
-		}
+		ressources.doBind(type, uri, resource);
+	}
+
+	public void setConnection(Connection connection) throws SQLException {
+		this.ressources.setConnection(connection);
 	}
 	
 	protected AbstractExtractor(RésultatsFFBB résultatsFFBB) {
-		ressources = Ressources.getInstance();
+		this.ressources = Ressources.getInstance();
 		this.résultatsFFBB = résultatsFFBB;
 	}
 	

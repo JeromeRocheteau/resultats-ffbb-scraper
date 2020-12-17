@@ -1,9 +1,9 @@
-SELECT s.`id`,
-    s.`latitude`,
-    s.`longitude`,
-    s.`nom`,
-    s.`adresse`,
-    s.`codePostal`,
-    s.`ville`
+SELECT s.`id` as `id`,
+    s.`latitude` as `latitude`,
+    s.`longitude` as `longitude`,
+    s.`nom` as `nom`,
+    s.`adresse` as `adresse`,
+    s.`codePostal` as `codePostal`,
+    s.`ville` as `ville`
 FROM `salles` AS s
 WHERE s.`id` = ?;

@@ -12,22 +12,24 @@ CREATE TABLE `salles` (
 );
 
 CREATE TABLE `organisations` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) DEFAULT NULL,
   `salle` bigint(20) DEFAULT NULL,
   `code` varchar(45) NOT NULL,
   `type` varchar(45) NOT NULL,
   `ffbb` varchar(45) NOT NULL,
   `nom` varchar(90) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`),
+  PRIMARY KEY (`code`),
+  UNIQUE KEY `code` (`id`),
   FOREIGN KEY (`salle`) REFERENCES `salles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE `appartenances` (
-  `organisation` bigint(20) NOT NULL,
-  `structure` bigint(20) NOT NULL,
+  `organisation` varchar(45) NOT NULL,
+  `structure` varchar(45) NOT NULL,
   `type` varchar(45) NOT NULL,
-  PRIMARY KEY (`organisation`,`structure`)
+  PRIMARY KEY (`organisation`,`structure`),
+  FOREIGN KEY (`organisation`) REFERENCES `organisations` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`structure`) REFERENCES `organisations` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `compétitions` (

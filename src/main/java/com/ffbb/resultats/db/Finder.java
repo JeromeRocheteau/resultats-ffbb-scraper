@@ -2,8 +2,6 @@ package com.ffbb.resultats.db;
 
 import java.net.URI;
 
-public interface Finder<T> {
+public abstract class Finder<T> extends Reader<URI, T> {
 
-	public T doFind(URI uri);
-	
 }

@@ -68,6 +68,8 @@ public class RésultatsDB extends ResultatsExtraction {
 			Assert.assertNotNull(organisation);
 			List<Appartenance> appartenances = extractor.getAppartenances(organisation);
 			Assert.assertNotNull(appartenances);
+			Salle salle = extractor.getSalle(organisation);
+			Assert.assertNotNull(salle);
 			// List<Engagement> engagements = extractor.getEngagements(organisation);
 			// Assert.assertNotNull(engagements);
 			//ChampionnatFiltre filtre = new ChampionnatFiltre().niveaux(Niveau.Départemental).catégories(Catégorie.U13).genres(Genre.Féminin).divisions(0);
@@ -89,16 +91,20 @@ public class RésultatsDB extends ResultatsExtraction {
 	}
 
 	private void doConnect() throws Exception {
-	    Properties properties = new Properties();
-	    properties.put("user", ""); // TODO
-	    properties.put("password", ""); // TODO
-	    connection = DriverManager.getConnection("jdbc:mysql://app.icam.fr:3306/basketballdb" + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "louR8jay");
+		String database = "jdbc:mysql://app.icam.fr:3306/basketballdb";
+		String parameters = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		String username = "basketballdb";
+		String password = "basketballdb";
+	    connection = DriverManager.getConnection(database + parameters, username, password);
 	    connection.setAutoCommit(false);
+	    extractor.setConnection(connection);
 	}
 	
 	private void doDisconnect() throws Exception {
 	    connection.close();
 	}
+	
+	/*
 	
 	private void doExtract(Engagement engagement, Filtre filtre) {
 		try {
@@ -214,7 +220,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		}
 	}
 	
-	/* Organisation */
+	/* Organisation * /
 
 	private boolean todo(Organisation organisation) throws Exception {
 		for (Organisation org : statues.keySet()) {
@@ -227,8 +233,8 @@ public class RésultatsDB extends ResultatsExtraction {
 
 	private boolean done(Organisation organisation) throws Exception {
 		OrganisationReader organisationReader = new OrganisationReader();
-		organisationReader.setObject(organisation);
-		return organisationReader.doRead(connection).booleanValue();	
+		organisationReader.setObject(organisation.getCode());
+		return organisationReader.doRead(connection) != null;	
 	}
 	
 	private void doing(Organisation organisation) throws Exception {
@@ -238,7 +244,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		this.doInfo("traitement de l'organisation " + organisation + " : " + (done ? "succès" : "échec"));		
 	}
 	
-	/* Compétition */
+	/* Compétition * /
 	
 	private long doing(Compétition compétition) throws Exception {
 		CompétitionUpdater compétitionUpdater = new CompétitionUpdater();
@@ -248,7 +254,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		return id;
 	}
 	
-	/* Championnat */
+	/* Championnat * /
 
 	private boolean done(Championnat championnat) throws Exception {
 		ChampionnatReader championnatReader = new ChampionnatReader();
@@ -263,7 +269,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		this.doInfo("traitement du championnat " + championnat + " : " + (done ? "succès" : "échec"));	
 	}
 	
-	/* Engagement */
+	/* Engagement * /
 
 	private long doing(Engagement engagement) throws Exception {
 		EngagementUpdater engagementUpdater = new EngagementUpdater();
@@ -273,7 +279,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		return id;
 	}
 	
-	/* Équipe */
+	/* Équipe * /
 
 	private boolean done(Équipe équipe) throws Exception {
 		ÉquipeReader équipeReader = new ÉquipeReader();
@@ -288,7 +294,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		this.doInfo("traitement de l'équipe " + équipe + " : " + (done ? "succès" : "échec"));	
 	}
 	
-	/* Rencontre */
+	/* Rencontre * /
 
 	private boolean done(Rencontre rencontre) throws Exception {
 		RencontreReader rencontreReader = new RencontreReader();
@@ -310,7 +316,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		}
 	}
 
-	/* Salle */
+	/* Salle * /
 
 	private boolean defined(Salle salle) {
 		return (salle.getId() == null || salle.getLatitude() == null || salle.getLongitude() == null || salle.getNom() == null || salle.getCodePostal() == null || salle.getVille() == null) == false;
@@ -329,7 +335,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		this.doInfo("traitement de la salle " + salle + " : " + (done ? "succès" : "échec"));
 	}
 	
-	/* Résultat */
+	/* Résultat * /
 
 	private boolean defined(Résultat résultat) {
 		return (résultat == null || résultat.getId() == null || résultat.getDomicile() == null || résultat.getVisiteur() == null) == false;
@@ -347,5 +353,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		boolean done = résultatUpdater.doUpdate(connection).booleanValue();
 		this.doInfo("traitement du résultat " + résultat + " : " + (done ? "succès" : "échec"));
 	}
+
 	
+	*/
 }

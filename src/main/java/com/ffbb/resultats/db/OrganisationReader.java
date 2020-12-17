@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Organisation;
 
-public class OrganisationReader extends Reader<Organisation, Boolean> {
+public class OrganisationReader extends Reader<String, Organisation> {
 
 	@Override
 	public String getScriptPath() {
@@ -13,21 +13,23 @@ public class OrganisationReader extends Reader<Organisation, Boolean> {
 	}
 
 	@Override
-	public Boolean getResult(ResultSet resultSet) throws Exception {
-		Organisation organisation = this.getObject();
+	public Organisation getResult(ResultSet resultSet) throws Exception {
 		if (resultSet.next()) {
-			Long id = resultSet.getLong(1);
-			organisation.setId(id);
-			return Boolean.TRUE;
+			Long id = resultSet.getLong("id");
+			String code = resultSet.getString("code");
+			String type = resultSet.getString("type");
+			String ffbb = resultSet.getString("ffbb");
+			String nom = resultSet.getString("nom");
+			return new Organisation(id, code, type, ffbb, nom);
 		} else {
-			return Boolean.FALSE;
+			return null;
 		}
 	}
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
-		Organisation organisation = this.getObject();
-		statement.setString(1, organisation.getCode());
+		String code = this.getObject();
+		statement.setString(1, code);
 	}
 
 }

@@ -20,29 +20,33 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 
 	public Salle doExtract(URI uri) throws Exception {
 		String prefix = "http://resultats.ffbb.com/organisation/salle/";
-		String link = uri.toString(); 
-		if (this.doFind(Salle.class, uri) == null) {
-			if (link.startsWith(prefix)) {
-				String code = link.substring(prefix.length(), link.length() - 5);
-				Organisation organisation = this.getOrganisation(code);
-				try {
-					Salle salle = this.doGrab(organisation, uri);
-					this.doBind(Salle.class, uri, salle);
-					return salle;
-				} catch (Exception e) {
-					return null;
-				}
+		String link = uri.toString();
+		if (link.startsWith(prefix)) {
+			String code = link.substring(prefix.length(), link.length() - 5);
+			Organisation organisation = this.getOrganisation(code);
+			URI u = this.doGrab(organisation, uri);
+			Salle salle = this.doFind(Salle.class, u);
+			if (salle == null) {
+				salle = this.doParse(u);
+				organisation.setSalle(salle);
+				this.doBind(Salle.class, u, salle);
+				return salle;
 			} else {
-				Salle salle = this.doParse(uri);
-				this.doBind(Salle.class, uri, salle);
-				return salle;				
+				return salle;
 			}
 		} else {
-			return this.doFind(Salle.class, uri);
+			Salle salle = this.doFind(Salle.class, uri);
+			if (this.doFind(Salle.class, uri) == null) {
+				salle = this.doParse(uri);
+				this.doBind(Salle.class, uri, salle);
+				return salle;
+			} else {
+				return salle;
+			}
 		}
 	}
 	
-	private Salle doGrab(Organisation organisation, URI uri) throws Exception {
+	private URI doGrab(Organisation organisation, URI uri) throws Exception {
 		String prefix = "https://resultats.ffbb.com/here/here_popup.php?id=";
 		Document doc = this.getDocument(uri);
 		Element body = doc.getElementById("idIfType");
@@ -52,9 +56,7 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 				.select("a").attr("href");
 		String suffix = value.substring("javascript:openHere('".length(), value.length() - 2);
 		String link = prefix + suffix;
-		Salle salle = this.doExtract(URI.create(link));
-		organisation.setSalle(salle);
-		return salle;
+		return URI.create(link);
 	}
 	
 	private Salle doParse(URI uri) throws Exception {

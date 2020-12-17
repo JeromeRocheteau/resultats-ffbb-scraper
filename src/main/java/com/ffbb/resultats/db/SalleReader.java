@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Salle;
 
-public class SalleReader extends Reader<Salle, Boolean> {
+public class SalleReader extends Reader<Long, Salle> {
 
 	@Override
 	public String getScriptPath() {
@@ -13,21 +13,25 @@ public class SalleReader extends Reader<Salle, Boolean> {
 	}
 
 	@Override
-	public Boolean getResult(ResultSet resultSet) throws Exception {
-		Salle salle = this.getObject();
+	public Salle getResult(ResultSet resultSet) throws Exception {
 		if (resultSet.next()) {
-			Long id = resultSet.getLong(1);
-			salle.setId(id);
-			return Boolean.TRUE;
+			Long id = resultSet.getLong("id");
+			Float latitude = resultSet.getFloat("latitude");
+			Float longitude = resultSet.getFloat("longitude");
+			String nom = resultSet.getString("nom");
+			String adresse = resultSet.getString("adresse");
+			String codePostal = resultSet.getString("codePostal");
+			String ville = resultSet.getString("ville");
+			return new Salle(id, latitude, longitude, nom, adresse, codePostal, ville);
 		} else {
-			return Boolean.FALSE;
+			return null;
 		}
 	}
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
-		Salle salle = this.getObject();
-		statement.setLong(1, salle.getId().longValue());
+		Long id = this.getObject();
+		statement.setLong(1, id);
 	}
 	
 }

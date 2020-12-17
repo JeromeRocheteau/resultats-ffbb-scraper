@@ -1,23 +1,12 @@
 package com.ffbb.resultats.db;
 
-public abstract class Controller<T,U,V> implements Finder<T> {
+import java.net.URI;
+import java.sql.Connection;
 
-	private Reader<T,U> reader;
-	
-	private Updater<T,V> updater;
+public interface Controller<T> {
 
-	public Reader<T,U> getReader() {
-		return reader;
-	}
-
-	public Updater<T,V> getUpdater() {
-		return updater;
-	}
-
-	public Controller(Reader<T, U> reader, Updater<T, V> updater) {
-		super();
-		this.reader = reader;
-		this.updater = updater;
-	}
+	public T doFind(Connection connection, URI uri) throws Exception;
+		
+	public void doSave(Connection connection, T resource) throws Exception;
 	
 }

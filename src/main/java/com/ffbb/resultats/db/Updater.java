@@ -9,7 +9,7 @@ public abstract class Updater<T,V> extends Adapter<T> {
 	
 	public abstract V getResult(int count, ResultSet resultSet) throws Exception;
 
-	protected V doUpdate(Connection connection) throws Exception {
+	public V doUpdate(Connection connection) throws Exception {
 		if (this.isValidated()) {
 			PreparedStatement statement = null;
 			String path = this.getScriptPath();
