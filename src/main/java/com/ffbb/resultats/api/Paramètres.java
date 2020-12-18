@@ -27,4 +27,9 @@ public class Paramètres {
 		this.division = division;
 	}
 	
+	@Override
+	public String toString() {
+		return this.code + ".html?r=" + this.id + "&d=" + this.division; 
+	}
+	
 }

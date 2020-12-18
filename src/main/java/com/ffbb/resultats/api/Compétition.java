@@ -28,7 +28,7 @@ public abstract class Compétition implements Identifiable, Encodable {
 		return code;
 	}
 
-	protected void setCode(String code) {
+	private void setCode(String code) {
 		this.code = code;
 	}
 
@@ -36,7 +36,7 @@ public abstract class Compétition implements Identifiable, Encodable {
 		return nom;
 	}
 
-	protected void setNom(String nom) {
+	private void setNom(String nom) {
 		this.nom = nom;
 	}
 
@@ -44,7 +44,7 @@ public abstract class Compétition implements Identifiable, Encodable {
 		return organisateur;
 	}
 
-	protected void setOrganisateur(Organisation organisateur) {
+	private void setOrganisateur(Organisation organisateur) {
 		this.organisateur = organisateur;
 	}
 
@@ -54,6 +54,13 @@ public abstract class Compétition implements Identifiable, Encodable {
 
 	protected void setType(Type type) {
 		this.type = type;
+	}
+	
+	protected Compétition(Long id, String code, String nom, Organisation organisateur) {
+		this.setId(id);
+		this.setCode(code);
+		this.setNom(nom);
+		this.setOrganisateur(organisateur);
 	}
 
 	@Override

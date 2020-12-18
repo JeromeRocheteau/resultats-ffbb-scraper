@@ -32,18 +32,5 @@ public class Appartenance {
 		this(organisation, structure);
 		this.type = type;
 	}
-
-	public Appartenance(Organisation organisation, Organisation structure, String type) {
-		this(organisation, structure);
-		this.setType(type);
-	}
-
-	private void setType(String type) {
-		if (type.equals(Type.Comité.name())) {
-			this.type = Type.Comité;
-		} else if (type.equals(Type.Ligue.name())) {
-			this.type = Type.Ligue;
-		}
-	}
 	
 }

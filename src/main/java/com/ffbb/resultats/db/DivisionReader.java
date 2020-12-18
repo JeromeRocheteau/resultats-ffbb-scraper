@@ -5,23 +5,27 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
+import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
+import com.ffbb.resultats.api.Paramètres;
 
-public class ChampionnatReader extends Reader<String, Championnat> {
+public class DivisionReader extends Reader<Paramètres, Division> {
 
 	@Override
 	public String getScriptPath() {
-		return "/championnat-select.sql";
+		return "/division-select.sql";
 	}
 
 	@Override
-	public Championnat getResult(ResultSet resultSet) throws Exception {
+	public Division getResult(ResultSet resultSet) throws Exception {
 		if (resultSet.next()) {
+			Long divisionId = resultSet.getLong("divisionId");
+			String divisionCode = resultSet.getString("divisionCode");
+			String divisionNom = resultSet.getString("divisionNom");
 			Long compétitionId = resultSet.getLong("compétitionId");
 			String compétitionCode = resultSet.getString("compétitionCode");
-			// String compétitionType = resultSet.getString("compétitionType");
 			String compétitionNom = resultSet.getString("compétitionNom");
 			Long organisateurId = resultSet.getLong("organisateurId");
 			String organisateurCode = resultSet.getString("organisateurCode");
@@ -38,7 +42,7 @@ public class ChampionnatReader extends Reader<String, Championnat> {
 			championnat.setCatégorie(Catégorie.valueOf(championnatCatégorie));
 			championnat.setGenre(Genre.valueOf(championnatGenre));
 			championnat.setPhase(championnatPhase);
-			return championnat;
+			return new Division(divisionId, divisionCode, divisionNom, championnat);
 		} else {
 			return null;
 		}
@@ -46,8 +50,10 @@ public class ChampionnatReader extends Reader<String, Championnat> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
-		String code = this.getObject();
-		statement.setString(1, code);
+		Paramètres paramètres = this.getObject();
+		statement.setString(1, paramètres.getCode());
+		statement.setLong(2, paramètres.getId());
+		statement.setLong(3, paramètres.getDivision());
 	}
 
 }

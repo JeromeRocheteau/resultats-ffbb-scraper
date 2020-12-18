@@ -23,15 +23,15 @@ public class AppartenancesReader extends Reader<String, Appartenances> {
 			String organisationType = resultSet.getString("organisationType");
 			String organisationFfbb = resultSet.getString("organisationFfbb");
 			String organisationNom = resultSet.getString("organisationNom");
-			Organisation organisation = new Organisation(organisationId, organisationCode, organisationType, organisationFfbb, organisationNom);
+			Organisation organisation = new Organisation(organisationId, organisationCode, Organisation.Type.valueOf(organisationType), organisationFfbb, organisationNom);
 			Long structureId = resultSet.getLong("structureId");
 			String structureCode = resultSet.getString("structureCode");
 			String structureType = resultSet.getString("structureType");
 			String structureFfbb = resultSet.getString("structureFfbb");
 			String structureNom = resultSet.getString("structureNom");
-			Organisation structure = new Organisation(structureId, structureCode, structureType, structureFfbb, structureNom);
+			Organisation structure = new Organisation(structureId, structureCode, Organisation.Type.valueOf(structureType), structureFfbb, structureNom);
 			String type = resultSet.getString("type");
-			Appartenance appartenance = new Appartenance(organisation, structure, type);
+			Appartenance appartenance = new Appartenance(organisation, structure, Appartenance.Type.valueOf(type));
 			if (appartenances == null) {
 				appartenances = new Appartenances(organisation);
 			}

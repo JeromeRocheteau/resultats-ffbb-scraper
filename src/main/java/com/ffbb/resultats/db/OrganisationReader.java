@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Organisation;
+import com.ffbb.resultats.api.Organisation.Type;
 
 public class OrganisationReader extends Reader<String, Organisation> {
 
@@ -20,7 +21,7 @@ public class OrganisationReader extends Reader<String, Organisation> {
 			String type = resultSet.getString("type");
 			String ffbb = resultSet.getString("ffbb");
 			String nom = resultSet.getString("nom");
-			return new Organisation(id, code, type, ffbb, nom);
+			return new Organisation(id, code, Type.valueOf(type), ffbb, nom);
 		} else {
 			return null;
 		}

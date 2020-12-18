@@ -48,17 +48,12 @@ public class Championnat extends Compétition implements Extractable {
 		this.phase = phase;
 	}
 
-
 	public List<Division> getDivisions() {
 		return divisions;
 	}
 
 	public Championnat(Long id, String code, String nom, Organisation organisateur) {
-		super();
-		this.setId(id);
-		this.setCode(code);
-		this.setNom(nom);
-		this.setOrganisateur(organisateur);
+		super(id, code, nom, organisateur);
 		this.setType(Type.Championnat);
 		this.divisions = new LinkedList<Division>();
 	}

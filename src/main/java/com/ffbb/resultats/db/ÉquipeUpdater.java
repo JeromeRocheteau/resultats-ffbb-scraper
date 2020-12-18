@@ -2,6 +2,7 @@ package com.ffbb.resultats.db;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 
 import com.ffbb.resultats.api.Équipe;
 
@@ -24,8 +25,14 @@ public class ÉquipeUpdater extends Updater<Équipe, Boolean> {
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
 		Équipe équipe = this.getObject();
-		statement.setLong(1, équipe.getId());
-		statement.setString(2, équipe.getNom());
+		statement.setString(1, équipe.getCode());
+		statement.setString(2, équipe.getOrganisation().getCode());
+		statement.setString(3, équipe.getDivision().getCode());
+		if (équipe.getNom() == null) {
+			statement.setNull(4, Types.VARCHAR);
+		} else {
+			statement.setString(4, équipe.getNom());
+		}
 	}
 	
 }

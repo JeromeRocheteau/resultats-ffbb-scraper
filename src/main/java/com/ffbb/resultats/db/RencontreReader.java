@@ -30,8 +30,8 @@ public class RencontreReader extends Reader<Rencontre, Boolean> {
 		// statement.setLong(1, rencontre.getCompétition().getId());
 		//statement.setInt(2, rencontre.getJournée());
 		statement.setDate(3, new Date(rencontre.getHoraire().getTime()));
-		statement.setLong(4, rencontre.getDomicile().getId());
-		statement.setLong(5, rencontre.getVisiteur().getId());
+		// statement.setLong(4, rencontre.getDomicile().getId());
+		// statement.setLong(5, rencontre.getVisiteur().getId());
 	}
 
 }

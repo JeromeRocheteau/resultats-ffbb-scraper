@@ -5,23 +5,26 @@ import java.sql.ResultSet;
 
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
+import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
 
-public class ChampionnatReader extends Reader<String, Championnat> {
+public class DivisionAlternativeReader extends Reader<String, Division> {
 
 	@Override
 	public String getScriptPath() {
-		return "/championnat-select.sql";
+		return "/division-select-alt.sql";
 	}
 
 	@Override
-	public Championnat getResult(ResultSet resultSet) throws Exception {
+	public Division getResult(ResultSet resultSet) throws Exception {
 		if (resultSet.next()) {
+			Long divisionId = resultSet.getLong("divisionId");
+			String divisionCode = resultSet.getString("divisionCode");
+			String divisionNom = resultSet.getString("divisionNom");
 			Long compétitionId = resultSet.getLong("compétitionId");
 			String compétitionCode = resultSet.getString("compétitionCode");
-			// String compétitionType = resultSet.getString("compétitionType");
 			String compétitionNom = resultSet.getString("compétitionNom");
 			Long organisateurId = resultSet.getLong("organisateurId");
 			String organisateurCode = resultSet.getString("organisateurCode");
@@ -38,7 +41,7 @@ public class ChampionnatReader extends Reader<String, Championnat> {
 			championnat.setCatégorie(Catégorie.valueOf(championnatCatégorie));
 			championnat.setGenre(Genre.valueOf(championnatGenre));
 			championnat.setPhase(championnatPhase);
-			return championnat;
+			return new Division(divisionId, divisionCode, divisionNom, championnat);
 		} else {
 			return null;
 		}

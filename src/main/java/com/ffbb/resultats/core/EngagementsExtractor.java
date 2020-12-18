@@ -49,7 +49,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 
 	public Engagements doExtract(URI uri) throws Exception {
 		if (this.doFind(Engagements.class, uri) == null) {
-			Engagements engagements = this.doPase(uri);
+			Engagements engagements = this.doParse(uri);
 			this.doBind(Engagements.class, uri, engagements);
 			return engagements;
 		} else {
@@ -57,7 +57,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 		}
 	}
 	
-	private Engagements doPase(URI uri) throws Exception {
+	private Engagements doParse(URI uri) throws Exception {
 		Engagements engagements = new Engagements(organisation);
 		Document doc = this.getDocument(uri);
 		Elements tbodies = doc.select("table.liste");

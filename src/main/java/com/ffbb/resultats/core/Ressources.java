@@ -7,10 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ffbb.resultats.api.Appartenances;
+import com.ffbb.resultats.api.Championnat;
+import com.ffbb.resultats.api.Division;
+import com.ffbb.resultats.api.Engagements;
 import com.ffbb.resultats.api.Extractable;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Salle;
 import com.ffbb.resultats.db.AppartenancesController;
+import com.ffbb.resultats.db.ChampionnatController;
+import com.ffbb.resultats.db.DivisionController;
+import com.ffbb.resultats.db.EngagementsController;
 import com.ffbb.resultats.db.OrganisationController;
 import com.ffbb.resultats.db.SalleController;
 
@@ -32,6 +38,9 @@ public class Ressources {
 	private SalleController salleController;
 	private OrganisationController organisationController;
 	private AppartenancesController appartenancesController;
+	private ChampionnatController championnatController;
+	private DivisionController divisionController;
+	private EngagementsController engagementsController;
 	
 	public void setConnection(Connection connection) throws SQLException {
 		if (this.connection == null || this.connection.isClosed()) {
@@ -64,6 +73,12 @@ public class Ressources {
 			organisationController.doSave(connection, (Organisation) resource);
 		} else if (Appartenances.class.isInstance(resource)) {
 			appartenancesController.doSave(connection, (Appartenances) resource);
+		} else if (Championnat.class.isInstance(resource)) {
+			championnatController.doSave(connection, (Championnat) resource);
+		} else if (Division.class.isInstance(resource)) {
+			divisionController.doSave(connection, (Division) resource);
+		} else if (Engagements.class.isInstance(resource)) {
+			engagementsController.doSave(connection, (Engagements) resource);
 		} else {
 			return;
 		}
@@ -79,6 +94,12 @@ public class Ressources {
 			return (U) organisationController.doFind(connection, uri);
 		} else if (Appartenances.class.isAssignableFrom(type)) {
 			return (U) appartenancesController.doFind(connection, uri);
+		} else if (Championnat.class.isAssignableFrom(type)) {
+			return (U) championnatController.doFind(connection, uri);
+		} else if (Division.class.isAssignableFrom(type)) {
+			return (U) divisionController.doFind(connection, uri);
+		} else if (Engagements.class.isAssignableFrom(type)) {
+			return (U) engagementsController.doFind(connection, uri);
 		} else {
 			return null;
 		}
@@ -89,6 +110,9 @@ public class Ressources {
 		salleController = new SalleController();
 		organisationController = new OrganisationController();
 		appartenancesController = new AppartenancesController();
+		championnatController = new ChampionnatController();
+		divisionController = new DivisionController();
+		engagementsController = new EngagementsController();
 		this.setExempt();
 	}
 	

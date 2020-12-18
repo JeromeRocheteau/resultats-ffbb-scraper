@@ -1,2 +1,2 @@
-INSERT INTO `engagements` (`organisation`,`compétition`)
-VALUES (?,?);
+INSERT INTO `équipes` (`code`,`organisation`,`division`)
+VALUES (?,?,?);

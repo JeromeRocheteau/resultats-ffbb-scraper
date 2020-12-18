@@ -101,7 +101,7 @@ public class Organisation implements Identifiable, Encodable, Extractable, Compa
 		this.engagements = new Engagements(this);
 	}
 	
-	public Organisation(Long id, String code, String type, String ffbb, String nom) {
+	public Organisation(Long id, String code, Type type, String ffbb, String nom) {
 		this(id, code);
 		this.setType(type);
 		this.setFfbb(ffbb);

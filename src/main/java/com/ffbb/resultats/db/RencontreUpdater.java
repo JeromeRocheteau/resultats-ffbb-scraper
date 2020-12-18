@@ -33,8 +33,8 @@ public class RencontreUpdater extends Updater<Rencontre, Long> {
 		// statement.setLong(1, rencontre.getCompétition().getId());
 		// statement.setInt(2, rencontre.getJournée());
 		statement.setDate(3, new Date(rencontre.getHoraire().getTime()));
-		statement.setLong(4, rencontre.getDomicile().getId());
-		statement.setLong(5, rencontre.getVisiteur().getId());
+		// statement.setLong(4, rencontre.getDomicile().getId());
+		// statement.setLong(5, rencontre.getVisiteur().getId());
 		if (rencontre.getSalle() == null) {
 			statement.setNull(6, Types.BIGINT);
 		} else {

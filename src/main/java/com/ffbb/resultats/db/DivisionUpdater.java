@@ -3,13 +3,13 @@ package com.ffbb.resultats.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.ffbb.resultats.api.Engagement;
+import com.ffbb.resultats.api.Division;
 
-public class EngagementUpdater extends Updater<Engagement, Boolean> {
+public class DivisionUpdater extends Updater<Division, Boolean> {
 
 	@Override
 	public String getScriptPath() {
-		return "/engagement-insert.sql";
+		return "/division-insert.sql";
 	}
 
 	@Override
@@ -23,10 +23,11 @@ public class EngagementUpdater extends Updater<Engagement, Boolean> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
-		Engagement engagement = this.getObject();
-		statement.setString(1, engagement.getCode());
-		statement.setString(2, engagement.getOrganisation().getCode());
-		statement.setString(3, engagement.getDivision().getCode());
+		Division championnat = this.getObject();
+		statement.setLong(1, championnat.getId());
+		statement.setString(2, championnat.getCode());
+		statement.setString(3, championnat.getChampionnat().getCode());
+		statement.setString(4, championnat.getNom());
 	}
 	
 }

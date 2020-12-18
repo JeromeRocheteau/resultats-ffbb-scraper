@@ -1,16 +1,18 @@
 package com.ffbb.resultats.api;
 
-public class Engagement implements Identifiable {
+public class Engagement implements Encodable {
+
+	private static final String SEP = "-";
 	
-	private Long id; 
+	private String code; 
 	
 	@Override
-	public Long getId() {
-		return id;
+	public String getCode() {
+		return code;
 	}
 	
-	public void setId(Long id) {
-		this.id = id;
+	public void setCode(String code) {
+		this.code = code;
 	}
 	
 	private Organisation organisation;
@@ -29,6 +31,7 @@ public class Engagement implements Identifiable {
 		super();
 		this.organisation = organisation;
 		this.division = division;
+		this.setCode(division.getCode() + SEP + organisation.getCode());
 	}
 	
 }
