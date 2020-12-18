@@ -1,11 +1,6 @@
 SELECT 
-  equ.`code` AS `équipeCode`,
-  equ.`nom` AS `équipeNom`,
-  clu.`id` AS `organisationId`,
-  clu.`code` AS `organisationCode`,
-  clu.`type` AS `organisationType`,
-  clu.`ffbb` AS `organisationFfbb`,
-  clu.`nom` AS `organisationNom`,
+  j.`code` AS `journéeCode`,
+  j.`numéro` AS `journéeNuméro`,
   d.`id` AS `divisionId`,
   d.`code` AS `divisionCode`,
   d.`nom` AS `divisionNom`,
@@ -22,12 +17,9 @@ SELECT
   cha.`catégorie` AS `championnatCatégorie`,
   cha.`genre` AS `championnatGenre`,
   cha.`phase` AS `championnatPhase`
-FROM `équipes` AS equ
-INNER JOIN `divisions` AS d ON d.`code` = equ.`division`
-INNER JOIN `organisations` AS clu ON clu.`code` = equ.`organisation`
+FROM `journées` AS j
+INNER JOIN `divisions` AS d ON d.`code` = j.`division` 
 INNER JOIN `championnats` AS cha ON d.`championnat` = cha.`code`
 INNER JOIN `compétitions` AS com ON com.`code` = cha.`code`
 INNER JOIN `organisations` AS org ON org.`code` = com.`organisateur`
-WHERE clu.`code` = ?
-  AND com.`id` = ?
-  AND d.`id` = ?;
+WHERE d.`code` = ?;

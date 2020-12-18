@@ -9,9 +9,10 @@ import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
+import com.ffbb.resultats.api.Paramètres;
 import com.ffbb.resultats.api.Équipe;
 
-public class ÉquipeReader extends Reader<String, Équipe> {
+public class ÉquipeReader extends Reader<Paramètres, Équipe> {
 
 	@Override
 	public String getScriptPath() {
@@ -62,8 +63,10 @@ public class ÉquipeReader extends Reader<String, Équipe> {
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
-		String code = this.getObject();
-		statement.setString(1, code);
+		Paramètres paramètres = this.getObject();
+		statement.setString(1, paramètres.getCode());
+		statement.setLong(2, paramètres.getR());
+		statement.setLong(3, paramètres.getD());
 	}
 
 }

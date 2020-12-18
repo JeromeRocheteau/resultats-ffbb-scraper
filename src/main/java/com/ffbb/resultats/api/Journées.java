@@ -15,7 +15,7 @@ public class Journées extends LinkedList<Journée> implements Extractable {
 	}
 	
 	public URI getURI() {
-		return URI.create("http://resultats.ffbb.com/journees/" + division.getCode() + ".html");
+		return URI.create("https://resultats.ffbb.com/championnat/journees/" + division.getCode() + ".html");
 	}
 
 }

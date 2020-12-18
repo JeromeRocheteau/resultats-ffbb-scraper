@@ -53,7 +53,7 @@ public class DivisionController implements Controller<Division> {
 				division = Long.valueOf(parameter.substring(2));
 			}
 		}
-		return new Paramètres(id, code, division);
+		return new Paramètres(code, id, division);
 	}
 
 	@Override

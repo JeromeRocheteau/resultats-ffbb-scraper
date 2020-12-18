@@ -30,6 +30,7 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 				salle = this.doParse(u);
 				organisation.setSalle(salle);
 				this.doBind(Salle.class, u, salle);
+				this.doLink(Organisation.class, Salle.class, uri, organisation, salle);
 				return salle;
 			} else {
 				return salle;

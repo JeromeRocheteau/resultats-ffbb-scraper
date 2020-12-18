@@ -74,23 +74,32 @@ CREATE TABLE `équipes` (
   FOREIGN KEY (`division`) REFERENCES `divisions` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-/***************** TODO ********************/
-
-CREATE TABLE `rencontres` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `journées` (
+  `code` varchar(45) NOT NULL,
+  `numéro` int(11) NOT NULL,
   `division` varchar(45) NOT NULL,
-  `journée` int(11) NOT NULL,
-  `horaire` datetime DEFAULT NULL,
-  `domicile` varchar(45) DEFAULT NULL,
-  `visiteur` varchar(45) DEFAULT NULL,
-  `salle` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`compétition`) REFERENCES `compétitions` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`domicile`) REFERENCES `équipes` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`visiteur`) REFERENCES `équipes` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`salle`) REFERENCES `salles` (`id`) ON DELETE CASCADE ON UPDATE SET NULL
+  PRIMARY KEY (`code`),
+  UNIQUE KEY `journée` (`numéro`,`division`),
+  FOREIGN KEY (`division`) REFERENCES `divisions` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+/***************** DOING ********************/
+
+CREATE TABLE `rencontres` (
+  `code` varchar(45) NOT NULL,
+  `numéro` int(11) NOT NULL,
+  `journée` varchar(45) NOT NULL,
+  `horaire` datetime NOT NULL,
+  `domicile` varchar(90) NOT NULL,
+  `visiteur` varchar(90) NOT NULL,
+  `salle` bigint(20) NOT NULL,
+  PRIMARY KEY (`code`),
+  FOREIGN KEY (`journée`) REFERENCES `journées` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`domicile`) REFERENCES `équipes` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`visiteur`) REFERENCES `équipes` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`salle`) REFERENCES `salles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+/***************** TODO ********************/
 CREATE TABLE `résultats` (
   `id` bigint(20) NOT NULL,
   `domicile` int(11) NOT NULL,
@@ -101,6 +110,7 @@ CREATE TABLE `résultats` (
 
 DROP TABLE `résultats`;
 DROP TABLE `rencontres`;
+DROP TABLE `journées`;
 DROP TABLE `équipes`;
 DROP TABLE `divisions`;
 DROP TABLE `championnats`;

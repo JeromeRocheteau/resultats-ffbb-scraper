@@ -7,20 +7,23 @@ import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
 import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Genre;
+import com.ffbb.resultats.api.Journée;
+import com.ffbb.resultats.api.Journées;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
-import com.ffbb.resultats.api.Paramètres;
 
-public class DivisionReader extends Reader<Paramètres, Division> {
+public class JournéesReader extends Reader<String, Journées> {
 
 	@Override
 	public String getScriptPath() {
-		return "/division-select.sql";
+		return "/journées-select.sql";
 	}
 
 	@Override
-	public Division getResult(ResultSet resultSet) throws Exception {
-		if (resultSet.next()) {
+	public Journées getResult(ResultSet resultSet) throws Exception {
+		Journées journées = null;
+		while (resultSet.next()) {
+			Integer numéro = resultSet.getInt("journéeNuméro");
 			Long divisionId = resultSet.getLong("divisionId");
 			String divisionCode = resultSet.getString("divisionCode");
 			String divisionNom = resultSet.getString("divisionNom");
@@ -42,18 +45,20 @@ public class DivisionReader extends Reader<Paramètres, Division> {
 			championnat.setCatégorie(Catégorie.valueOf(championnatCatégorie));
 			championnat.setGenre(Genre.valueOf(championnatGenre));
 			championnat.setPhase(championnatPhase);
-			return new Division(divisionId, divisionCode, divisionNom, championnat);
-		} else {
-			return null;
+			Division division = new Division(divisionId, divisionCode, divisionNom, championnat);
+			Journée journée = new Journée(numéro, division);
+			if (journées == null) {
+				journées = new Journées(division);
+			}
+			journées.add(journée);
 		}
+		return journées;
 	}
 
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
-		Paramètres paramètres = this.getObject();
-		statement.setString(1, paramètres.getCode());
-		statement.setLong(2, paramètres.getR());
-		statement.setLong(3, paramètres.getD());
+		String code = this.getObject();
+		statement.setString(1, code);
 	}
 
 }

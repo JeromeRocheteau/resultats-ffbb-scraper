@@ -93,7 +93,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 				String link = cell.select("a").attr("href");
 				Paramètres paramètres = this.getParamètres(link);
 				if (type == Type.Championnat) {
-					Division division = this.getDivision(paramètres.getId(), paramètres.getCode(), paramètres.getDivision());
+					Division division = this.getDivision(paramètres.getR(), paramètres.getCode(), paramètres.getD());
 					Engagement engagement = new Engagement(organisation, division);
 					engagements.add(engagement);
 				}
@@ -108,7 +108,7 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 			String code = matcher.group(1);
 			Long id = Long.valueOf(matcher.group(2));
 			Long division = Long.valueOf(matcher.group(3));
-			return new Paramètres(id, code, division);
+			return new Paramètres(code, id, division);
 		} else {
 			throw new Exception(link);
 		}

@@ -2,12 +2,14 @@ package com.ffbb.resultats.api;
 
 import java.util.Date;
 
-public class Rencontre implements Comparable<Rencontre> {
+public class Rencontre implements Encodable, Comparable<Rencontre> {
 	
-	private Journée journée;
+	private String code;
 	
 	private Integer numéro;
 	
+	private Journée journée;
+		
 	private Date horaire;
 	
 	private Équipe domicile;
@@ -17,6 +19,15 @@ public class Rencontre implements Comparable<Rencontre> {
 	private Résultat résultat;
 	
 	private Salle salle;
+
+	@Override
+	public String getCode() {
+		return code;
+	}
+
+	public Integer getNuméro() {
+		return numéro;
+	}
 
 	public Journée getJournée() {
 		return journée;
@@ -46,10 +57,6 @@ public class Rencontre implements Comparable<Rencontre> {
 		return salle;
 	}
 
-	public void setSalle(Salle salle) {
-		this.salle = salle;
-	}
-
 	public Rencontre(Journée journée, Integer numéro, Équipe domicile, Équipe visiteur, Date horaire, Salle salle) {
 		this.journée = journée;
 		this.numéro = numéro;
@@ -58,6 +65,7 @@ public class Rencontre implements Comparable<Rencontre> {
 		this.journée = journée;
 		this.horaire = horaire;
 		this.salle = salle;
+		this.code = code();
 	}
 	
 	@Override
@@ -68,7 +76,7 @@ public class Rencontre implements Comparable<Rencontre> {
 				+ "\t" + (visiteur == null ? "Exempt" : visiteur.getNom());
 	}
 	
-	public String code() {
+	private String code() {
 		return journée.getDivision().getCode() + "-" + numéro;
 	}
 

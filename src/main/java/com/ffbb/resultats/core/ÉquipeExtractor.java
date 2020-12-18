@@ -43,11 +43,13 @@ public class ÉquipeExtractor extends AbstractExtractor<Équipe> {
 		link = link.substring("https://resultats.ffbb.com/championnat/equipe/".length());
 		String code = link.substring(0, link.indexOf('?'));
 		code = code.substring(0, code.length() - 5);
-		String parameters = link.substring(link.indexOf('?') + 1);
 		Long chp= Long.valueOf(parameters.substring(parameters.indexOf("r=") + 2, parameters.indexOf("&p=")));
 		Long div = Long.valueOf(parameters.substring(parameters.indexOf("&p=") + 3, parameters.indexOf("&d=")));
-		Long org = Long.valueOf(parameters.substring(parameters.indexOf("&d=") + 3));
 		*/
+		String link = uri.toString();
+		String parameters = link.substring(link.indexOf('?') + 1);
+		Long org = Long.valueOf(parameters.substring(parameters.indexOf("&d=") + 3));
+		
 		Document document = this.getDocument(uri);
 		Element td = document.getElementById("idTableClub");
 		Elements trs = td.select("tr");
@@ -55,6 +57,7 @@ public class ÉquipeExtractor extends AbstractExtractor<Équipe> {
 		String code = a.attr("href");
 		code = code.substring("../../organisation/".length(), code.length() - 5);
 		Organisation organisation = this.getOrganisation(code);
+		organisation.setId(org);
 		/*
 		Elements elts = trs.get(3).select("option");
 		for (Element elt : elts) {

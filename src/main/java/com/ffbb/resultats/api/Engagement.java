@@ -34,4 +34,9 @@ public class Engagement implements Encodable {
 		this.setCode(division.getCode() + SEP + organisation.getCode());
 	}
 	
+	@Override
+	public String toString() {
+		return division.getChampionnat().getNom() + " " + division.getNom() + " | " + organisation.getNom(); 
+	}
+	
 }

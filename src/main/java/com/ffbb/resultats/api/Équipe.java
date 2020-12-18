@@ -31,12 +31,18 @@ public class Équipe extends Engagement implements Extractable {
 		this.rencontres = new LinkedList<Rencontre>();
 	}
 
+	@Override
 	public URI getURI() {
-		String link = "http://resultats.ffbb.com/championnat/equipe/" + this.getOrganisation().getCode() + ".html" 
-				+ "?r=" + this.getDivision().getId() 
+		String link = "https://resultats.ffbb.com/championnat/equipe/" + this.getOrganisation().getCode() + ".html" 
+				+ "?r=" + this.getDivision().getChampionnat().getId() 
 				+ "&p=" + this.getDivision().getId()
 				+ "&d=" + this.getOrganisation().getId();
 		return URI.create(link);
 	}
 
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+	
 }

@@ -1,2 +1,2 @@
-INSERT INTO `rencontres` (`compétition`,`journée`,`horaire`,`domicile`,`visiteur`,`salle`)
-VALUES (?,?,?,?,?,?);
+INSERT INTO `rencontres` (`code`,`numéro`,`journée`,`horaire`,`domicile`,`visiteur`,`salle`)
+VALUES (?,?,?,?,?,?,?);

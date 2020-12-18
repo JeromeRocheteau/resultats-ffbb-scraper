@@ -2,34 +2,34 @@ package com.ffbb.resultats.api;
 
 public class Paramètres {
 
-	private Long id;
-
 	private String code;
 	
-	private Long division;
-	
-	public Long getId() {
-		return id;
-	}
+	private Long r;
+
+	private Long d;
 	
 	public String getCode() {
 		return code;
 	}
 
-	public Long getDivision() {
-		return division;
+	public Long getR() {
+		return r;
+	}
+	
+	public Long getD() {
+		return d;
 	}
 
-	public Paramètres(Long id, String code, Long division) {
+	public Paramètres(String code, Long r, Long d) {
 		super();
-		this.id = id;
 		this.code = code;
-		this.division = division;
+		this.r = r;
+		this.d = d;
 	}
 	
 	@Override
 	public String toString() {
-		return this.code + ".html?r=" + this.id + "&d=" + this.division; 
+		return this.code + ".html?r=" + this.r + "&d=" + this.d; 
 	}
 	
 }

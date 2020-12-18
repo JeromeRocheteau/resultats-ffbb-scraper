@@ -66,6 +66,10 @@ public abstract class AbstractExtractor<T> {
 	protected <U extends Extractable> void doBind(Class<U> type, URI uri, U resource) throws Exception {
 		ressources.doBind(type, uri, resource);
 	}
+	
+	protected <U extends Extractable,V extends Extractable> void doLink(Class<U> containerType, Class<V> resourceType, URI uri, U container, V resource) throws Exception {
+		ressources.doLink(containerType, resourceType, uri, container, resource);
+	}
 
 	public void setConnection(Connection connection) throws SQLException {
 		this.ressources.setConnection(connection);
