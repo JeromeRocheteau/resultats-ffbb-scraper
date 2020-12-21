@@ -106,6 +106,25 @@ CREATE TABLE `résultats` (
   FOREIGN KEY (`code`) REFERENCES `rencontres` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE `classements` (
+  `date` date NOT NULL,
+  `division` varchar(45) NOT NULL,
+  `équipe` varchar(90) NOT NULL,
+  `rang` int(11) NOT NULL,
+  `points` int(11) NOT NULL,
+  `matchs` int(11) NOT NULL,
+  `victoires` int(11) NOT NULL,
+  `défaites` int(11) NOT NULL,
+  `nuls` int(11) NOT NULL,
+  `pour` int(11) NOT NULL,
+  `contre` int(11) NOT NULL,
+  `diff` int(11) NOT NULL,
+  PRIMARY KEY (`division`,`équipe`),
+  FOREIGN KEY (`division`) REFERENCES `divisions` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`équipe`) REFERENCES `équipes` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE `classements`;
 DROP TABLE `résultats`;
 DROP TABLE `rencontres`;
 DROP TABLE `journées`;

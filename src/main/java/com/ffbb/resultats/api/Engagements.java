@@ -15,7 +15,7 @@ public class Engagements extends LinkedList<Engagement> implements Extractable {
 	}
 	
 	public URI getURI() {
-		return URI.create("http://resultats.ffbb.com/organisation/engagements/" + organisation.getCode() + ".html");
+		return URI.create("https://resultats.ffbb.com/organisation/engagements/" + organisation.getCode() + ".html");
 	}
 
 }

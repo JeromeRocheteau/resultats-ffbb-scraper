@@ -20,7 +20,7 @@ public class EngagementsController implements Controller<Engagements> {
 	@Override
 	public Engagements doFind(Connection connection, URI uri) throws Exception {
 		String link = uri.toString();
-		int prefix = "http://resultats.ffbb.com/organisation/engagements/".length();
+		int prefix = "https://resultats.ffbb.com/organisation/engagements/".length();
 		int suffix = ".html".length();
 		String code = link.substring(prefix, link.length() - suffix);
 		reader.setObject(code);
@@ -30,7 +30,6 @@ public class EngagementsController implements Controller<Engagements> {
 	@Override
 	public void doSave(Connection connection, Engagements engagements) throws Exception {
 		for (Engagement engagement : engagements) {
-			System.out.println("SAVE " + engagement.getCode());
 			updater.setObject(engagement);
 			updater.doUpdate(connection);			
 		}

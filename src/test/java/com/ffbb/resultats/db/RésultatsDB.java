@@ -21,6 +21,8 @@ import org.junit.runners.MethodSorters;
 import com.ffbb.resultats.api.Appartenance;
 import com.ffbb.resultats.api.Catégorie;
 import com.ffbb.resultats.api.Championnat;
+import com.ffbb.resultats.api.Classement;
+import com.ffbb.resultats.api.Classements;
 import com.ffbb.resultats.api.Compétition;
 import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Engagement;
@@ -80,6 +82,8 @@ public class RésultatsDB extends ResultatsExtraction {
 					Rencontres rencontres = extractor.getRencontres(journée);
 					Assert.assertNotNull(rencontres);
 				}
+				Classements classements = extractor.getClassements(division);
+				Assert.assertNotNull(classements);
 			}
 			this.doInfo("fin de l'extraction");
 		} finally {

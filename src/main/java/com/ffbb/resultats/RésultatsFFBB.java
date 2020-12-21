@@ -93,20 +93,20 @@ public class RésultatsFFBB {
 	}
 	
 	public Organisation getOrganisation(String code) throws Exception {
-		String link = "http://resultats.ffbb.com/organisation/" + code + ".html";
+		String link = "https://resultats.ffbb.com/organisation/" + code + ".html";
 		URI uri = URI.create(link);
 		return organisationExtractor.doExtract(uri);
 	}
 
 	public Appartenances getAppartenances(Organisation organisation) throws Exception {
-		String link = "http://resultats.ffbb.com/organisation/appartenance/" + organisation.getCode() + ".html";
+		String link = "https://resultats.ffbb.com/organisation/appartenance/" + organisation.getCode() + ".html";
 		URI uri = URI.create(link);
 		appartenancesExtractor.setOrganisation(organisation);
 		return appartenancesExtractor.doExtract(uri);
 	}
 
 	public Salle getSalle(Organisation organisation) throws Exception {
-		String link = "http://resultats.ffbb.com/organisation/salle/" + organisation.getCode() + ".html";
+		String link = "https://resultats.ffbb.com/organisation/salle/" + organisation.getCode() + ".html";
 		URI uri = URI.create(link); 
 		return salleExtractor.doExtract(uri);
 	}
@@ -119,7 +119,7 @@ public class RésultatsFFBB {
 
 	public Engagements getEngagements(Organisation organisation) throws Exception {
 		String code = organisation.getCode();
-		String link = "http://resultats.ffbb.com/organisation/engagements/" + code + ".html";
+		String link = "https://resultats.ffbb.com/organisation/engagements/" + code + ".html";
 		URI uri = URI.create(link);
 		engagementsExtractor.setOrganisation(organisation);
 		Engagements engagements = engagementsExtractor.doExtract(uri);

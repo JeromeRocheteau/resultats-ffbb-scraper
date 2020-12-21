@@ -19,7 +19,7 @@ public class OrganisationSalleController implements Controller<Organisation> {
 	
 	@Override
 	public Organisation doFind(Connection connection, URI uri) throws Exception {
-		String prefix = "http://resultats.ffbb.com/organisation/salle/";
+		String prefix = "https://resultats.ffbb.com/organisation/salle/";
 		String link = uri.toString();
 		String code = link.substring(prefix.length(), link.length() - 5);
 		reader.setObject(code);

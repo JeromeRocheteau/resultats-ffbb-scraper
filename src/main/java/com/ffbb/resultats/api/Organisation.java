@@ -130,7 +130,7 @@ public class Organisation implements Identifiable, Encodable, Extractable, Compa
 
 	@Override
 	public URI getURI() {
-		return URI.create("http://resultats.ffbb.com/organisation/" + code + ".html");
+		return URI.create("https://resultats.ffbb.com/organisation/" + code + ".html");
 	}
 	
 }

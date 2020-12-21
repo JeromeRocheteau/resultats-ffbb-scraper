@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.ffbb.resultats.api.Appartenances;
 import com.ffbb.resultats.api.Championnat;
+import com.ffbb.resultats.api.Classements;
 import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Engagements;
 import com.ffbb.resultats.api.Extractable;
@@ -18,6 +19,7 @@ import com.ffbb.resultats.api.Salle;
 import com.ffbb.resultats.api.Équipe;
 import com.ffbb.resultats.db.AppartenancesController;
 import com.ffbb.resultats.db.ChampionnatController;
+import com.ffbb.resultats.db.ClassementsController;
 import com.ffbb.resultats.db.OrganisationSalleController;
 import com.ffbb.resultats.db.RencontresController;
 import com.ffbb.resultats.db.DivisionController;
@@ -52,6 +54,7 @@ public class Ressources {
 	private ÉquipeController équipeController;
 	private JournéesController journéesController;
 	private RencontresController rencontresController;
+	private ClassementsController classementsController;
 	
 	public void setConnection(Connection connection) throws SQLException {
 		if (this.connection == null || this.connection.isClosed()) {
@@ -64,16 +67,18 @@ public class Ressources {
 	public <U extends Extractable> U doFind(Class<U> type, URI uri) {
 		Object resource = resources.get(uri.toString());
 		if (resource == null) {
-			try { resource = this.doRetrieve(type, uri); } 
-			catch (Exception e) { e.printStackTrace(); }
+			try { 
+				resource = this.doRetrieve(type, uri);
+			} catch (Exception e) { e.printStackTrace(); }
 		}
 		return (U) resource;
 	}
 
 	public <U extends Extractable> void doBind(Class<U> type, URI uri, U resource) {
 		resources.put(uri.toString(), resource);
-		try { this.doInsert(type, resource); } 
-		catch (Exception e) { e.printStackTrace(); }
+		try { 
+			this.doInsert(type, resource); 
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
 	public <U extends Extractable,V extends Extractable> void doLink(Class<U> resourceType, Class<V> linkedResourceType, URI uri, U resource, V linkedResource) throws Exception {
@@ -110,6 +115,8 @@ public class Ressources {
 			journéesController.doSave(connection, (Journées) resource);
 		} else if (Rencontres.class.isInstance(resource)) {
 			rencontresController.doSave(connection, (Rencontres) resource);
+		} else if (Classements.class.isInstance(resource)) {
+			classementsController.doSave(connection, (Classements) resource);
 		} else {
 			return;
 		}
@@ -138,6 +145,8 @@ public class Ressources {
 			return (U) journéesController.doFind(connection, uri);
 		} else if (Rencontres.class.isAssignableFrom(type)) {
 			return (U) rencontresController.doFind(connection, uri);
+		} else if (Classements.class.isAssignableFrom(type)) {
+			return (U) classementsController.doFind(connection, uri);
 		} else {
 			return null;
 		}
@@ -155,11 +164,12 @@ public class Ressources {
 		équipeController = new ÉquipeController();
 		journéesController = new JournéesController();
 		rencontresController = new RencontresController();
+		classementsController = new ClassementsController();
 		this.setExempt();
 	}
 	
 	private void setExempt() {
-		URI uri = URI.create("http://resultats.ffbb.com/organisation/0.html");
+		URI uri = URI.create("https://resultats.ffbb.com/organisation/0.html");
 		Organisation exempt = this.doFind(Organisation.class, uri);
 		if (exempt == null) {
 			exempt = new Organisation(0L, "0");

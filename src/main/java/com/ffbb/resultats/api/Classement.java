@@ -5,6 +5,8 @@ import java.util.Date;
 
 public class Classement implements Comparable<Classement> {
 	
+	private Division division;
+	
 	private Équipe équipe;
 	
 	private Date date;
@@ -63,6 +65,10 @@ public class Classement implements Comparable<Classement> {
 		return diff;
 	}
 
+	public Division getDivision() {
+		return division;
+	}
+
 	public Équipe getÉquipe() {
 		return équipe;
 	}
@@ -71,14 +77,15 @@ public class Classement implements Comparable<Classement> {
 		return date;
 	}
 
-	public Classement(Équipe équipe) {
+	public Classement(Division division, Équipe équipe) {
 		super();
+		this.division = division;
 		this.équipe = équipe;
 		this.date = Calendar.getInstance().getTime();
 	}
 
-	public Classement(Équipe équipe, Integer rang, Integer points, Integer matchs, Integer victoires, Integer défaites,	Integer nuls, Integer pour, Integer contre, Integer diff) {
-		this(équipe);
+	public Classement(Division division, Équipe équipe, Integer rang, Integer points, Integer matchs, Integer victoires, Integer défaites,	Integer nuls, Integer pour, Integer contre, Integer diff) {
+		this(division, équipe);
 		this.rang = rang;
 		this.points = points;
 		this.matchs = matchs;

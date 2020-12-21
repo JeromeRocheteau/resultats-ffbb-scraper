@@ -15,7 +15,7 @@ public class Appartenances extends LinkedList<Appartenance> implements Extractab
 	}
 	
 	public URI getURI() {
-		return URI.create("http://resultats.ffbb.com/organisation/appartenance/" + organisation.getCode() + ".html");
+		return URI.create("https://resultats.ffbb.com/organisation/appartenance/" + organisation.getCode() + ".html");
 	}
 
 }

@@ -24,7 +24,7 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 	}
 
 	private Organisation doParse(URI uri) throws Exception {
-		String prefix = "http://resultats.ffbb.com/organisation/";
+		String prefix = "https://resultats.ffbb.com/organisation/";
 		String link = uri.toString();
 		String code = link.substring(prefix.length(), link.length() - 5);
 		Document doc = this.getDocument(uri);

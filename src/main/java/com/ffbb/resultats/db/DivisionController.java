@@ -23,7 +23,7 @@ public class DivisionController implements Controller<Division> {
 	@Override
 	public Division doFind(Connection connection, URI uri) throws Exception {
 		String link = uri.toString();
-		String prefix = "http://resultats.ffbb.com/championnat/division/";
+		String prefix = "https://resultats.ffbb.com/championnat/division/";
 		if (link.startsWith(prefix)) {
 			int offset = prefix.length();
 			int suffix = ".html".length();
@@ -38,7 +38,7 @@ public class DivisionController implements Controller<Division> {
 	}
 
 	private Paramètres getParamètres(String link) {
-		int prefix = "http://resultats.ffbb.com/championnat/".length();
+		int prefix = "https://resultats.ffbb.com/championnat/".length();
 		int suffix = ".html".length();
 		int cut = link.indexOf('?');
 		String code = link.substring(prefix, cut - suffix);

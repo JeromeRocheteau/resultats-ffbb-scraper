@@ -19,7 +19,7 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 	}
 
 	public Salle doExtract(URI uri) throws Exception {
-		String prefix = "http://resultats.ffbb.com/organisation/salle/";
+		String prefix = "https://resultats.ffbb.com/organisation/salle/";
 		String link = uri.toString();
 		if (link.startsWith(prefix)) {
 			String code = link.substring(prefix.length(), link.length() - 5);

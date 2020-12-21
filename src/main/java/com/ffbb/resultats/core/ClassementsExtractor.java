@@ -61,7 +61,7 @@ public class ClassementsExtractor extends AbstractExtractor<Classements> {
 					Integer pour = Integer.valueOf(cols.get(15).text());
 					Integer contre = Integer.valueOf(cols.get(16).text());
 					Integer diff = Integer.valueOf(cols.get(16).text());
-					Classement classement = new Classement(équipe, rang, points, matchs, victoires, défaites, nuls, pour, contre, diff);
+					Classement classement = new Classement(division, équipe, rang, points, matchs, victoires, défaites, nuls, pour, contre, diff);
 					classements.add(classement);
 				} else if (cols.size() == 17) {
 					Integer rang = Integer.valueOf(cols.get(0).text());
@@ -74,7 +74,7 @@ public class ClassementsExtractor extends AbstractExtractor<Classements> {
 					Integer pour = Integer.valueOf(cols.get(14).text());
 					Integer contre = Integer.valueOf(cols.get(15).text());
 					Integer diff = Integer.valueOf(cols.get(16).text());
-					Classement classement = new Classement(équipe, rang, points, matchs, victoires, défaites, nuls, pour, contre, diff);
+					Classement classement = new Classement(division, équipe, rang, points, matchs, victoires, défaites, nuls, pour, contre, diff);
 					classements.add(classement);
 				}
 			}
@@ -90,22 +90,18 @@ public class ClassementsExtractor extends AbstractExtractor<Classements> {
 		int sup = link.indexOf('?');
 		String code = link.substring(inf, sup - 5);
 		Organisation organisation = this.getOrganisation(code);
-		URI uri = URI.create("http://resultats.ffbb.com/championnat/equipe/" + link.substring(inf));
-		if (this.doFind(Équipe.class, uri) == null) {
+		URI uri = URI.create("https://resultats.ffbb.com/championnat/equipe/" + link.substring(inf));
+		Équipe équipe = this.doFind(Équipe.class, uri);
+		if (équipe == null) {
 			try {
 				Équipe equipe = new Équipe(organisation, division);
 				equipe.setNom(name);
-				this.doBind(Équipe.class, equipe.getURI(), equipe);
-				return equipe;
+				this.doBind(Équipe.class, uri, equipe);
 			} catch (Exception e) {
 				Logger.getAnonymousLogger().log(Level.WARNING, "Impossible de récupérer l'organisation " + code + " pour l'équipe " + uri);
-				return null;
 			}
-		} else {
-			Équipe équipe = this.doFind(Équipe.class, uri);
-			équipe.setNom(name);
-			return équipe;
 		}
+		return équipe;
 	}
 	
 }

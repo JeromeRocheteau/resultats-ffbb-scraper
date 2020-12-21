@@ -60,7 +60,7 @@ public class Championnat extends Compétition implements Extractable {
 
 	@Override
 	public URI getURI() {
-		String link = "http://resultats.ffbb.com/championnat/" + this.getCode() + ".html";
+		String link = "https://resultats.ffbb.com/championnat/" + this.getCode() + ".html";
 		return URI.create(link);
 	}
 	

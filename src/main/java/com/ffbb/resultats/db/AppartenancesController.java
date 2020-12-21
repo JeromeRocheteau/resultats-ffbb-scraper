@@ -20,7 +20,7 @@ public class AppartenancesController implements Controller<Appartenances> {
 	@Override
 	public Appartenances doFind(Connection connection, URI uri) throws Exception {
 		String link = uri.toString();
-		int prefix = "http://resultats.ffbb.com/organisation/appartenance/".length();
+		int prefix = "https://resultats.ffbb.com/organisation/appartenance/".length();
 		int suffix = ".html".length();
 		String code = link.substring(prefix, link.length() - suffix);
 		reader.setObject(code);

@@ -56,14 +56,14 @@ public class Division implements Identifiable, Encodable, Extractable, Comparabl
 
 	@Override
 	public URI getURI() {
-		String link = "http://resultats.ffbb.com/championnat/" + this.getChampionnat().getCode() + ".html"
+		String link = "https://resultats.ffbb.com/championnat/" + this.getChampionnat().getCode() + ".html"
 				+ "?r=" + this.getChampionnat().getId()
 				+ "&d=" + this.getId();
 		return URI.create(link);
 	}
 
 	public URI getAlternateURI() {
-		String link = "http://resultats.ffbb.com/championnat/division/" + this.getCode() + ".html";
+		String link = "https://resultats.ffbb.com/championnat/division/" + this.getCode() + ".html";
 		return URI.create(link);
 	}
 
