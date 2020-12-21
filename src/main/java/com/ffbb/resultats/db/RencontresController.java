@@ -5,16 +5,20 @@ import java.sql.Connection;
 
 import com.ffbb.resultats.api.Rencontre;
 import com.ffbb.resultats.api.Rencontres;
+import com.ffbb.resultats.api.Résultat;
 
 public class RencontresController implements Controller<Rencontres> {
 
 	private RencontresReader reader;
 	
-	private RencontreUpdater updater;
+	private RencontreUpdater rencontreUpdater;
+	
+	private RésultatUpdater résultatUpdater;
 	
 	public RencontresController() {
 		reader = new RencontresReader();
-		updater = new RencontreUpdater();
+		rencontreUpdater = new RencontreUpdater();
+		résultatUpdater = new RésultatUpdater();
 	}
 	
 	@Override
@@ -29,9 +33,14 @@ public class RencontresController implements Controller<Rencontres> {
 
 	@Override
 	public void doSave(Connection connection, Rencontres rencontres) throws Exception {
-		for (Rencontre encontre : rencontres) {
-			updater.setObject(encontre);
-			updater.doUpdate(connection);			
+		for (Rencontre rencontre : rencontres) {
+			rencontreUpdater.setObject(rencontre);
+			rencontreUpdater.doUpdate(connection);
+			Résultat résultat = rencontre.getRésultat();
+			if (résultat != null) {
+				résultatUpdater.setObject(résultat);
+				résultatUpdater.doUpdate(connection);
+			}
 		}
 	}
 

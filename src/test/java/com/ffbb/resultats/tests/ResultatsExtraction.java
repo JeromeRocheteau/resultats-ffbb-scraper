@@ -10,7 +10,8 @@ public abstract class ResultatsExtraction {
 	
 	@Before
 	public void setUp() {
-		extractor = new RésultatsFFBB("C:\\Program Files (x86)\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
+		extractor = new RésultatsFFBB("/usr/bin/phantomjs");
+		// extractor = new RésultatsFFBB("C:\\Program Files (x86)\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
 	}
 	
 }

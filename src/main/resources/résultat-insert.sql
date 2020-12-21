@@ -1,2 +1,2 @@
-INSERT INTO `résultats` (`id`,`domicile`,`visiteur`)
+INSERT INTO `résultats` (`code`,`domicile`,`visiteur`)
 VALUES (?,?,?);

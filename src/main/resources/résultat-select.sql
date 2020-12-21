@@ -1,6 +1,6 @@
 SELECT 
-  r.`id`,
-  r.`domicile`,
-  r.`visiteur`
+  r.`code` AS `code`,
+  r.`domicile` AS `domicile`,
+  r.`visiteur` AS `visisteur`
 FROM `résultats` AS r
-WHERE r.`id` = ?;
+WHERE r.`code` = ?;

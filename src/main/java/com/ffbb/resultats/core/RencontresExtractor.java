@@ -33,14 +33,13 @@ public class RencontresExtractor extends AbstractExtractor<Rencontres> {
 	}
 
 	public Rencontres doExtract(URI uri) throws Exception {
-		if (this.doFind(Rencontres.class, uri) == null) {
-			Rencontres rencontres = this.doParse(uri);
+		Rencontres rencontres = this.doFind(Rencontres.class, uri);
+		if (rencontres == null) {
+			rencontres = this.doParse(uri);
 			this.doBind(Rencontres.class, uri, rencontres);
 			journée.getRencontres().addAll(rencontres);
-			return rencontres;
-		} else {
-			return this.doFind(Rencontres.class, uri);
 		}
+		return rencontres;
 	}
 
 	public Rencontres doParse(URI uri) throws Exception {
@@ -57,9 +56,9 @@ public class RencontresExtractor extends AbstractExtractor<Rencontres> {
 					Date horaire = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(date);
 					Équipe domicile = this.getÉquipe(cols.get(3));
 					Équipe visiteur = this.getÉquipe(cols.get(4));
-					Résultat résultat = this.getRésultat(cols.get(5).text());
 					Salle salle = this.getSalle(cols.get(6));
 					Rencontre rencontre = new Rencontre(journée, numéro, domicile, visiteur, horaire, salle);
+					Résultat résultat = this.getRésultat(rencontre, cols.get(5).text());
 					rencontre.setRésultat(résultat);
 					rencontres.add(rencontre);
 					domicile.getRencontres().add(rencontre);
@@ -70,12 +69,12 @@ public class RencontresExtractor extends AbstractExtractor<Rencontres> {
 		return rencontres;
 	}
 
-	private Résultat getRésultat(String text) throws Exception {
+	private Résultat getRésultat(Rencontre rencontre, String text) throws Exception {
 		String[] items = text.split("-");
 		if (items.length == 2) {
 			Integer domicile = Integer.valueOf(items[0].trim());
 			Integer visiteur = Integer.valueOf(items[1].trim());
-			return new Résultat(domicile, visiteur);
+			return new Résultat(rencontre, domicile, visiteur);
 		} else {
 			return null;
 		}

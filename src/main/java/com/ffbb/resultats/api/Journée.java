@@ -31,7 +31,7 @@ public class Journée implements Encodable {
 	}
 
 	public Journée(Integer numéro, Division division) {
-		this.code = division.getCode() + "-" + numéro;
+		this.code = division.getCode() + Integer.toHexString(numéro);
 		this.numéro = numéro;
 		this.division = division;
 		this.rencontres = new LinkedList<Rencontre>();

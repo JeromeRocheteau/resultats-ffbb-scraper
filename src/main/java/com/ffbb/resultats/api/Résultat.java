@@ -1,21 +1,16 @@
 package com.ffbb.resultats.api;
 
-public class Résultat implements Identifiable {
-	
-	private Long id; 
-	
-	@Override
-	public Long getId() {
-		return id;
-	}
+public class Résultat {
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+	private Rencontre rencontre;
 
 	private Integer domicile;
 	
 	private Integer visiteur;
+
+	public Rencontre getRencontre() {
+		return rencontre;
+	}
 
 	public Integer getDomicile() {
 		return domicile;
@@ -25,15 +20,11 @@ public class Résultat implements Identifiable {
 		return visiteur;
 	}
 
-	public Résultat(Integer domicile, Integer visiteur) {
+	public Résultat(Rencontre rencontre, Integer domicile, Integer visiteur) {
 		super();
+		this.rencontre = rencontre;
 		this.domicile = domicile;
 		this.visiteur = visiteur;
-	}
-
-	@Override
-	public String toString() {
-		return this.getId() + " : " + domicile + "-" + visiteur;
 	}
 	
 }

@@ -24,7 +24,7 @@ public class RésultatUpdater extends Updater<Résultat, Boolean> {
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
 		Résultat résultat = this.getObject();
-		statement.setLong(1, résultat.getId());
+		statement.setString(1, résultat.getRencontre().getCode());
 		statement.setInt(2, résultat.getDomicile());
 		statement.setInt(3, résultat.getVisiteur());
 	}

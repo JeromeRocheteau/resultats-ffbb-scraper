@@ -28,13 +28,12 @@ public class ÉquipeExtractor extends AbstractExtractor<Équipe> {
 	}
 
 	public Équipe doExtract(URI uri) throws Exception {
-		if (this.doFind(Équipe.class, uri) == null) {
-			Équipe équipe = this.doParse(uri);
+		Équipe équipe = this.doFind(Équipe.class, uri);
+		if (équipe == null) {
+			équipe = this.doParse(uri);
 			this.doBind(Équipe.class, uri, équipe);
-			return équipe;
-		} else {
-			return this.doFind(Équipe.class, uri);
 		}
+		return équipe;
 	}
 
 	public Équipe doParse(URI uri) throws Exception {

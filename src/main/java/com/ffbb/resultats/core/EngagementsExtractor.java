@@ -48,13 +48,12 @@ public class EngagementsExtractor extends AbstractExtractor<List<Engagement>> {
 	}
 
 	public Engagements doExtract(URI uri) throws Exception {
-		if (this.doFind(Engagements.class, uri) == null) {
-			Engagements engagements = this.doParse(uri);
+		Engagements engagements = this.doFind(Engagements.class, uri);
+		if (engagements == null) {
+			engagements = this.doParse(uri);
 			this.doBind(Engagements.class, uri, engagements);
-			return engagements;
-		} else {
-			return this.doFind(Engagements.class, uri);
 		}
+		return engagements;
 	}
 	
 	private Engagements doParse(URI uri) throws Exception {

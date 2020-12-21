@@ -28,14 +28,13 @@ public class JournéesExtractor extends AbstractExtractor<Journées> {
 	}
 
 	public Journées doExtract(URI uri) throws Exception {
-		if (this.doFind(Journées.class, uri) == null) {
-			Journées journées = this.doParse(uri);
+		Journées journées = this.doFind(Journées.class, uri);
+		if (journées == null) {
+			journées = this.doParse(uri);
 			this.doBind(Journées.class, uri, journées);
 			division.getJournées().addAll(journées);
-			return journées;
-		} else {
-			return this.doFind(Journées.class, uri);
 		}
+		return journées;
 	}
 
 	public Journées doParse(URI uri) throws Exception {

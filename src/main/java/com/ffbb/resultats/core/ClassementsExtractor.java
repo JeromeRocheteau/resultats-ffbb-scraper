@@ -32,17 +32,14 @@ public class ClassementsExtractor extends AbstractExtractor<Classements> {
 	}
 
 	public Classements doExtract(URI uri) throws Exception {
-		if (this.doFind(Classements.class, uri) == null) {
+		Classements classements = this.doFind(Classements.class, uri);
+		if (classements == null) {
 			try {
-				Classements classements = this.getClassements(uri);
+				classements = this.getClassements(uri);
 				this.doBind(Classements.class, uri, classements);
-				return classements;
-			} catch (Exception e) {
-				return null;
-			}
-		} else {
-			return this.doFind(Classements.class, uri);
+			} catch (Exception e) { }
 		}
+		return classements;
 	}
 	
 	private Classements getClassements(URI uri) throws Exception {

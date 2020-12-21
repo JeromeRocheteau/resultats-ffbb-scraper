@@ -1,7 +1,12 @@
 SELECT
-  r.`code` AS `renontreCode`,
-  r.`horaire` AS `renontreHoraire`,
+  r.`code` AS `rencontreCode`,
+  r.`numéro` AS `rencontreNuméro`,
+  r.`horaire` AS `rencontreHoraire`,
   
+  res.`code` AS `scoreCode`,
+  res.`domicile` AS `scoreDomicile`,
+  res.`visiteur` AS `scoreVisiteur`,
+
   j.`code` AS `journéeCode`,
   j.`numéro` AS `journéeNuméro`,
   
@@ -14,17 +19,17 @@ SELECT
   com.`type` AS `compétitionType`,
   com.`nom` AS `compétitionNom`,
   
-  org.`id` AS `organisateurId`,
-  org.`code` AS `organisateurCode`,
-  org.`type` AS `organisateurType`,
-  org.`ffbb` AS `organisateurFfbb`,
-  org.`nom` AS `organisateurNom`,
-  
   cha.`niveau` AS `championnatNiveau`,
   cha.`catégorie` AS `championnatCatégorie`,
   cha.`genre` AS `championnatGenre`,
   cha.`phase` AS `championnatPhase`,
   
+  org.`id` AS `organisateurId`,
+  org.`code` AS `organisateurCode`,
+  org.`type` AS `organisateurType`,
+  org.`ffbb` AS `organisateurFfbb`,
+  org.`nom` AS `organisateurNom`,
+
   dom.`code` AS `équipeDomicileCode`,
   dom.`nom` AS `équipeDomicileNom`,
   domorg.`id` AS `clubDomicileId`,
@@ -49,15 +54,16 @@ SELECT
   s.`codePostal` as `salleCodePostal`,
   s.`ville` as `salleVille`
   
-FROM `rencontres` AS r
+FROM `rencontres` AS r 
 INNER JOIN `journées` AS j ON j.`code` = r.`journée` 
-INNER JOIN `divisions` AS d ON d.`code` = j.`division` 
+INNER JOIN `divisions` AS d ON d.`code` = j.`division`
 INNER JOIN `championnats` AS cha ON d.`championnat` = cha.`code`
 INNER JOIN `compétitions` AS com ON com.`code` = cha.`code`
-INNER JOIN `organisations` AS org ON org.`code` = com.`organisateur`
+INNER JOIN `organisations` AS org ON org.`code` = com.`organisateur` 
 INNER JOIN `équipes` AS dom ON dom.`code` = r.`domicile` 
-INNER JOIN `équipes` AS vis ON dom.`code` = r.`visiteur` 
+INNER JOIN `équipes` AS vis ON vis.`code` = r.`visiteur`
 INNER JOIN `organisations` AS domorg ON domorg.`code` = dom.`organisation`
 INNER JOIN `organisations` AS visorg ON visorg.`code` = vis.`organisation`
-INNER JOIN `salles` AS s ON s.`id` = r.`salle` 
+INNER JOIN `salles` AS s ON s.`id` = r.`salle`
+LEFT JOIN `résultats` AS res on res.`code` = r.`code` 
 WHERE r.`journée`= ?;

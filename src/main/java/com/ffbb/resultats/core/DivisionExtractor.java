@@ -22,14 +22,13 @@ public class DivisionExtractor extends AbstractExtractor<Division> {
 	}
 
 	public Division doExtract(URI uri) throws Exception {
-		if (this.doFind(Division.class, uri) == null) {
-			Division division = this.doParse(uri);
+		Division division = this.doFind(Division.class, uri);
+		if (division == null) {
+			division = this.doParse(uri);
 			this.doBind(Division.class, division.getURI(), division);
 			this.doBind(Division.class, division.getAlternateURI(), division);
-			return division;
-		} else {
-			return this.doFind(Division.class, uri);
 		}
+		return division;
 	}
 
 	private Division doParse(URI uri) throws Exception {
@@ -49,7 +48,8 @@ public class DivisionExtractor extends AbstractExtractor<Division> {
 		String championnatLink = uri.toString();
 		championnatLink = championnatLink.substring(0, championnatLink.indexOf('?'));
 		URI championnatURI = URI.create(championnatLink);
-		if (this.doFind(Championnat.class, championnatURI) == null) {
+		Championnat championnat = this.doFind(Championnat.class, championnatURI); 
+		if (championnat == null) {
 			String code = championnatLink.substring("https://resultats.ffbb.com/championnat/".length(), championnatLink.length() - 5);
 			Element cadre = document.getElementById("idTableCoupeChampionnat");		
 			Element element = cadre.getElementById("idTdDivision");
@@ -59,7 +59,7 @@ public class DivisionExtractor extends AbstractExtractor<Division> {
 			String href = cadre.select("tr").get(2).select("td").get(1).selectFirst("a").attr("href");
 			String org = href.substring("../organisation/".length(), href.length() - 5);
 			Organisation organisateur = this.getOrganisation(org);
-			Championnat championnat = new Championnat(id, code, nom, organisateur);
+			championnat = new Championnat(id, code, nom, organisateur);
 			String[] words = element.text().split("\\s+");
 			Niveau niveau = this.getNiveau(words);
 			Catégorie catégorie = this.getCatégorie(words);
@@ -68,10 +68,8 @@ public class DivisionExtractor extends AbstractExtractor<Division> {
 			championnat.setCatégorie(catégorie);
 			championnat.setGenre(genre);
 			this.doBind(Championnat.class, championnat.getURI(), championnat);
-			return championnat;
-		} else {
-			return this.doFind(Championnat.class, championnatURI);
 		}
+		return championnat;
 	}
 
 	private Division getDivision(Document document, String script, Championnat championnat) {

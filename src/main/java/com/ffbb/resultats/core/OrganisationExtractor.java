@@ -15,13 +15,12 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 	}
 
 	public Organisation doExtract(URI uri) throws Exception {
-		if (this.doFind(Organisation.class, uri) == null) {
-			Organisation organisation = this.doParse(uri);
+		Organisation organisation = this.doFind(Organisation.class, uri);
+		if (organisation == null) {
+			organisation = this.doParse(uri);
 			this.doBind(Organisation.class, uri, organisation);
-			return organisation;
-		} else {
-			return this.doFind(Organisation.class, uri);
 		}
+		return organisation;
 	}
 
 	private Organisation doParse(URI uri) throws Exception {

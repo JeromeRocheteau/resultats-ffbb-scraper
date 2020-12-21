@@ -28,18 +28,17 @@ public class AppartenancesExtractor extends AbstractExtractor<List<Appartenance>
 	}
 	
 	public Appartenances doExtract(URI uri) throws Exception {
-		if (this.doFind(Appartenances.class, uri) == null) {
+		Appartenances appartenances = this.doFind(Appartenances.class, uri); 
+		if (appartenances == null) {
 			try {
-				Appartenances appartenances = this.doParse(uri);
+				appartenances = this.doParse(uri);
 				this.doBind(Appartenances.class, uri, appartenances);
 				organisation.getAppartenances().addAll(appartenances);
-				return appartenances;
 			} catch (Exception e) {
-				return new Appartenances(organisation);
+				appartenances = new Appartenances(organisation);
 			}
-		} else {
-			return this.doFind(Appartenances.class, uri);
 		}
+		return appartenances;
 	}
 
 	private Appartenances doParse(URI uri) throws Exception {

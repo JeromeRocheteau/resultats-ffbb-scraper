@@ -21,14 +21,12 @@ public class ÉquipeController implements Controller<Équipe> {
 	public Équipe doFind(Connection connection, URI uri) throws Exception {
 		String link = uri.toString();
 		Paramètres paramètres = this.getParamètres(link);
-		System.out.println("PARAM " + paramètres);
 		reader.setObject(paramètres);
 		return reader.doRead(connection);
 	}
 
 	@Override
 	public void doSave(Connection connection, Équipe équipe) throws Exception {
-		System.out.println("SAVE " + équipe);
 		updater.setObject(équipe);
 		updater.doUpdate(connection);
 	}
@@ -38,9 +36,6 @@ public class ÉquipeController implements Controller<Équipe> {
 		int suffix = ".html".length();
 		int cut = link.indexOf('?');
 		String code = link.substring(prefix, cut - suffix);
-		
-		System.out.println("CODE " + code);
-		
 		String query = link.substring(cut + 1);
 		Long r = null;
 		// Long p = null;

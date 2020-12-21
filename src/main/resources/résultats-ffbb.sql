@@ -83,8 +83,6 @@ CREATE TABLE `journées` (
   FOREIGN KEY (`division`) REFERENCES `divisions` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-/***************** DOING ********************/
-
 CREATE TABLE `rencontres` (
   `code` varchar(45) NOT NULL,
   `numéro` int(11) NOT NULL,
@@ -99,13 +97,13 @@ CREATE TABLE `rencontres` (
   FOREIGN KEY (`visiteur`) REFERENCES `équipes` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`salle`) REFERENCES `salles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
-/***************** TODO ********************/
+
 CREATE TABLE `résultats` (
-  `id` bigint(20) NOT NULL,
+  `code` varchar(45) NOT NULL,
   `domicile` int(11) NOT NULL,
   `visiteur` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`id`) REFERENCES `rencontres` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`code`),
+  FOREIGN KEY (`code`) REFERENCES `rencontres` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 DROP TABLE `résultats`;

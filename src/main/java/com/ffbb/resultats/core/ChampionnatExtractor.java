@@ -25,11 +25,11 @@ public class ChampionnatExtractor extends AbstractExtractor<Championnat> {
 	}
 
 	public Championnat doExtract(URI uri) throws Exception {
-		if (this.doFind(Championnat.class, uri) == null) {
-			return this.doParse(uri);
-		} else {
-			return this.doFind(Championnat.class, uri);
+		Championnat championnat = this.doFind(Championnat.class, uri);
+		if (championnat == null) {
+			championnat = this.doParse(uri);
 		}
+		return championnat;
 	}
 
 	private Championnat doParse(URI uri) throws Exception {

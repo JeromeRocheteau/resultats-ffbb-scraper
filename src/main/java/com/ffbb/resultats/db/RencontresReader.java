@@ -13,6 +13,7 @@ import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
 import com.ffbb.resultats.api.Rencontre;
 import com.ffbb.resultats.api.Rencontres;
+import com.ffbb.resultats.api.Résultat;
 import com.ffbb.resultats.api.Salle;
 import com.ffbb.resultats.api.Équipe;
 
@@ -27,11 +28,15 @@ public class RencontresReader extends Reader<String, Rencontres> {
 	public Rencontres getResult(ResultSet resultSet) throws Exception {
 		Rencontres rencontres = null;
 		while (resultSet.next()) {
-			String rencontreCode = resultSet.getString("rencontreCode");
+			// String rencontreCode = resultSet.getString("rencontreCode");
 			Integer rencontreNuméro = resultSet.getInt("rencontreNuméro");
 			Date rencontreHoraire = resultSet.getDate("rencontreHoraire");
+			
+			String scoreCode = resultSet.getString("scoreCode");
+			Integer scoreDomicile = resultSet.getInt("scoreDomicile");
+			Integer scoreVisiteur = resultSet.getInt("scoreVisiteur");
 
-			String journéeCode = resultSet.getString("journéeCode");
+			// String journéeCode = resultSet.getString("journéeCode");
 			Integer journéeNuméro = resultSet.getInt("journéeNuméro");
 			
 			Long divisionId = resultSet.getLong("divisionId");
@@ -53,7 +58,7 @@ public class RencontresReader extends Reader<String, Rencontres> {
 			String championnatGenre = resultSet.getString("championnatGenre");
 			Integer championnatPhase = resultSet.getInt("championnatPhase");
 			
-			String équipeDomicileCode = resultSet.getString("équipeDomicileCode");
+			// String équipeDomicileCode = resultSet.getString("équipeDomicileCode");
 			String équipeDomicileNom = resultSet.getString("équipeDomicileNom");
 			Long clubDomicileId = resultSet.getLong("clubDomicileId");
 			String clubDomicileCode = resultSet.getString("clubDomicileCode");
@@ -61,7 +66,7 @@ public class RencontresReader extends Reader<String, Rencontres> {
 			String clubDomicileFfbb = resultSet.getString("clubDomicileFfbb");
 			String clubDomicileNom = resultSet.getString("clubDomicileNom");
 			
-			String équipeVisiteurCode = resultSet.getString("équipeVisiteurCode");
+			// String équipeVisiteurCode = resultSet.getString("équipeVisiteurCode");
 			String équipeVisiteurNom = resultSet.getString("équipeVisiteurNom");
 			Long clubVisiteurId = resultSet.getLong("clubVisiteurId");
 			String clubVisiteurCode = resultSet.getString("clubVisiteurCode");
@@ -106,7 +111,12 @@ public class RencontresReader extends Reader<String, Rencontres> {
 			if (rencontres == null) {
 				rencontres = new Rencontres(journée);
 			}
+			
 			Rencontre rencontre = new Rencontre(journée, rencontreNuméro, équipeDomicile, équipeVisiteur, rencontreHoraire, salle);
+			
+			Résultat résultat = scoreCode == null ? null : new Résultat(rencontre, scoreDomicile, scoreVisiteur);
+			rencontre.setRésultat(résultat);
+			
 			rencontres.add(rencontre);
 		}
 		return rencontres;

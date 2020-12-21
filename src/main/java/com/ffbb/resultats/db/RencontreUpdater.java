@@ -25,9 +25,9 @@ public class RencontreUpdater extends Updater<Rencontre, Boolean> {
 	@Override
 	public void setParameters(PreparedStatement statement) throws Exception {
 		Rencontre rencontre = this.getObject();
-		statement.setString(1, rencontre.getJournée().getCode());
+		statement.setString(1, rencontre.getCode());
 		statement.setInt(2, rencontre.getNuméro());
-		statement.setInt(3, rencontre.getJournée().getNuméro());
+		statement.setString(3, rencontre.getJournée().getCode());
 		statement.setDate(4, new Date(rencontre.getHoraire().getTime()));
 		statement.setString(5, rencontre.getDomicile().getCode());
 		statement.setString(6, rencontre.getVisiteur().getCode());

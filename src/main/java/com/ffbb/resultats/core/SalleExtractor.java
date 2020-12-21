@@ -31,19 +31,15 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 				organisation.setSalle(salle);
 				this.doBind(Salle.class, u, salle);
 				this.doLink(Organisation.class, Salle.class, uri, organisation, salle);
-				return salle;
-			} else {
-				return salle;
 			}
+			return salle;
 		} else {
 			Salle salle = this.doFind(Salle.class, uri);
-			if (this.doFind(Salle.class, uri) == null) {
+			if (salle == null) {
 				salle = this.doParse(uri);
 				this.doBind(Salle.class, uri, salle);
-				return salle;
-			} else {
-				return salle;
 			}
+			return salle;
 		}
 	}
 	
