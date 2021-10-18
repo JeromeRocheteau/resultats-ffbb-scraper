@@ -28,7 +28,14 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 		String link = uri.toString();
 		String code = link.substring(prefix.length(), link.length() - 5);
 		Document doc = this.getDocument(uri);
+		
+		this.doInfo("uri = '" + uri.toString() + "'");
+		this.doInfo("data = '" + doc.data() + "'");
+		
 		Element td = doc.getElementById("idTdOrganisme");
+		
+		this.doInfo("'" + td.data() + "'");
+		
 		td = td.selectFirst("table")
 				.selectFirst("tbody")
 				.selectFirst("tr")
@@ -42,13 +49,18 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 
 	private Organisation doParse(Long id, String code, String display) throws Exception { // 
 		Organisation organisation = new Organisation(id, code);
-		if (display.endsWith(" - Club")) {
+		String[] items = display.split("-");
+		String name = items[0].trim();
+		String ffbb = items[1].trim();
+		String type = items[2].trim(); 
+		// FIXME
+		if (type.equalsIgnoreCase("Club")) {
 			organisation.setType(Organisation.Type.Club);
 			this.doParse(organisation, display, true);
-		} else if (display.endsWith(" - Entente")) {
+		} else if (display.equalsIgnoreCase("Entente")) {
 			organisation.setType(Organisation.Type.Entente);
 			this.doParse(organisation, display, true);
-		} else if (display.endsWith(" - Association club professionnel")) {
+		} else if (display.equalsIgnoreCase("Association club professionnel")) {
 			organisation.setType(Organisation.Type.ClubPro);
 			this.doParse(organisation, display, true);
 		} else if (display.equals("FÉDÉRATION FRANCAISE BASKET-BALL - FEDE")) {

@@ -1,3 +1,15 @@
+DROP TABLE `classements`;
+DROP TABLE `résultats`;
+DROP TABLE `rencontres`;
+DROP TABLE `journées`;
+DROP TABLE `équipes`;
+DROP TABLE `divisions`;
+DROP TABLE `championnats`;
+DROP TABLE `compétitions`;
+DROP TABLE `appartenances`;
+DROP TABLE `organisations`;
+DROP TABLE `salles`;
+
 CREATE TABLE `salles` (
   `id` bigint(20) NOT NULL,
   `latitude` float NOT NULL,
@@ -13,11 +25,11 @@ CREATE TABLE `salles` (
 
 CREATE TABLE `organisations` (
   `id` bigint(20) DEFAULT NULL,
-  `salle` bigint(20) DEFAULT NULL,
   `code` varchar(45) NOT NULL,
   `type` varchar(45) NOT NULL,
   `ffbb` varchar(45) NOT NULL,
-  `nom` varchar(90) NOT NULL,
+  `nom` varchar(180) NOT NULL,
+  `salle` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`code`),
   UNIQUE KEY `id` (`id`),
   FOREIGN KEY (`salle`) REFERENCES `salles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
@@ -123,15 +135,3 @@ CREATE TABLE `classements` (
   FOREIGN KEY (`division`) REFERENCES `divisions` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`équipe`) REFERENCES `équipes` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-DROP TABLE `classements`;
-DROP TABLE `résultats`;
-DROP TABLE `rencontres`;
-DROP TABLE `journées`;
-DROP TABLE `équipes`;
-DROP TABLE `divisions`;
-DROP TABLE `championnats`;
-DROP TABLE `compétitions`;
-DROP TABLE `appartenances`;
-DROP TABLE `organisations`;
-DROP TABLE `salles`;

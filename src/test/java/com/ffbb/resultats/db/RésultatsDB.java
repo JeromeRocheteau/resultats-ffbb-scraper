@@ -4,12 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,24 +15,16 @@ import org.junit.runners.MethodSorters;
 
 import com.ffbb.resultats.api.Appartenance;
 import com.ffbb.resultats.api.Catégorie;
-import com.ffbb.resultats.api.Championnat;
-import com.ffbb.resultats.api.Classement;
 import com.ffbb.resultats.api.Classements;
-import com.ffbb.resultats.api.Compétition;
 import com.ffbb.resultats.api.Division;
 import com.ffbb.resultats.api.Engagement;
-import com.ffbb.resultats.api.Filtre;
 import com.ffbb.resultats.api.Genre;
 import com.ffbb.resultats.api.Journée;
 import com.ffbb.resultats.api.Journées;
 import com.ffbb.resultats.api.Niveau;
 import com.ffbb.resultats.api.Organisation;
-import com.ffbb.resultats.api.Rencontre;
 import com.ffbb.resultats.api.Rencontres;
-import com.ffbb.resultats.api.Résultat;
 import com.ffbb.resultats.api.Salle;
-import com.ffbb.resultats.api.Équipe;
-import com.ffbb.resultats.core.ChampionnatExtractor;
 import com.ffbb.resultats.tests.ResultatsExtraction;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -53,8 +40,8 @@ public class RésultatsDB extends ResultatsExtraction {
 	
 	public RésultatsDB() throws Exception {
 		super();
-		début = ffbbDateTimeFormatter.parse("2020-09-01 00:00");
-		fin = ffbbDateTimeFormatter.parse("2020-10-31 23:59");
+		début = ffbbDateTimeFormatter.parse("2021-09-18 00:00");
+		fin = ffbbDateTimeFormatter.parse("2021-10-03 23:59");
 	}
 	
 	@Test
@@ -69,6 +56,7 @@ public class RésultatsDB extends ResultatsExtraction {
 			Assert.assertNotNull(organisation);
 			List<Appartenance> appartenances = extractor.getAppartenances(organisation);
 			Assert.assertNotNull(appartenances);
+			this.doInfo("extraction de la salle de l'organisation: " + organisation.getCode());
 			Salle salle = extractor.getSalle(organisation);
 			Assert.assertNotNull(salle);
 			List<Engagement> engagements = extractor.getEngagements(organisation);

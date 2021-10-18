@@ -24,6 +24,9 @@ public class SalleExtractor extends AbstractExtractor<Salle> {
 		if (link.startsWith(prefix)) {
 			String code = link.substring(prefix.length(), link.length() - 5);
 			Organisation organisation = this.getOrganisation(code);
+			
+			this.doInfo("salle uri = " + uri.toString());
+			
 			URI u = this.doGrab(organisation, uri);
 			Salle salle = this.doFind(Salle.class, u);
 			if (salle == null) {

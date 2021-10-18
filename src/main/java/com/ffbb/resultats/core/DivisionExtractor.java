@@ -75,18 +75,20 @@ public class DivisionExtractor extends AbstractExtractor<Division> {
 	private Division getDivision(Document document, String script, Championnat championnat) {
 		Element td = document.getElementById("idTableCoupeChampionnat");
 		Map<String, Long> codes = this.getIdentifiers(script);
-		Element element = td.getElementById("idTdPoule");
+		Element element = document.getElementById("idTdPoule");
 		Element elt = element.select("option[selected]").first();
 		if (elt == null) {
-			String nom = element.text();
+			String nom = codes.keySet().iterator().next();
 			Long id = codes.get(nom);
-			elt = element.select("input[type=hidden]").first();
+			elt = td.select("input[type=hidden]").first();
 			String code = elt.attr("value");
+			/*
 			int inf = code.indexOf('/');
 			int sup = code.lastIndexOf('.');
 			code = code.substring(inf + 1, sup);
+			*/
+			assert(id != null);
 			Division division = new Division(id, code, nom, championnat);
-			// division.setNum(num);
 			return division;
 		} else {
 			String nom = elt.text();
@@ -95,6 +97,7 @@ public class DivisionExtractor extends AbstractExtractor<Division> {
 			int inf = code.indexOf('/');
 			int sup = code.lastIndexOf('.');
 			code = code.substring(inf + 1, sup);
+			assert(id != null);
 			Division division = new Division(id, code, nom, championnat);
 			return division;
 		}
