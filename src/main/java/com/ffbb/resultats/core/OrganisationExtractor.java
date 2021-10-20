@@ -28,14 +28,7 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 		String link = uri.toString();
 		String code = link.substring(prefix.length(), link.length() - 5);
 		Document doc = this.getDocument(uri);
-		
-		this.doInfo("uri = '" + uri.toString() + "'");
-		this.doInfo("data = '" + doc.data() + "'");
-		
 		Element td = doc.getElementById("idTdOrganisme");
-		
-		this.doInfo("'" + td.data() + "'");
-		
 		td = td.selectFirst("table")
 				.selectFirst("tbody")
 				.selectFirst("tr")

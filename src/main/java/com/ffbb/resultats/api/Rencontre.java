@@ -1,6 +1,6 @@
 package com.ffbb.resultats.api;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Rencontre implements Encodable, Comparable<Rencontre> {
 	

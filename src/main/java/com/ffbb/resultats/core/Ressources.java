@@ -82,7 +82,7 @@ public class Ressources {
 	}
 	
 	public <U extends Extractable,V extends Extractable> void doLink(Class<U> resourceType, Class<V> linkedResourceType, URI uri, U resource, V linkedResource) throws Exception {
-		System.out.println("LINK " + linkedResource.getURI() + " to " + resource.getURI());
+		// System.out.println("LINK " + linkedResource.getURI() + " to " + resource.getURI());
 		if (connection == null) {
 			return;
 		} else if (resources.get(uri.toString()) == null) {
@@ -94,7 +94,7 @@ public class Ressources {
 	}
 
 	private <U extends Extractable> void doInsert(Class<U> type, U resource) throws Exception {
-		System.out.println("SAVE " + resource.getURI() + " as " + type.getSimpleName().toLowerCase());
+		// System.out.println("SAVE " + resource.getURI() + " as " + type.getSimpleName().toLowerCase());
 		if (connection == null) {
 			return;
 		} else if (Salle.class.isInstance(resource)) {
@@ -124,7 +124,7 @@ public class Ressources {
 
 	@SuppressWarnings("unchecked")
 	private <U extends Extractable> U doRetrieve(Class<U> type, URI uri) throws Exception {
-		System.out.println("FIND " + uri + " as " + type.getSimpleName().toLowerCase());
+		// System.out.println("FIND " + uri + " as " + type.getSimpleName().toLowerCase());
 		if (connection == null) {
 			return null;
 		} else if (Salle.class.isAssignableFrom(type)) {

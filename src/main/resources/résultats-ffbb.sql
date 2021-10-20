@@ -102,12 +102,12 @@ CREATE TABLE `rencontres` (
   `horaire` datetime NOT NULL,
   `domicile` varchar(90) NOT NULL,
   `visiteur` varchar(90) NOT NULL,
-  `salle` bigint(20) NOT NULL,
+  `salle` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`code`),
   FOREIGN KEY (`journée`) REFERENCES `journées` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`domicile`) REFERENCES `équipes` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`visiteur`) REFERENCES `équipes` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`salle`) REFERENCES `salles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`salle`) REFERENCES `salles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE `résultats` (

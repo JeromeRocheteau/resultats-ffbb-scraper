@@ -1,8 +1,8 @@
 package com.ffbb.resultats.core;
 
 import java.net.URI;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -53,7 +53,7 @@ public class RencontresExtractor extends AbstractExtractor<Rencontres> {
 				if (cols.size() == 7) {
 					Integer numéro = Integer.valueOf(cols.get(0).text());
 					String date = cols.get(1).text() + " " + cols.get(2).text();
-					Date horaire = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(date);
+					Date horaire = new Date(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(date).getTime());
 					Équipe domicile = this.getÉquipe(cols.get(3));
 					Équipe visiteur = this.getÉquipe(cols.get(4));
 					Salle salle = this.getSalle(cols.get(6));
@@ -96,8 +96,13 @@ public class RencontresExtractor extends AbstractExtractor<Rencontres> {
 		String href = a.attr("href");
 		int inf = "javascript:openHere('".length();
 		int sup = href.length() - "')".length();
-		Long id = Long.valueOf(href.substring(inf, sup));
-		return this.getSalle(id);
+		if (inf < sup) {
+			Long id = Long.valueOf(href.substring(inf, sup));
+			return this.getSalle(id);
+		} else {
+			this.doWarn("wrong salle reference: '" + href + "' in " + element.html());
+			return null;
+		}
 	}
 	
 	/*

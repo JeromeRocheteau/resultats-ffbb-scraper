@@ -1,8 +1,6 @@
 package com.ffbb.resultats.core;
 
 import java.net.URI;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -98,8 +96,10 @@ public class ClassementsExtractor extends AbstractExtractor<Classements> {
 				equipe.setNom(name);
 				this.doBind(Équipe.class, uri, equipe);
 			} catch (Exception e) {
-				Logger.getAnonymousLogger().log(Level.WARNING, "Impossible de récupérer l'organisation " + code + " pour l'équipe " + uri);
+				this.doWarn("Impossible de récupérer l'organisation " + code + " pour l'équipe " + uri);
 			}
+		} else if (équipe.getNom() == null) {
+			this.doWarn("Le nom de l'équipe " + organisation.toString() + " engagé en " + division.toString() + " a ps de nom");
 		}
 		return équipe;
 	}
