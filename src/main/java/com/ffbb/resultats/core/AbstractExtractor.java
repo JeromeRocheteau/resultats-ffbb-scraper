@@ -1,16 +1,19 @@
 package com.ffbb.resultats.core;
 
 import java.net.URI;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.ProtocolHandshake;
 
 import com.ffbb.resultats.RésultatsFFBB;
 import com.ffbb.resultats.api.Catégorie;
@@ -78,7 +81,6 @@ public abstract class AbstractExtractor<T> {
 	}
 	
 	protected Document getDocument(URI uri) throws Exception {
-		/*
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 		capabilities.setJavascriptEnabled(true);  
 		capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, résultatsFFBB.getPhantomJsPath());
@@ -87,14 +89,11 @@ public abstract class AbstractExtractor<T> {
 		Logger.getLogger(ProtocolHandshake.class.getName()).setLevel(Level.OFF);		
 		WebDriver driver = new  PhantomJSDriver(capabilities);
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		*/
 		try {
-			System.out.println("document -> " + uri.toString());
-			URL url = uri.toURL();
-			String page = IOUtils.toString(url, StandardCharsets.UTF_8.toString());
-			return Jsoup.parse(page);
+			driver.get(uri.toString());
+			return Jsoup.parse(driver.getPageSource());
 		} finally {
-			// driver.quit();
+			driver.quit();
 		}
 	}	
 	

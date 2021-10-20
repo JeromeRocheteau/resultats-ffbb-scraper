@@ -41,7 +41,7 @@ public class RésultatsDB extends ResultatsExtraction {
 	public RésultatsDB() throws Exception {
 		super();
 		début = ffbbDateTimeFormatter.parse("2021-09-18 00:00");
-		fin = ffbbDateTimeFormatter.parse("2021-10-03 23:59");
+		fin = ffbbDateTimeFormatter.parse("2021-10-24 23:59");
 	}
 	
 	@Test
@@ -51,7 +51,7 @@ public class RésultatsDB extends ResultatsExtraction {
 		this.doConnect();
 		this.doInfo("début de l'extraction");
 		try {
-			extractor.filtre().niveaux(Niveau.Départemental).catégories(Catégorie.U13).genres(Genre.Féminin).dates(début, fin);
+			extractor.filtre()/*.niveaux(Niveau.Départemental).catégories(Catégorie.U13).genres(Genre.Féminin)*/.dates(début, fin);
 			Organisation organisation = extractor.getOrganisation("2226");
 			Assert.assertNotNull(organisation);
 			List<Appartenance> appartenances = extractor.getAppartenances(organisation);
@@ -63,6 +63,7 @@ public class RésultatsDB extends ResultatsExtraction {
 			Assert.assertNotNull(engagements);
 			for (Engagement engagement : engagements) {
 				Division division = engagement.getDivision();
+				this.doInfo("extraction de la division: " + division.toString());
 				Assert.assertNotNull(division);
 				Journées journées = extractor.getJournées(division);
 				Assert.assertNotNull(journées);
@@ -91,8 +92,8 @@ public class RésultatsDB extends ResultatsExtraction {
 	private void doConnect() throws Exception {
 		String database = "jdbc:mysql://app.icam.fr:3306/basketballdb";
 		String parameters = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-		String username = "basketballdb";
-		String password = "basketballdb";
+		String username = "root";
+		String password = "louR8j@y2011";
 	    connection = DriverManager.getConnection(database + parameters, username, password);
 	    connection.setAutoCommit(false);
 	    extractor.setConnection(connection);

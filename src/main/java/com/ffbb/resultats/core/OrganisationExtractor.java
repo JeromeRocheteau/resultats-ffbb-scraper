@@ -50,47 +50,44 @@ public class OrganisationExtractor extends AbstractExtractor<Organisation> {
 	private Organisation doParse(Long id, String code, String display) throws Exception { // 
 		Organisation organisation = new Organisation(id, code);
 		String[] items = display.split("-");
-		String name = items[0].trim();
-		String ffbb = items[1].trim();
-		String type = items[2].trim(); 
-		// FIXME
+		int length = items.length;
+		String name = null;
+		String ffbb = null;
+		String type = null; 
+		if (length < 3) {
+			throw new Exception(display);
+		} else if (length == 3 || length == 4) {
+			name = items[0].trim();
+			ffbb = items[1].trim();
+			type = items[2].trim();
+		} else if (length > 4) {
+			for (int i = 0; i < length - 3; i++) {
+				if (i > 0) {
+					name +=  " - ";
+				}
+				name += items[i];
+			}
+			ffbb = items[length - 3].trim();
+			type = items[length - 2].trim();
+		}
 		if (type.equalsIgnoreCase("Club")) {
 			organisation.setType(Organisation.Type.Club);
-			this.doParse(organisation, display, true);
-		} else if (display.equalsIgnoreCase("Entente")) {
+		} else if (type.equalsIgnoreCase("Entente")) {
 			organisation.setType(Organisation.Type.Entente);
-			this.doParse(organisation, display, true);
-		} else if (display.equalsIgnoreCase("Association club professionnel")) {
+		} else if (type.equalsIgnoreCase("Association club professionnel")) {
 			organisation.setType(Organisation.Type.ClubPro);
-			this.doParse(organisation, display, true);
-		} else if (display.equals("FÉDÉRATION FRANCAISE BASKET-BALL - FEDE")) {
+		} else if (type.equals("FÉDÉRATION FRANCAISE BASKET-BALL - FEDE")) {
 			organisation.setType(Organisation.Type.Fédération);
-			this.doParse(organisation, display, false);
-		} else if (display.startsWith("COMITE")) {
+		} else if (type.startsWith("COMITE")) {
 			organisation.setType(Organisation.Type.Comité);
-			this.doParse(organisation, display, false);
-		} else if (display.startsWith("LIGUE")) {
+		} else if (type.startsWith("LIGUE")) {
 			organisation.setType(Organisation.Type.Ligue);
-			this.doParse(organisation, display, false);
 		} else {
-			throw new Exception(display);
+			throw new Exception(display + " " + type);
 		}
-		return organisation;
-	}
-
-	private void doParse(Organisation organisation, String display, boolean skip) throws Exception {
-		String[] items = display.split(" - ");
-		StringBuilder name = new StringBuilder();
-		int last = items.length - (skip ? 2 : 1);
-		for (int i = 0; i < last; i++) {
-			if (i > 0) {
-				name.append(" - ");	
-			}
-			name.append(items[i]);
-		}
-		String ffbb = items[last].trim();
 		organisation.setFfbb(ffbb);
 		organisation.setNom(name.toString());
+		return organisation;
 	}
 	
 }
