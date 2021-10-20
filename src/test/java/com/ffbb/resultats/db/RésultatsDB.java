@@ -92,8 +92,8 @@ public class RésultatsDB extends ResultatsExtraction {
 	private void doConnect() throws Exception {
 		String database = "jdbc:mysql://app.icam.fr:3306/basketballdb";
 		String parameters = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-		String username = "root";
-		String password = "louR8j@y2011";
+		String username = "basketballdb";
+		String password = "basketballdb";
 	    connection = DriverManager.getConnection(database + parameters, username, password);
 	    connection.setAutoCommit(false);
 	    extractor.setConnection(connection);
